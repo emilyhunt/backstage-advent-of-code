@@ -1,0 +1,3 @@
+[submodule "michael/previous_years"]
+	path = michael/previous_years
+	url = https://github.com/michaelotty/AdventOfCode.git
