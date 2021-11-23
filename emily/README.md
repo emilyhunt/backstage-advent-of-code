@@ -6,6 +6,4 @@ I'm also interested in trying to improve my knowledge of Python/C/C++ wrappers (
 
 ## Progress
 
-### Prep - <span style="color:green">done</span>
-
-### Day 1 - `not started`
+### Day 1 - 🔴 `not started`
