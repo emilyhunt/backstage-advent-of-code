@@ -3,8 +3,21 @@ Attempts at the 2021 advent of code!
 
 Chat to Emily to get added.
 
+## Folder structure
 
-## Repo instructions
+Setup your folder like this:
+
+```
+/NAME           - your folder
+/NAME/README.md - info about what you're doing this year, e.g. language used
+/NAME/XX        - code & data for each day, where XX is e.g. 01, 02, 03... etc.
+/NAME/XX/data   - your data for the day
+/NAME/XX/output - any output for that day that should be ignored and not be added to the repo
+```
+
+## Repo etiquette
+
+* Don't commit things to someone else's folder unless you want to be in _git merge hell_
 
 * Check the `.gitignore` file and make sure that anything you don't want added to the entire repo (like compiled binaries) isn't shared with everyone else. [How to use `.gitignore` files](https://git-scm.com/docs/gitignore)
 
