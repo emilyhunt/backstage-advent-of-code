@@ -1,5 +1,5 @@
 # advent-of-code-21
-Attempts at the 2021 advent of code!
+Attempts at the [2021 advent of code!](https://adventofcode.com/2021/)
 
 Chat to Emily to get added.
 
