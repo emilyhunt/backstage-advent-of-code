@@ -1,3 +1,6 @@
 [submodule "michael/previous_years"]
 	path = michael/previous_years
 	url = https://github.com/michaelotty/AdventOfCode.git
+[submodule "chris"]
+	path = chris
+	url = https://github.com/enygma999/AdventOfCode
