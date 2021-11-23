@@ -24,3 +24,6 @@ Setup your folder like this:
 * Try to avoid adding any big files here! You can set up some `.gitignore` rules to keep them in your local repo if you'd like.
 
 * Make sure that any file output that your code spews out goes into any folder called `output`, as this will be auto-ignored via the .gitignore file.
+
+## Git submodules
+The repo contains some [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules). To clone a repo with submodules, use `git clone --recurse-submodules`. If you didn't do this the submodule may need to be initialised first time with `git submodule update --init`. It's not the end of the world if you don't update the submodules though, you just won't see much in your local repo!
