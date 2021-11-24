@@ -1,5 +1,5 @@
 # advent-of-code-21
-Attempts at the [2021 advent of code!](https://adventofcode.com/2021/)
+Attempts at the [2021 advent of code!](https://adventofcode.com/2021/) Also, here's [our private leaderboard](https://adventofcode.com/2021/leaderboard/private/view/830486) on the AoC site (speak to Tom to get added.)
 
 Chat to Emily to get added.
 
