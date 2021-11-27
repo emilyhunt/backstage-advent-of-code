@@ -4,3 +4,6 @@
 [submodule "chris"]
 	path = chris
 	url = https://github.com/enygma999/AdventOfCode
+[submodule "tomdufall/solutions"]
+	path = tomdufall/solutions
+	url = https://github.com/TomDufall/prog-puzzles
