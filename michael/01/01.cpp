@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <sstream>
 #include <vector>
 
 std::vector<int> ReadFile(const char *fileName);
@@ -37,17 +35,6 @@ void PrintNumbers(const std::vector<int> &numbers)
     std::cout << "\n";
 }
 
-int Part1(const std::vector<int> &numbers)
-{
-    std::vector<int> diffs;
-    for (int i = 0; i < numbers.size() - 1; i++)
-    {
-        if ((numbers[i + 1] - numbers[i]) > 0)
-            diffs.push_back(1);
-    }
-    return Sum(diffs);
-}
-
 int Sum(const std::vector<int> &numbers)
 {
     int sum = 0;
@@ -56,10 +43,21 @@ int Sum(const std::vector<int> &numbers)
     return sum;
 }
 
+int Part1(const std::vector<int> &numbers)
+{
+    int sum = 0;
+    for (size_t i = 0; i < numbers.size() - 1; i++)
+    {
+        if ((numbers[i + 1] - numbers[i]) > 0)
+            sum += 1;
+    }
+    return sum;
+}
+
 int main()
 {
     std::vector<int> numbers = ReadFile("01/data/input.txt");
-    std::cout << Part1(numbers) << std::endl;
+    std::cout << "Part 1: " << Part1(numbers) << "\n";
 
     return 0;
 }
