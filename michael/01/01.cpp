@@ -4,9 +4,9 @@
 
 std::vector<int> ReadFile(const char *fileName);
 void PrintNumbers(const std::vector<int> &numbers);
-int Part1(const std::vector<int> &numbers);
 int Sum(const std::vector<int> &numbers);
-
+int Part1(const std::vector<int> &numbers);
+int Part2(const std::vector<int> &numbers);
 
 std::vector<int> ReadFile(const char *fileName)
 {
@@ -20,29 +20,6 @@ std::vector<int> ReadFile(const char *fileName)
     return numbers;
 }
 
-void PrintNumbers(const std::vector<int> &numbers)
-{
-    bool first = true;
-    for (int number : numbers)
-    {
-        if (first)
-            first = false;
-        else
-            std::cout << ", ";
-
-        std::cout << number;
-    }
-    std::cout << "\n";
-}
-
-int Sum(const std::vector<int> &numbers)
-{
-    int sum = 0;
-    for (int i : numbers)
-        sum += i;
-    return sum;
-}
-
 int Part1(const std::vector<int> &numbers)
 {
     int sum = 0;
@@ -54,10 +31,20 @@ int Part1(const std::vector<int> &numbers)
     return sum;
 }
 
+int Part2(const std::vector<int> &numbers)
+{
+    std::vector<int> windowed;
+    for (size_t i = 0; i < numbers.size() - 2; i++)
+        windowed.push_back(numbers[i] + numbers[i + 1] + numbers[i + 2]);
+
+    return Part1(windowed);
+}
+
 int main()
 {
     std::vector<int> numbers = ReadFile("01/data/input.txt");
     std::cout << "Part 1: " << Part1(numbers) << "\n";
+    std::cout << "Part 2: " << Part2(numbers) << "\n";
 
     return 0;
 }
