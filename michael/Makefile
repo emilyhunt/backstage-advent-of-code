@@ -4,8 +4,6 @@ INCLUDE = -I.
 
 build: 01/01.out 02/02.out
 
-
-
 01/01.out: 01/01.cpp $(UTILS)
 	g++ $^ -Wall -Wextra -Wpedantic $(INCLUDE) -o $@
 
