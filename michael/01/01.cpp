@@ -3,8 +3,6 @@
 #include <vector>
 
 std::vector<int> ReadFile(const char *fileName);
-void PrintNumbers(const std::vector<int> &numbers);
-int Sum(const std::vector<int> &numbers);
 int Part1(const std::vector<int> &numbers);
 int Part2(const std::vector<int> &numbers);
 
