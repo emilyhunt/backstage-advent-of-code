@@ -7,6 +7,8 @@ output/
 # JetBrains product project files
 *.idea
 
+/.vscode/
+
 
 ### COMPILER STUFF THAT WE WANT TO IGNORE
 # Python byte-compiled/optimized/DLL files
