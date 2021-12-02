@@ -1,14 +1,15 @@
 UTILS = Utilities/Utilities.o
 INCLUDE = -I.
+FLAGS = -Wall -Wextra -Wpedantic -std=c++17
 .PHONY: build
 
 build: 01/01.out 02/02.out
 
 01/01.out: 01/01.cpp $(UTILS)
-	g++ $^ -Wall -Wextra -Wpedantic $(INCLUDE) -o $@
+	g++ $^ $(FLAGS) $(INCLUDE) -o $@
 
 02/02.out: 02/02.cpp $(UTILS)
-	g++ $^ -Wall -Wextra -Wpedantic $(INCLUDE) -o $@
+	g++ $^ $(FLAGS) $(INCLUDE) -o $@
 
 Utilities/Utilities.o: Utilities/Utilities.cpp Utilities/Utilities.h
-	g++ $< -Wall -Wextra -Wpedantic $(INCLUDE) -c -o $@
+	g++ $< $(FLAGS) $(INCLUDE) -c -o $@
