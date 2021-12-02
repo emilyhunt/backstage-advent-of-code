@@ -14,7 +14,7 @@ int Part1(const std::vector<std::tuple<std::string, int>> &instructions)
     int coords[2] = {0, 0};
     for (auto &instruction : instructions)
     {
-        auto& [direction, amount] = instruction;
+        auto &[direction, amount] = instruction;
         if (direction == "forward")
             coords[0] += amount;
         else if (direction == "down")
@@ -28,9 +28,27 @@ int Part1(const std::vector<std::tuple<std::string, int>> &instructions)
     return coords[0] * coords[1];
 }
 
-int Part2(const std::vector<std::tuple<std::string, int>> &numbers)
+int Part2(const std::vector<std::tuple<std::string, int>> &instructions)
 {
-    return 0;
+    int aim = 0;
+    int coords[2] = {0, 0};
+    for (auto &instruction : instructions)
+    {
+        auto &[direction, amount] = instruction;
+        if (direction == "forward")
+        {
+            coords[0] += amount;
+            coords[1] += aim * amount;
+        }
+        else if (direction == "down")
+            aim += amount;
+        else if (direction == "up")
+            aim -= amount;
+        else
+            std::cerr << "'" << direction << "' is not allowed" << std::endl;
+    }
+
+    return coords[0] * coords[1];
 }
 
 std::vector<std::tuple<std::string, int>> ExtractInstructions(const std::string &text)
@@ -49,15 +67,6 @@ std::vector<std::tuple<std::string, int>> ExtractInstructions(const std::string 
         instructions.push_back(line);
     }
     return instructions;
-}
-
-void PrintInstructions(const std::vector<std::tuple<std::string, int>> &instructions)
-{
-    for (auto instruction : instructions)
-    {
-        auto [s, i] = instruction;
-        std::cout << s << " - " << i << "\n";
-    }
 }
 
 int main()
