@@ -1,6 +1,6 @@
 UTILS = Utilities/Utilities.o
 INCLUDE = -I.
-FLAGS = -Wall -Wextra -Wpedantic -std=c++17
+FLAGS = -Wall -Wextra -Wpedantic -std=c++17 -g
 .PHONY: build
 
 build: 01/01.out 02/02.out
