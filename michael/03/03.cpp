@@ -1,4 +1,5 @@
 #include <array>
+#include <cmath>
 #include <iostream>
 #include <sstream>
 #include <tuple>
@@ -9,12 +10,11 @@
 int Part1(const std::vector<std::string> &lines);
 int Part2(const std::vector<std::string> &lines);
 std::vector<std::string> ExtractLines(const std::string &text);
-int CalculateGammaRate(const std::vector<std::string> &lines);
-int CalculateEpsilonRate(const std::vector<std::string> &lines);
+int CalculateRate(const std::vector<std::string> &lines, const std::string& option);
 
 int Part1(const std::vector<std::string> &lines)
 {
-    return CalculateGammaRate(lines) * CalculateEpsilonRate(lines);
+    return CalculateRate(lines, "gamma") * CalculateRate(lines, "epsilon");
 }
 
 int Part2(const std::vector<std::string> &lines)
@@ -34,18 +34,10 @@ std::vector<std::string> ExtractLines(const std::string &text)
     return lines;
 }
 
-void PrintLines(const std::vector<std::string> &lines)
-{
-    for (auto &line : lines)
-    {
-        std::cout << line << "\n";
-    }
-}
-
-int CalculateGammaRate(const std::vector<std::string> &lines)
+int CalculateRate(const std::vector<std::string> &lines, const std::string& option)
 {
     const int width = lines[0].length();
-    std::vector<int> gammaRate(width, 0);
+    std::vector<unsigned int> gammaRate(width, 0);
 
     for (int i = 0; i < width; i++)
     {
@@ -60,22 +52,29 @@ int CalculateGammaRate(const std::vector<std::string> &lines)
             gammaRate[i] = 0;
     }
 
-    // gammaRate
-    return gammaRate[0];
-}
+    int decimalGammaRate = 0;
+    int j = 0;
+    for (auto i = gammaRate.rbegin(); i != gammaRate.rend(); ++i)
+    {
+        decimalGammaRate += (*i << j);
+        j++;
+    }
 
-int CalculateEpsilonRate(const std::vector<std::string> &lines)
-{
-    return 1;
+    if (option == "gamma")
+        return decimalGammaRate;
+    else if (option == "epsilon")
+        return (~decimalGammaRate) & ((1 << gammaRate.size()) - 1);
+    std::cerr << "Option '" << option << "' is not allowed\n";
+    return 0;
 }
 
 int main()
 {
-    std::string text = ReadTextFile("03/data/test.txt");
+    std::string text = ReadTextFile("03/data/input.txt");
     auto lines = ExtractLines(text);
 
     std::cout << "Part 1: " << Part1(lines) << "\n";
-    // std::cout << "Part 2: " << Part2(instructions) << "\n";
+    std::cout << "Part 2: " << Part2(lines) << "\n";
 
     return 0;
 }
