@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <list>
 #include <regex>
 #include <vector>
 
@@ -20,6 +21,7 @@ private:
     std::array<std::array<bool, 5>, 5> m_blotted;
 
 public:
+    static int cardCount;
     BingoCard(const std::string& cardText) : m_grid{0}, m_blotted{false}
     {
         std::stringstream cardTextStream(cardText);
@@ -67,7 +69,7 @@ public:
                 if (row[col])
                     sum++;
 
-            if (sum == m_blotted[0].size())
+            if (sum == m_blotted[col].size())
                 return true;
         }
         return false;
@@ -79,7 +81,7 @@ public:
 class BingoGame
 {
 private:
-    std::vector<BingoCard> m_cards;
+    std::list<BingoCard> m_cards;
     std::vector<int> m_balls;
     std::vector<int>::iterator m_ballsIter;
 
@@ -120,19 +122,6 @@ public:
         m_ballsIter = m_balls.begin();
     }
 
-    void DrawNextBall()
-    {
-        m_ballsIter++;
-        if (m_ballsIter == m_balls.end())
-            throw std::out_of_range("Nobody won!");
-    }
-
-    void BlotCards()
-    {
-        for (auto& card : m_cards)
-            card.Blot(*m_ballsIter);
-    }
-
     int GetCurrentBall() const { return *m_ballsIter; }
 
     /**
@@ -146,6 +135,26 @@ public:
             if (card.CheckForLine())
                 return card.GetScore();
         return 0;
+    }
+
+    int GetCardsRemaining() const { return m_cards.size(); }
+
+    void DrawNextBall()
+    {
+        m_ballsIter++;
+        if (m_ballsIter == m_balls.end())
+            throw std::out_of_range("Nobody won!");
+    }
+
+    void BlotCards()
+    {
+        for (auto& card : m_cards)
+            card.Blot(*m_ballsIter);
+    }
+
+    void RemoveWinners()
+    {
+        m_cards.remove_if([](BingoCard card) { return card.CheckForLine(); });
     }
 
     friend std::ostream& operator<<(std::ostream& os,
@@ -188,6 +197,7 @@ std::ostream& operator<<(std::ostream& os, const BingoGame& bingoGame)
 ================================================================================
 */
 int Part1(BingoGame& game);
+int Part2(BingoGame& game);
 
 /*
 ================================================================================
@@ -197,6 +207,7 @@ int Part1(BingoGame& game);
 int Part1(BingoGame& game)
 {
     game.BlotCards();
+
     while (!game.GetLineWinnerScore())
     {
         game.DrawNextBall();
@@ -206,12 +217,27 @@ int Part1(BingoGame& game)
     return game.GetLineWinnerScore() * game.GetCurrentBall();
 }
 
+int Part2(BingoGame& game)
+{
+    game.RemoveWinners();
+
+    while (game.GetCardsRemaining() > 1)
+    {
+        game.DrawNextBall();
+        game.BlotCards();
+        game.RemoveWinners();
+    }
+
+    return Part1(game);
+}
+
 int main()
 {
     std::string text = ReadTextFile("04/data/input.txt");
     BingoGame bingoGame(text);
 
     std::cout << "Part 1: " << Part1(bingoGame) << "\n";
+    std::cout << "Part 2: " << Part2(bingoGame) << "\n";
 
     return 0;
 }
