@@ -79,6 +79,11 @@ public:
                || (m_start.GetY() == m_end.GetY());
     }
 
+    bool IsDiagonal() const
+    {
+        return !IsHorizontalOrVertical();
+    }
+
     std::vector<Point> GetAllPoints() const
     {
         std::vector<Point> points;
@@ -166,6 +171,17 @@ public:
         }
     }
 
+    void PaintDiagonalLines()
+    {
+        for (const auto& line : m_lines)
+        {
+            if (line.IsDiagonal())
+            {
+                PaintLine(line);
+            }
+        }
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const Lines& lines);
 };
 
@@ -210,7 +226,7 @@ int Part1(Lines& lines)
 
 int Part2(Lines& lines)
 {
-    // lines.PaintDiagonalLines();
+    lines.PaintDiagonalLines();
     return lines.CountIntersections();
 }
 
