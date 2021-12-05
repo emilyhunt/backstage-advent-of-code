@@ -1,12 +1,12 @@
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <regex>
 #include <sstream>
-#include <string>
 
 #include "Utilities/Utilities.h"
 
-std::string ReadTextFile(const char *fileName)
+std::string ReadTextFile(const char* fileName)
 {
     std::ifstream file(fileName);
     std::stringstream buffer;
@@ -35,4 +35,3 @@ void PrintNumbers(const std::vector<int>& numbers)
     std::copy(numbers.begin(), numbers.end(), iter);
     std::cout << std::endl;
 }
-
