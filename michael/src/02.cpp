@@ -14,7 +14,8 @@
 #include <tuple>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -116,13 +117,11 @@ ExtractInstructions(const std::string& text)
  *
  * @return int return 0 for normal running
  */
-int main()
+void Day2()
 {
     std::string text = ReadTextFile("02/data/input.txt");
     auto instructions = ExtractInstructions(text);
 
     std::cout << "Part 1: " << Part1(instructions) << "\n";
     std::cout << "Part 2: " << Part2(instructions) << "\n";
-
-    return 0;
 }

@@ -18,7 +18,8 @@
 #include <regex>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -339,13 +340,11 @@ int Part2(BingoGame& game)
  *
  * @return int return 0 for normal running
  */
-int main()
+void Day4()
 {
     std::string text = ReadTextFile("04/data/input.txt");
     BingoGame bingoGame(text);
 
     std::cout << "Part 1: " << Part1(bingoGame) << "\n";
     std::cout << "Part 2: " << Part2(bingoGame) << "\n";
-
-    return 0;
 }

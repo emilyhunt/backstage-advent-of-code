@@ -15,7 +15,8 @@
 #include <numeric>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -93,12 +94,10 @@ long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
  *
  * @return int return 0 for normal running
  */
-int main()
+void Day6()
 {
     std::vector<int> lanternfish = ReadNumbersFile<int>("06/data/input.txt");
 
     std::cout << "Part 1: " << SimulateLanternfish(lanternfish, 80) << "\n";
     std::cout << "Part 2: " << SimulateLanternfish(lanternfish, 256) << "\n";
-
-    return 0;
 }

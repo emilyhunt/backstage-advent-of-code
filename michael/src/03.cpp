@@ -17,7 +17,8 @@
 #include <tuple>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -248,13 +249,11 @@ std::vector<unsigned int> CountBits(const std::vector<std::string>& lines)
  *
  * @return int return 0 for normal running
  */
-int main()
+void Day3()
 {
     std::string text = ReadTextFile("03/data/input.txt");
     auto lines = ExtractLines(text);
 
     std::cout << "Part 1: " << Part1(lines) << "\n";
     std::cout << "Part 2: " << Part2(lines) << "\n";
-
-    return 0;
 }

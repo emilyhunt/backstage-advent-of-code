@@ -13,7 +13,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "Utilities/Utilities.h"
+#include "Utilities.h"
 
 /**
  * @brief Read file to a string

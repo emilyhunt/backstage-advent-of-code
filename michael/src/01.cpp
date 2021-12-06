@@ -13,7 +13,8 @@
 #include <numeric>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -64,14 +65,10 @@ int Part2(const std::vector<int>& numbers)
 
 /**
  * @brief Start of program execution
- *
- * @return int return 0 for normal running
  */
-int main()
+void Day1()
 {
     std::vector<int> numbers = ReadNumbersFile<int>("01/data/input.txt");
     std::cout << "Part 1: " << Part1(numbers) << "\n";
     std::cout << "Part 2: " << Part2(numbers) << "\n";
-
-    return 0;
 }

@@ -20,7 +20,8 @@
 #include <utility>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -385,13 +386,11 @@ int Part2(Lines& lines)
  *
  * @return int return 0 for normal running
  */
-int main()
+void Day5()
 {
     std::string text = ReadTextFile("05/data/input.txt");
     Lines lines(text);
 
     std::cout << "Part 1: " << Part1(lines) << "\n";
     std::cout << "Part 2: " << Part2(lines) << "\n";
-
-    return 0;
 }
