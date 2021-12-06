@@ -31,7 +31,7 @@ int Part2(const std::vector<int> &numbers)
 
 int main()
 {
-    std::vector<int> numbers = ReadNumbersFile("01/data/input.txt");
+    std::vector<int> numbers = ReadNumbersFile<int>("01/data/input.txt");
     std::cout << "Part 1: " << Part1(numbers) << "\n";
     std::cout << "Part 2: " << Part2(numbers) << "\n";
 
