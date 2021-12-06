@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -14,15 +15,43 @@
                             Function Definitions
 ================================================================================
 */
-int Part1(const std::vector<int> numbers) { return 0; }
+
+void Decrement(std::vector<int>& lanternfish)
+{
+    for (auto& fish : lanternfish)
+        fish--;
+}
+
+void SpawnLanternfish(std::vector<int>& lanternfish)
+{
+    std::size_t newFish = 0;
+    for (auto& fish : lanternfish)
+    {
+        if (fish < 0)
+        {
+            fish = 6;
+            newFish++;
+        }
+    }
+
+    lanternfish.insert(lanternfish.end(), newFish, 8);
+}
+
+int Part1(std::vector<int>& lanternfish)
+{
+    for (int i = 0; i < 80; i++)
+    {
+        Decrement(lanternfish);
+        SpawnLanternfish(lanternfish);
+    }
+    return lanternfish.size();
+}
 
 int main()
 {
-    std::vector<int> numbers = ReadNumbersFile("06/data/test.txt");
+    std::vector<int> lanternfish = ReadNumbersFile("06/data/input.txt");
 
-    PrintNumbers(numbers);
-
-    // std::cout << "Part 1: " << Part1(numbers) << "\n";
+    std::cout << "Part 1: " << Part1(lanternfish) << "\n";
 
     return 0;
 }
