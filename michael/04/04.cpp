@@ -34,8 +34,47 @@ private:
     std::array<std::array<int, 5>, 5> m_grid;
     std::array<std::array<bool, 5>, 5> m_blotted;
 
+    bool CheckRowsForLine() const
+    {
+        bool rowLineFound = false;
+
+        for (const auto& row : m_blotted)
+            if (std::all_of(row.begin(), row.end(), [](bool i) { return i; }))
+            {
+                rowLineFound = true;
+                break;
+            }
+
+        return rowLineFound;
+    }
+
+    bool CheckColsForLine() const
+    {
+        bool colLineFound = false;
+
+        for (size_t col = 0; col < m_blotted[0].size(); col++)
+        {
+            size_t sum = 0;
+            for (const auto& row : m_blotted)
+                if (row[col])
+                    sum++;
+
+            if (sum == m_blotted[col].size())
+            {
+                colLineFound = true;
+                break;
+            }
+        }
+
+        return colLineFound;
+    }
+
 public:
-    static int cardCount;
+    /**
+     * @brief Construct a new BingoCard object
+     *
+     * @param cardText text from input file to construct BingoCard
+     */
     BingoCard(const std::string& cardText) : m_grid{0}, m_blotted{false}
     {
         std::stringstream cardTextStream(cardText);
@@ -44,20 +83,26 @@ public:
                 cardTextStream >> num;
     }
 
+    /**
+     * @brief Blot all numbers matching the ball drawn in the BingoGame
+     *
+     * @param ball the number drawn in the BingoGame
+     */
     void Blot(int ball)
     {
         for (size_t i = 0; i < m_grid.size(); i++)
-        {
             for (size_t j = 0; j < m_grid[0].size(); j++)
-            {
                 if (m_grid[i][j] == ball)
-                {
                     m_blotted[i][j] = true;
-                }
-            }
-        }
     }
 
+    /**
+     * @brief Get the current score of the BingoCard
+     *
+     * Score is calculated by summing the unblotted numbers.
+     *
+     * @return int the calculated score
+     */
     int GetScore() const
     {
         int sum = 0;
@@ -68,25 +113,15 @@ public:
         return sum;
     }
 
+    /**
+     * @brief Check if won by line of numbers
+     *
+     * @return true BingoCard has won with a line
+     * @return false BingoCard has not won with a line yet
+     */
     bool CheckForLine() const
     {
-        // Check rows
-        for (const auto& row : m_blotted)
-            if (std::all_of(row.begin(), row.end(), [](bool i) { return i; }))
-                return true;
-
-        // Check cols
-        for (size_t col = 0; col < m_blotted[0].size(); col++)
-        {
-            size_t sum = 0;
-            for (const auto& row : m_blotted)
-                if (row[col])
-                    sum++;
-
-            if (sum == m_blotted[col].size())
-                return true;
-        }
-        return false;
+        return CheckRowsForLine() || CheckColsForLine();
     }
 
     friend std::ostream& operator<<(std::ostream& os, const BingoCard& card);
@@ -103,6 +138,11 @@ private:
     std::vector<int>::iterator m_ballsIter;
 
 public:
+    /**
+     * @brief Construct a new BingoGame object
+     *
+     * @param textFile Text file to use to construct BingoGame
+     */
     BingoGame(const std::string& textFile)
         : m_cards{}, m_balls{}, m_ballsIter(m_balls.begin())
     {
@@ -139,6 +179,11 @@ public:
         m_ballsIter = m_balls.begin();
     }
 
+    /**
+     * @brief Get the current ball drawn in the game
+     *
+     * @return int Ball number
+     */
     int GetCurrentBall() const { return *m_ballsIter; }
 
     /**
@@ -154,8 +199,16 @@ public:
         return 0;
     }
 
+    /**
+     * @brief Get the Cards Remaining object
+     *
+     * @return int Count of cards still in game
+     */
     int GetCardsRemaining() const { return m_cards.size(); }
 
+    /**
+     * @brief Draw the next number for the game
+     */
     void DrawNextBall()
     {
         m_ballsIter++;
@@ -163,12 +216,19 @@ public:
             throw std::out_of_range("Nobody won!");
     }
 
+    /**
+     * @brief Blot all cards with the current number
+     */
     void BlotCards()
     {
+        int currentNumber = GetCurrentBall();
         for (auto& card : m_cards)
-            card.Blot(*m_ballsIter);
+            card.Blot(currentNumber);
     }
 
+    /**
+     * @brief Remove any winners from the game
+     */
     void RemoveWinners()
     {
         m_cards.remove_if([](BingoCard card) { return card.CheckForLine(); });
@@ -202,7 +262,7 @@ std::ostream& operator<<(std::ostream& os, const BingoCard& card)
  * @brief BingoGame object representation to std::ostream
  *
  * @param os Output stream
- * @param card BingoGame to output
+ * @param bingoGame BingoGame to output
  * @return std::ostream& reference to modified output stream
  */
 std::ostream& operator<<(std::ostream& os, const BingoGame& bingoGame)
