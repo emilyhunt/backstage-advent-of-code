@@ -18,7 +18,8 @@
 #include <regex>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -335,17 +336,15 @@ int Part2(BingoGame& game)
 }
 
 /**
- * @brief Start of program execution
+ * @brief Day 4 of Advent of Code
  *
- * @return int return 0 for normal running
+ * @param fileName to read as puzzle input
  */
-int main()
+void Day4(const char* fileName)
 {
-    std::string text = ReadTextFile("04/data/input.txt");
+    std::string text = ReadTextFile(fileName);
     BingoGame bingoGame(text);
 
     std::cout << "Part 1: " << Part1(bingoGame) << "\n";
     std::cout << "Part 2: " << Part2(bingoGame) << "\n";
-
-    return 0;
 }

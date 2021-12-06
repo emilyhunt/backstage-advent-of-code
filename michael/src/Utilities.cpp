@@ -9,11 +9,12 @@
  *
  */
 
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-#include "Utilities/Utilities.h"
+#include "Utilities.h"
 
 /**
  * @brief Read file to a string
@@ -24,6 +25,8 @@
 std::string ReadTextFile(const char* fileName)
 {
     std::ifstream file(fileName);
+    if (!file)
+        throw std::invalid_argument("Filename is not valid");
     std::stringstream buffer;
     buffer << file.rdbuf();
     return buffer.str();

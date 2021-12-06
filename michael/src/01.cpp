@@ -13,7 +13,8 @@
 #include <numeric>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -63,15 +64,13 @@ int Part2(const std::vector<int>& numbers)
 }
 
 /**
- * @brief Start of program execution
+ * @brief Day 1 of Advent of Code
  *
- * @return int return 0 for normal running
+ * @param fileName to read as puzzle input
  */
-int main()
+void Day1(const char* fileName)
 {
-    std::vector<int> numbers = ReadNumbersFile<int>("01/data/input.txt");
+    std::vector<int> numbers = ReadNumbersFile<int>(fileName);
     std::cout << "Part 1: " << Part1(numbers) << "\n";
     std::cout << "Part 2: " << Part2(numbers) << "\n";
-
-    return 0;
 }

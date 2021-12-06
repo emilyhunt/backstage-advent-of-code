@@ -20,7 +20,8 @@
 #include <utility>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -381,17 +382,15 @@ int Part2(Lines& lines)
 }
 
 /**
- * @brief Start of program execution
+ * @brief Day 5 of Advent of Code
  *
- * @return int return 0 for normal running
+ * @param fileName to read as puzzle input
  */
-int main()
+void Day5(const char* fileName)
 {
-    std::string text = ReadTextFile("05/data/input.txt");
+    std::string text = ReadTextFile(fileName);
     Lines lines(text);
 
     std::cout << "Part 1: " << Part1(lines) << "\n";
     std::cout << "Part 2: " << Part2(lines) << "\n";
-
-    return 0;
 }

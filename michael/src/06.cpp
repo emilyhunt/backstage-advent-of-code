@@ -15,7 +15,8 @@
 #include <numeric>
 #include <vector>
 
-#include "Utilities/Utilities.h"
+#include "Days.h"
+#include "Utilities.h"
 
 /*
 ================================================================================
@@ -89,16 +90,14 @@ long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
 }
 
 /**
- * @brief Start of program execution
+ * @brief Day 6 of Advent of Code
  *
- * @return int return 0 for normal running
+ * @param fileName to read as puzzle input
  */
-int main()
+void Day6(const char* fileName)
 {
-    std::vector<int> lanternfish = ReadNumbersFile<int>("06/data/input.txt");
+    std::vector<int> lanternfish = ReadNumbersFile<int>(fileName);
 
     std::cout << "Part 1: " << SimulateLanternfish(lanternfish, 80) << "\n";
     std::cout << "Part 2: " << SimulateLanternfish(lanternfish, 256) << "\n";
-
-    return 0;
 }
