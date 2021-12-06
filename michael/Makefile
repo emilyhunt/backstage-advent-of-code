@@ -28,6 +28,9 @@ $(BIN): $(OBJ)
 	$(MAKE_DIR)
 	$(CXX) $(OBJ) -o $@
 
-.PHONY: clean
+.PHONY: clean docs
+docs: Doxyfile $(SRC)
+	doxygen Doxyfile
+
 clean:
 	$(RM) $(BIN) $(OBJ) $(DEPS)
