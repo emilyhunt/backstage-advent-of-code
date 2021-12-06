@@ -1,7 +1,7 @@
 /**
  * @file 06.cpp
  * @author Michael Otty (michael.otty@gmail.com)
- * @brief Day 6 of advent of code 2021, part 1 and 2
+ * @brief Advent of Code 2021 day 6
  * @version 1.0.0
  * @date 2021-12-06
  *
@@ -88,6 +88,11 @@ long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
     return CountFish(fishes);
 }
 
+/**
+ * @brief Start of program execution
+ *
+ * @return int return 0 for normal running
+ */
 int main()
 {
     std::vector<int> lanternfish = ReadNumbersFile<int>("06/data/input.txt");

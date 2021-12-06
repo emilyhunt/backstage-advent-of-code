@@ -1,13 +1,40 @@
+/**
+ * @file 01.cpp
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Advent of Code 2021 day 1
+ * @version 1.0.0
+ * @date 2021-12-01
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
+
 #include <iostream>
 #include <numeric>
 #include <vector>
 
 #include "Utilities/Utilities.h"
 
-int Part1(const std::vector<int> &numbers);
-int Part2(const std::vector<int> &numbers);
+/*
+================================================================================
+                            Function Declarations
+================================================================================
+*/
+int Part1(const std::vector<int>& numbers);
+int Part2(const std::vector<int>& numbers);
 
-int Part1(const std::vector<int> &numbers)
+/*
+================================================================================
+                            Function Definitions
+================================================================================
+*/
+/**
+ * @brief Solve part 1
+ *
+ * @param numbers File input numbers
+ * @return int Solution
+ */
+int Part1(const std::vector<int>& numbers)
 {
     std::vector<int> diff(numbers.size(), 0);
     std::adjacent_difference(numbers.begin(), numbers.end(), diff.begin());
@@ -20,7 +47,13 @@ int Part1(const std::vector<int> &numbers)
     return sum;
 }
 
-int Part2(const std::vector<int> &numbers)
+/**
+ * @brief Solve part 2
+ *
+ * @param numbers File input numbers
+ * @return int Solution
+ */
+int Part2(const std::vector<int>& numbers)
 {
     std::vector<int> windowed;
     for (size_t i = 0; i < numbers.size() - 2; i++)
@@ -29,6 +62,11 @@ int Part2(const std::vector<int> &numbers)
     return Part1(windowed);
 }
 
+/**
+ * @brief Start of program execution
+ *
+ * @return int return 0 for normal running
+ */
 int main()
 {
     std::vector<int> numbers = ReadNumbersFile<int>("01/data/input.txt");
