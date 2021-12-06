@@ -10,6 +10,8 @@ SRC = $(wildcard $(SRC_DIR)/*.$(SRC_EXT))
 OBJ = $(SRC:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/%.o)
 DEPS = $(OBJ:.o=.d)
 
+MAKE_DIR = @mkdir -p $(@D)
+
 .PHONY: all build
 all:
 	@$(MAKE) -j --no-print-directory build
@@ -19,9 +21,11 @@ build: $(BIN)
 -include $(DEPS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.$(SRC_EXT)
+	$(MAKE_DIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
 
 $(BIN): $(OBJ)
+	$(MAKE_DIR)
 	$(CXX) $(OBJ) -o $@
 
 .PHONY: clean
