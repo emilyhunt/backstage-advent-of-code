@@ -30,8 +30,7 @@ int main(int argc, char** argv)
         throw std::invalid_argument(
             "Too many args, format is ./AdventOfCode <dayId> <inputFile>");
 
-    int dayId = std::atoi(argv[1]);
-    switch (dayId)
+    switch (std::atoi(argv[1]))
     {
     case 1:
         Day1(argv[2]);
