@@ -1,7 +1,7 @@
 /**
  * @file 06.cpp
  * @author Michael Otty (michael.otty@gmail.com)
- * @brief Day 6 of advent of code 2021, part 1 and 2
+ * @brief Advent of Code 2021 day 6
  * @version 1.0.0
  * @date 2021-12-06
  *

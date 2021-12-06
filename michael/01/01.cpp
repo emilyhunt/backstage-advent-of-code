@@ -1,3 +1,14 @@
+/**
+ * @file 01.cpp
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Advent of Code 2021 day 1
+ * @version 1.0.0
+ * @date 2021-12-01
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include <iostream>
 #include <numeric>
 #include <vector>

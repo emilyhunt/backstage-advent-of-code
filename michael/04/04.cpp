@@ -1,3 +1,14 @@
+/**
+ * @file 04.cpp
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Advent of Code 2021 day 4
+ * @version 1.0.0
+ * @date 2021-12-04
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include <algorithm>
 #include <array>
 #include <cstdlib>

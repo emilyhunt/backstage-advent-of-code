@@ -1,3 +1,14 @@
+/**
+ * @file Utilities.h
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Advent of Code 2021 general utility headers
+ * @version 1.0.0
+ * @date 2021-12-01
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
+
 #include <regex>
 #include <string>
 #include <vector>
@@ -5,17 +16,15 @@
 #pragma once
 
 std::string ReadTextFile(const char* fileName);
-void PrintNumbers(const std::vector<int>& numbers);
+void PrintNumbers(const std::vector<int>& numbers, const char* sep);
 
-template <typename T>
-T Sum(const std::vector<T> numbers)
-{
-    T sum = 0;
-    for (T number : numbers)
-        sum += number;
-    return sum;
-}
-
+/**
+ * @brief Read numbers to a vector of numbers, can be spaced by anything
+ *
+ * @tparam T data will be read as this integer type
+ * @param fileName Path to file to read from
+ * @return std::vector<T> Vector of integer type
+ */
 template <typename T>
 std::vector<T> ReadNumbersFile(const char* fileName)
 {

@@ -1,3 +1,14 @@
+/**
+ * @file 05.cpp
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Advent of Code 2021 day 5
+ * @version 1.0.0
+ * @date 2021-12-05
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include <algorithm>
 #include <cmath>
 #include <functional>

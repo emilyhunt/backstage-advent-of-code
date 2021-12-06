@@ -1,3 +1,14 @@
+/**
+ * @file 03.cpp
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Advent of Code 2021 day 3
+ * @version 1.0.0
+ * @date 2021-12-04
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include <array>
 #include <cmath>
 #include <iostream>

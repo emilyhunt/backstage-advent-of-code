@@ -1,3 +1,14 @@
+/**
+ * @file 02.cpp
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Advent of Code 2021 day 2
+ * @version 1.0.0
+ * @date 2021-12-02
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include <iostream>
 #include <sstream>
 #include <tuple>
