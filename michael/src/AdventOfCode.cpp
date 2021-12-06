@@ -1,49 +1,64 @@
+/**
+ * @file AdventOfCode.cpp
+ * @author Michael Otty (michael.otty@gmail.com)
+ * @brief Program starts from here and calls the relavant function for each day
+ * @version 1.0.0
+ * @date 2021-12-06
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
+
 #include <exception>
-#include <iostream>
-#include <string>
-#include <vector>
 
 #include "Days.h"
 #include "Utilities.h"
 
+/**
+ * @brief Start of program execution
+ * 
+ * @param argc Count of arguments, includes the command running the program itself
+ * @param argv Arguments, first is always the program itself
+ * @return int Return 0 for normal exit
+ */
 int main(int argc, char** argv)
 {
-    std::vector<const char*> args;
-    for (int i = 0; i < argc; i++)
-        args.push_back(argv[i]);
+    if (argc < 3)
+        throw std::invalid_argument(
+            "Too few args, format is ./AdventOfCode <dayId> <inputFile>");
+    if (argc > 3)
+        throw std::invalid_argument(
+            "Too many args, format is ./AdventOfCode <dayId> <inputFile>");
 
-    if (args.size() != 3)
-        throw std::invalid_argument("Wrong number of args");
-
-    int dayId = std::atoi(args[1]);
+    int dayId = std::atoi(argv[1]);
     switch (dayId)
     {
     case 1:
-        Day1(args[2]);
+        Day1(argv[2]);
         break;
 
     case 2:
-        Day2(args[2]);
+        Day2(argv[2]);
         break;
 
     case 3:
-        Day3(args[2]);
+        Day3(argv[2]);
         break;
 
     case 4:
-        Day4(args[2]);
+        Day4(argv[2]);
         break;
 
     case 5:
-        Day5(args[2]);
+        Day5(argv[2]);
         break;
 
     case 6:
-        Day6(args[2]);
+        Day6(argv[2]);
         break;
 
     default:
-        throw std::invalid_argument(args[1]);
+        throw std::invalid_argument(argv[1]);
         break;
     }
 }

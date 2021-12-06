@@ -245,13 +245,13 @@ std::vector<unsigned int> CountBits(const std::vector<std::string>& lines)
 }
 
 /**
- * @brief Start of program execution
+ * @brief Day 3 of Advent of Code
  *
- * @return int return 0 for normal running
+ * @param fileName to read as puzzle input
  */
 void Day3(const char* fileName)
 {
-    std::string text = ReadTextFile("03/data/input.txt");
+    std::string text = ReadTextFile(fileName);
     auto lines = ExtractLines(text);
 
     std::cout << "Part 1: " << Part1(lines) << "\n";

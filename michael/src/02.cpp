@@ -113,13 +113,13 @@ ExtractInstructions(const std::string& text)
 }
 
 /**
- * @brief Start of program execution
+ * @brief Day 2 of Advent of Code
  *
- * @return int return 0 for normal running
+ * @param fileName to read as puzzle input
  */
 void Day2(const char* fileName)
 {
-    std::string text = ReadTextFile("02/data/input.txt");
+    std::string text = ReadTextFile(fileName);
     auto instructions = ExtractInstructions(text);
 
     std::cout << "Part 1: " << Part1(instructions) << "\n";

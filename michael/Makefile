@@ -12,7 +12,7 @@ DEPS = $(OBJ:.o=.d)
 
 .PHONY: all build
 all:
-	$(MAKE) -j build
+	@$(MAKE) -j --no-print-directory build
 
 build: $(BIN)
 

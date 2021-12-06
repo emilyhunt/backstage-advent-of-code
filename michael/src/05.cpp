@@ -382,13 +382,13 @@ int Part2(Lines& lines)
 }
 
 /**
- * @brief Start of program execution
+ * @brief Day 5 of Advent of Code
  *
- * @return int return 0 for normal running
+ * @param fileName to read as puzzle input
  */
 void Day5(const char* fileName)
 {
-    std::string text = ReadTextFile("05/data/input.txt");
+    std::string text = ReadTextFile(fileName);
     Lines lines(text);
 
     std::cout << "Part 1: " << Part1(lines) << "\n";
