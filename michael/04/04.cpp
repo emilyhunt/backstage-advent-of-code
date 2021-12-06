@@ -4,9 +4,9 @@
  * @brief Advent of Code 2021 day 4
  * @version 1.0.0
  * @date 2021-12-04
- * 
+ *
  * @copyright Copyright (c) 2021
- * 
+ *
  */
 
 #include <algorithm>
@@ -25,6 +25,9 @@
                                 Classes etc
 ================================================================================
 */
+/**
+ * @brief BingoCard to play bingo with
+ */
 class BingoCard
 {
 private:
@@ -89,6 +92,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const BingoCard& card);
 };
 
+/**
+ * @brief BingoGame to play bingo!
+ */
 class BingoGame
 {
 private:
@@ -172,6 +178,13 @@ public:
                                     const BingoGame& bingoGame);
 };
 
+/**
+ * @brief BingoCard object representation to std::ostream
+ *
+ * @param os Output stream
+ * @param card BingoCard to output
+ * @return std::ostream& reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const BingoCard& card)
 {
     os << "\n";
@@ -185,6 +198,13 @@ std::ostream& operator<<(std::ostream& os, const BingoCard& card)
     return os;
 }
 
+/**
+ * @brief BingoGame object representation to std::ostream
+ *
+ * @param os Output stream
+ * @param card BingoGame to output
+ * @return std::ostream& reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const BingoGame& bingoGame)
 {
     bool doneFirstRun = false;
@@ -215,6 +235,12 @@ int Part2(BingoGame& game);
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Solve part 1
+ *
+ * @param game bingo game to play
+ * @return int Solution
+ */
 int Part1(BingoGame& game)
 {
     game.BlotCards();
@@ -228,6 +254,12 @@ int Part1(BingoGame& game)
     return game.GetLineWinnerScore() * game.GetCurrentBall();
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param game bingo game to play
+ * @return int Solution
+ */
 int Part2(BingoGame& game)
 {
     game.RemoveWinners();
@@ -242,6 +274,11 @@ int Part2(BingoGame& game)
     return Part1(game);
 }
 
+/**
+ * @brief Start of program execution
+ *
+ * @return int return 0 for normal running
+ */
 int main()
 {
     std::string text = ReadTextFile("04/data/input.txt");

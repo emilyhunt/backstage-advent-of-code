@@ -9,6 +9,7 @@
  *
  */
 
+#include <cstdlib>
 #include <regex>
 #include <string>
 #include <vector>
@@ -39,4 +40,17 @@ std::vector<T> ReadNumbersFile(const char* fileName)
         numbers.push_back(std::atoi((*iter).str().c_str()));
 
     return numbers;
+}
+
+/**
+ * @brief Generic sign function, returns +1, 0 or -1
+ *
+ * @tparam T Type of input used
+ * @param val to find sign of
+ * @return int +1 for positive sign, -1 for negative sign, otherwise 0
+ */
+template <typename T>
+int Sign(T val)
+{
+    return (T(0) < val) - (val < T(0));
 }

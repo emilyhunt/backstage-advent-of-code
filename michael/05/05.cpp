@@ -4,9 +4,9 @@
  * @brief Advent of Code 2021 day 5
  * @version 1.0.0
  * @date 2021-12-05
- * 
+ *
  * @copyright Copyright (c) 2021
- * 
+ *
  */
 
 #include <algorithm>
@@ -27,10 +27,8 @@
                                 Classes etc
 ================================================================================
 */
-int Sign(int val) { return (0 < val) - (val < 0); }
-
 /**
- * @brief Point class
+ * @brief Any point on a line
  */
 class Point
 {
@@ -66,15 +64,26 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Point& point);
 };
 
+namespace std
+{
+/**
+ * @brief Hash function for Point
+ *
+ * @tparam unused in this case
+ */
 template <>
-struct std::hash<Point>
+struct hash<Point>
 {
     std::size_t operator()(const Point& point) const
     {
         return std::hash<std::string>{}(point.str());
     }
 };
+}
 
+/**
+ * @brief A line of points
+ */
 class Line
 {
 private:
@@ -90,10 +99,7 @@ public:
                || (m_start.GetY() == m_end.GetY());
     }
 
-    bool IsDiagonal() const
-    {
-        return !IsHorizontalOrVertical();
-    }
+    bool IsDiagonal() const { return !IsHorizontalOrVertical(); }
 
     std::vector<Point> GetAllPoints() const
     {
@@ -102,8 +108,8 @@ public:
         auto [x1, y1] = m_start.GetCoord();
         auto [x2, y2] = m_end.GetCoord();
 
-        int xDir = Sign(x2 - x1);
-        int yDir = Sign(y2 - y1);
+        int xDir = Sign<int>(x2 - x1);
+        int yDir = Sign<int>(y2 - y1);
 
         while (!((x1 == x2) && (y1 == y2)))
         {
@@ -118,6 +124,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Line& line);
 };
 
+/**
+ * @brief A collection of horizontal, vertical and diagonal lines
+ */
 class Lines
 {
 private:
@@ -196,12 +205,26 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Lines& lines);
 };
 
+/**
+ * @brief Point object representation to std::ostream
+ *
+ * @param os Output stream
+ * @param card Point to output
+ * @return std::ostream& reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const Point& point)
 {
     os << point.m_x << "," << point.m_y;
     return os;
 }
 
+/**
+ * @brief Line object representation to std::ostream
+ *
+ * @param os Output stream
+ * @param card Line to output
+ * @return std::ostream& reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const Line& line)
 {
     os << line.m_start << " -> " << line.m_end << " : "
@@ -209,6 +232,13 @@ std::ostream& operator<<(std::ostream& os, const Line& line)
     return os;
 }
 
+/**
+ * @brief Lines object representation to std::ostream
+ *
+ * @param os Output stream
+ * @param card Lines to output
+ * @return std::ostream& reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const Lines& lines)
 {
     for (const auto& line : lines.m_lines)
@@ -221,26 +251,43 @@ std::ostream& operator<<(std::ostream& os, const Lines& lines)
                             Function Declarations
 ================================================================================
 */
-int Part1(const Lines& lines);
-int Part2(const Lines& lines);
+int Part1(Lines& lines);
+int Part2(Lines& lines);
 
 /*
 ================================================================================
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Solve part 1
+ *
+ * @param lines lines object to use
+ * @return int Solution
+ */
 int Part1(Lines& lines)
 {
     lines.PaintHorizontalAndVerticalLines();
     return lines.CountIntersections();
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param lines lines object to use
+ * @return int Solution
+ */
 int Part2(Lines& lines)
 {
     lines.PaintDiagonalLines();
     return lines.CountIntersections();
 }
 
+/**
+ * @brief Start of program execution
+ *
+ * @return int return 0 for normal running
+ */
 int main()
 {
     std::string text = ReadTextFile("05/data/input.txt");

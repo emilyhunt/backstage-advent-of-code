@@ -88,6 +88,11 @@ long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
     return CountFish(fishes);
 }
 
+/**
+ * @brief Start of program execution
+ *
+ * @return int return 0 for normal running
+ */
 int main()
 {
     std::vector<int> lanternfish = ReadNumbersFile<int>("06/data/input.txt");
