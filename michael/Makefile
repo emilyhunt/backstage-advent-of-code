@@ -1,28 +1,29 @@
-UTILS = Utilities/Utilities.o
-INCLUDE = -I.
-FLAGS = -Wall -Wextra -Wpedantic -std=c++17 -g
-OUTPUT = 01/01.out 02/02.out 03/03.out 04/04.out 05/05.out 06/06.out
+BIN_DIR := bin
+OBJ_DIR := obj
+SRC_DIR := src
+SRC_EXT := cpp
+BIN := $(BIN_DIR)/AdventOfCode
+INCLUDES := -I.
+CXXSTD := -std=c++17
+CXXFLAGS := -Wall -Wextra -Wpedantic $(CXXSTD) -MMD -g
+SRC = $(wildcard $(SRC_DIR)/*.$(SRC_EXT))
+OBJ = $(SRC:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/%.o)
+DEPS = $(OBJ:.o=.d)
 
-.PHONY: build
-build: $(OUTPUT)
+.PHONY: all build
+all:
+	$(MAKE) -j build
 
-01/01.out: 01/01.cpp $(UTILS)
-	g++ $^ $(FLAGS) $(INCLUDE) -o $@
+build: $(BIN)
 
-02/02.out: 02/02.cpp $(UTILS)
-	g++ $^ $(FLAGS) $(INCLUDE) -o $@
+-include $(DEPS)
 
-03/03.out: 03/03.cpp $(UTILS)
-	g++ $^ $(FLAGS) $(INCLUDE) -o $@
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.$(SRC_EXT)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
 
-04/04.out: 04/04.cpp $(UTILS)
-	g++ $^ $(FLAGS) $(INCLUDE) -o $@
+$(BIN): $(OBJ)
+	$(CXX) $(OBJ) -o $@
 
-05/05.out: 05/05.cpp $(UTILS)
-	g++ $^ $(FLAGS) $(INCLUDE) -o $@
-
-06/06.out: 06/06.cpp $(UTILS)
-	g++ $^ $(FLAGS) $(INCLUDE) -o $@
-
-Utilities/Utilities.o: Utilities/Utilities.cpp Utilities/Utilities.h
-	g++ $< $(FLAGS) $(INCLUDE) -c -o $@
+.PHONY: clean
+clean:
+	$(RM) $(BIN) $(OBJ) $(DEPS)
