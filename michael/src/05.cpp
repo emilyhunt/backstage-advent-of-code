@@ -386,7 +386,7 @@ int Part2(Lines& lines)
  *
  * @return int return 0 for normal running
  */
-void Day5()
+void Day5(const char* fileName)
 {
     std::string text = ReadTextFile("05/data/input.txt");
     Lines lines(text);

@@ -94,7 +94,7 @@ long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
  *
  * @return int return 0 for normal running
  */
-void Day6()
+void Day6(const char* fileName)
 {
     std::vector<int> lanternfish = ReadNumbersFile<int>("06/data/input.txt");
 

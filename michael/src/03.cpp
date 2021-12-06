@@ -249,7 +249,7 @@ std::vector<unsigned int> CountBits(const std::vector<std::string>& lines)
  *
  * @return int return 0 for normal running
  */
-void Day3()
+void Day3(const char* fileName)
 {
     std::string text = ReadTextFile("03/data/input.txt");
     auto lines = ExtractLines(text);

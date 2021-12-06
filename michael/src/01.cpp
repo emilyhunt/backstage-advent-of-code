@@ -66,7 +66,7 @@ int Part2(const std::vector<int>& numbers)
 /**
  * @brief Start of program execution
  */
-void Day1()
+void Day1(const char* fileName)
 {
     std::vector<int> numbers = ReadNumbersFile<int>("01/data/input.txt");
     std::cout << "Part 1: " << Part1(numbers) << "\n";

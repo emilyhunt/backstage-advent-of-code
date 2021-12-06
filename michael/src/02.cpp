@@ -117,7 +117,7 @@ ExtractInstructions(const std::string& text)
  *
  * @return int return 0 for normal running
  */
-void Day2()
+void Day2(const char* fileName)
 {
     std::string text = ReadTextFile("02/data/input.txt");
     auto instructions = ExtractInstructions(text);

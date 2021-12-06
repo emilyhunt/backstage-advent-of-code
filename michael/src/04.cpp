@@ -340,7 +340,7 @@ int Part2(BingoGame& game)
  *
  * @return int return 0 for normal running
  */
-void Day4()
+void Day4(const char* fileName)
 {
     std::string text = ReadTextFile("04/data/input.txt");
     BingoGame bingoGame(text);
