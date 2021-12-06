@@ -37,8 +37,19 @@ private:
     int m_y;
 
 public:
+    /**
+     * @brief Construct a new Point object
+     *
+     * @param x Coordinate on the x axis
+     * @param y Coordinate on the y axis
+     */
     Point(int x, int y) : m_x(x), m_y(y) {}
 
+    /**
+     * @brief String representation of point
+     *
+     * @return std::string representation of point in format "x,y"
+     */
     std::string str() const
     {
         std::stringstream ss;
@@ -46,15 +57,45 @@ public:
         return ss.str();
     }
 
+    /**
+     * @brief Equality operator for comparing Point objects
+     *
+     * @param other Point to compare to
+     * @return true Point coordinates match
+     * @return false Point coordinates don't match
+     */
     bool operator==(const Point& other) const
     {
         return (this->m_x == other.m_x) && (this->m_y == other.m_y);
     }
 
+    /**
+     * @brief Get the x coordinate
+     *
+     * @return int X coordinate
+     */
     int GetX() const { return m_x; }
+
+    /**
+     * @brief Get the y coordinate
+     *
+     * @return int Y coordinate
+     */
     int GetY() const { return m_y; }
+
+    /**
+     * @brief Get the Coordinate as a pair
+     *
+     * @return std::pair<int, int> x then y pair
+     */
     std::pair<int, int> GetCoord() const { return std::make_pair(m_x, m_y); }
 
+    /**
+     * @brief Distance between two points
+     *
+     * @param other to measure the distance to
+     * @return int Chebyshev distance from this point to other point
+     */
     int DistanceTo(const Point& other) const
     {
         return std::max(std::abs(this->m_x - other.m_x),
@@ -68,12 +109,16 @@ namespace std
 {
 /**
  * @brief Hash function for Point
- *
- * @tparam unused in this case
  */
 template <>
 struct hash<Point>
 {
+    /**
+     * @brief Call operator for hash object, for use with std::unordered_map
+     *
+     * @param point point object to hash
+     * @return std::size_t hash of object
+     */
     std::size_t operator()(const Point& point) const
     {
         return std::hash<std::string>{}(point.str());
@@ -91,16 +136,39 @@ private:
     Point m_end;
 
 public:
+    /**
+     * @brief Construct a new Line object
+     *
+     * @param start the first point of the line of points
+     * @param end the last point of the line of points
+     */
     Line(const Point& start, const Point& end) : m_start(start), m_end(end) {}
 
+    /**
+     * @brief Finds if a point is horizontal or vertical, i.e not diagonal
+     *
+     * @return true if horizontal or vertical
+     * @return false if diagonal
+     */
     bool IsHorizontalOrVertical() const
     {
         return (m_start.GetX() == m_end.GetX())
                || (m_start.GetY() == m_end.GetY());
     }
 
+    /**
+     * @brief Finds if a point is diagonal, i.e not horizontal or vertical
+     *
+     * @return true if diagonal
+     * @return false if horizontal or vertical
+     */
     bool IsDiagonal() const { return !IsHorizontalOrVertical(); }
 
+    /**
+     * @brief Get the all Points on the line
+     *
+     * @return std::vector<Point> the points as a vector of Point objects
+     */
     std::vector<Point> GetAllPoints() const
     {
         std::vector<Point> points;
@@ -133,6 +201,11 @@ private:
     std::vector<Line> m_lines;
     std::unordered_map<Point, int> m_grid;
 
+    /**
+     * @brief Paint the line onto the grid
+     *
+     * @param line to paint
+     */
     void PaintLine(const Line& line)
     {
         auto points = line.GetAllPoints();
@@ -140,6 +213,11 @@ private:
             PaintPoint(point);
     }
 
+    /**
+     * @brief Paint a point onto grid
+     *
+     * @param point location to paint
+     */
     void PaintPoint(const Point& point)
     {
         if (m_grid.count(point))
@@ -149,6 +227,11 @@ private:
     }
 
 public:
+    /**
+     * @brief Construct a new Lines object
+     *
+     * @param text file to build lines from
+     */
     Lines(const std::string& text) : m_lines(), m_grid()
     {
         std::regex lineRegex("(\\d+),(\\d+) -> (\\d+),(\\d+)");
@@ -167,12 +250,20 @@ public:
         }
     }
 
+    /**
+     * @brief Print painted grid locations
+     */
     void PrintGrid() const
     {
         for (const auto& item : m_grid)
             std::cout << item.first << ": " << item.second << "\n";
     }
 
+    /**
+     * @brief Count how many intersections of lines there currently are
+     *
+     * @return int amount of intersections
+     */
     int CountIntersections() const
     {
         return std::count_if(m_grid.begin(), m_grid.end(),
@@ -180,6 +271,9 @@ public:
                              { return i.second > 1; });
     }
 
+    /**
+     * @brief Paint only horizontal and vertical lines
+     */
     void PaintHorizontalAndVerticalLines()
     {
         for (const auto& line : m_lines)
@@ -191,6 +285,9 @@ public:
         }
     }
 
+    /**
+     * @brief Paint only diagonal lines
+     */
     void PaintDiagonalLines()
     {
         for (const auto& line : m_lines)
@@ -209,7 +306,7 @@ public:
  * @brief Point object representation to std::ostream
  *
  * @param os Output stream
- * @param card Point to output
+ * @param point Point to output
  * @return std::ostream& reference to modified output stream
  */
 std::ostream& operator<<(std::ostream& os, const Point& point)
@@ -222,7 +319,7 @@ std::ostream& operator<<(std::ostream& os, const Point& point)
  * @brief Line object representation to std::ostream
  *
  * @param os Output stream
- * @param card Line to output
+ * @param line Line to output
  * @return std::ostream& reference to modified output stream
  */
 std::ostream& operator<<(std::ostream& os, const Line& line)
@@ -236,7 +333,7 @@ std::ostream& operator<<(std::ostream& os, const Line& line)
  * @brief Lines object representation to std::ostream
  *
  * @param os Output stream
- * @param card Lines to output
+ * @param lines Lines to output
  * @return std::ostream& reference to modified output stream
  */
 std::ostream& operator<<(std::ostream& os, const Lines& lines)
