@@ -20,16 +20,12 @@
                             Function Declarations
 ================================================================================
 */
-int Part1();
-int Part2();
 
 /*
 ================================================================================
                             Function Definitions
 ================================================================================
 */
-int Part1() { return 0; }
-int Part2() { return 0; }
 
 /**
  * @brief Day 7 of Advent of Code
@@ -38,9 +34,5 @@ int Part2() { return 0; }
  */
 void Day7(const char* fileName)
 {
-    std::string text = ReadTextFile(fileName);
-    std::cout << text << "\n";
-
-    std::cout << "Part 1: " << Part1() << "\n";
-    std::cout << "Part 2: " << Part2() << "\n";
+    std::cout << "Part 1 and 2: https://docs.google.com/spreadsheets/d/1Jn2FnVbrSW1sGMGhrnGRo5Xz2PUrvFs-bKzXlFLDRAw/edit?usp=sharing" << "\n";
 }
