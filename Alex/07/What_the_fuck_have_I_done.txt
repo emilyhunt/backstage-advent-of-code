@@ -1,0 +1,32 @@
+Hey peeps.
+
+Basically my approach was generate all the averages I could think of.
+Pick the most sensible one and do a local optimisation using that as an initial value.
+
+The averages I calculated were:
+mean
+root mean square
+mean root square (cos we love being silly)
+Geometric Mean
+
+I had some additional fun in that geometric means don't deal with zero very well.
+So I tried 3 different methods of handling this.
+1) Add one to all values, calculate the GM, minus one from the GM
+2) Just ignore zeros yay
+3) Just pretend all zeros are one
+I then calcualted the mean of the geometric means (here on MoGMs)
+
+I have tried both part A and B with each initial conditions for lols. Here are the times and number of optimisation loops needed.
+
+Part A:
+
+mean		152 loops		1.72s
+RMS			324 loops		1.76s
+MRS			325 loops		1.78s
+MoGMs		85 loops		1.76s
+
+Part B:
+mean		1 loop			1.77s
+RMS			173 loops		5.38s
+MRS			476 loops		11.07s
+MoGMs		236 loops		6.11s
