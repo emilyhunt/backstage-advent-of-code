@@ -11,7 +11,6 @@
 
 #include <exception>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 
 #include "Utilities.h"
@@ -26,7 +25,7 @@ std::string ReadTextFile(const char* fileName)
 {
     std::ifstream file(fileName);
     if (!file)
-        throw std::invalid_argument("Filename is not valid");
+        throw std::invalid_argument(fileName);
     std::stringstream buffer;
     buffer << file.rdbuf();
     return buffer.str();
@@ -40,7 +39,5 @@ std::string ReadTextFile(const char* fileName)
  */
 void PrintNumbers(const std::vector<int>& numbers, const char* sep = " ")
 {
-    std::ostream_iterator<int> iter(std::cout, sep);
-    std::copy(numbers.begin(), numbers.end(), iter);
-    std::cout << std::endl;
+    PrintVector<int>(numbers, sep);
 }
