@@ -10,6 +10,7 @@
  */
 
 #include <cstdlib>
+#include <iostream>
 #include <regex>
 #include <string>
 #include <vector>
@@ -40,6 +41,37 @@ std::vector<T> ReadNumbersFile(const char* fileName)
         numbers.push_back(std::atoi((*iter).str().c_str()));
 
     return numbers;
+}
+
+/**
+ * @brief Prints all elements of a vector
+ *
+ * @tparam T any ostream compatible type
+ * @param vec vector of printable elements
+ * @param sep Seperator between elements
+ */
+template <typename T>
+void PrintVector(const std::vector<T>& vec, const char* sep = " ")
+{
+    for (const auto& item : vec)
+        std::cout << item << sep;
+    std::cout << "\n";
+}
+
+/**
+ * @brief Print a map like a python dict
+ * 
+ * @tparam T1 unordered_map key type
+ * @tparam T2 unordered_map val type
+ * @param map The map to print
+ */
+template<typename T1, typename T2>
+void PrintMap(const std::unordered_map<T1, T2>& map)
+{
+    std::cout << "{";
+    for (const auto& [key, val] : map)
+        std::cout << key << ": " << val << ", ";
+    std::cout << "}\n";
 }
 
 /**

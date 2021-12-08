@@ -11,7 +11,6 @@
 
 #include <exception>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 
 #include "Utilities.h"
@@ -40,7 +39,5 @@ std::string ReadTextFile(const char* fileName)
  */
 void PrintNumbers(const std::vector<int>& numbers, const char* sep = " ")
 {
-    std::ostream_iterator<int> iter(std::cout, sep);
-    std::copy(numbers.begin(), numbers.end(), iter);
-    std::cout << std::endl;
+    PrintVector<int>(numbers, sep);
 }
