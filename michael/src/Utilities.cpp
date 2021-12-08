@@ -26,7 +26,7 @@ std::string ReadTextFile(const char* fileName)
 {
     std::ifstream file(fileName);
     if (!file)
-        throw std::invalid_argument("Filename is not valid");
+        throw std::invalid_argument(fileName);
     std::stringstream buffer;
     buffer << file.rdbuf();
     return buffer.str();
