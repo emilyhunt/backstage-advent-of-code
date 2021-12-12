@@ -41,3 +41,36 @@ void PrintNumbers(const std::vector<int>& numbers, const char* sep = " ")
 {
     PrintVector<int>(numbers, sep);
 }
+
+/**
+ * @brief Split lines
+ * 
+ * @param text String to split
+ * @return std::vector<std::string> Split into vector of strings
+ */
+std::vector<std::string> SplitLines(const std::string& text)
+{
+    return Split(text, "\n");
+}
+
+/**
+ * @brief Split a string by a delimiter
+ * 
+ * @param text The string to split
+ * @param delim Delimiter
+ * @return std::vector<std::string> Split into vector of strings
+ */
+std::vector<std::string> Split(const std::string& text,
+                               const std::string& delim)
+{
+    std::vector<std::string> splitString;
+    size_t last = 0;
+    size_t next = 0;
+    while ((next = text.find(delim, last)) != std::string::npos)
+    {
+        splitString.push_back(text.substr(last, next - last));
+        last = next + 1;
+    }
+    splitString.push_back(text.substr(text.rfind("\n") + 1, text.length()));
+    return splitString;
+}
