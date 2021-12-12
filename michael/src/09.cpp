@@ -64,7 +64,7 @@ int GetRiskLevel(const std::vector<std::vector<int>>& numberGrid, size_t row,
     return numberGrid[row][col] + 1;
 }
 
-int Part1(const std::vector<std::vector<int>>& numberGrid)
+static int Part1(const std::vector<std::vector<int>>& numberGrid)
 {
     int sum = 0;
     const size_t lastCol = numberGrid[0].size() - 1;
@@ -109,7 +109,7 @@ int Part1(const std::vector<std::vector<int>>& numberGrid)
     for (size_t col = 1; col < numberGrid[0].size() - 1; col++)
         if (numberGrid[lastRow][col] < numberGrid[lastRow][col - 1]
             && numberGrid[lastRow][col] < numberGrid[lastRow][col + 1]
-            && numberGrid[lastRow][col] < numberGrid[lastRow-1][col])
+            && numberGrid[lastRow][col] < numberGrid[lastRow - 1][col])
             sum += GetRiskLevel(numberGrid, lastRow, col);
 
     // Insides
@@ -124,6 +124,8 @@ int Part1(const std::vector<std::vector<int>>& numberGrid)
     return sum;
 }
 
+static int Part2(const std::vector<std::vector<int>>& numberGrid) { return 0; }
+
 /**
  * @brief Day 9 of Advent of Code
  *
@@ -134,4 +136,5 @@ void Day9(const char* fileName)
     std::string text = ReadTextFile(fileName);
     auto numberGrid = ParseTextToNumberGrid(text);
     std::cout << "Part 1: " << Part1(numberGrid) << "\n";
+    std::cout << "Part 2: " << Part2(numberGrid) << "\n";
 }
