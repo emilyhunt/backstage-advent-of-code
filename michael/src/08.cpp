@@ -255,7 +255,7 @@ void Day8(const char* fileName)
 {
     auto t0 = std::chrono::high_resolution_clock::now();
     std::string text = ReadTextFile(fileName);
-    auto t1 = std::chrono::high_resolution_clock::now();
+    // auto t1 = std::chrono::high_resolution_clock::now();
     std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>
         data = ParseSevenSegmentData(text);
     auto t2 = std::chrono::high_resolution_clock::now();

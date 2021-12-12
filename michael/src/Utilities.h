@@ -19,6 +19,9 @@
 
 std::string ReadTextFile(const char* fileName);
 void PrintNumbers(const std::vector<int>& numbers, const char* sep);
+std::vector<std::string> SplitLines(const std::string& text);
+std::vector<std::string> Split(const std::string& text,
+                               const std::string& delim);
 
 /**
  * @brief Read numbers to a vector of numbers, can be spaced by anything
@@ -60,12 +63,12 @@ void PrintVector(const std::vector<T>& vec, const char* sep = " ")
 
 /**
  * @brief Print a map like a python dict
- * 
+ *
  * @tparam T1 unordered_map key type
  * @tparam T2 unordered_map val type
  * @param map The map to print
  */
-template<typename T1, typename T2>
+template <typename T1, typename T2>
 void PrintMap(const std::unordered_map<T1, T2>& map)
 {
     std::cout << "{";
