@@ -9,7 +9,10 @@
  *
  */
 
+#include <array>
 #include <iostream>
+#include <queue>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -64,64 +67,90 @@ int GetRiskLevel(const std::vector<std::vector<int>>& numberGrid, size_t row,
     return numberGrid[row][col] + 1;
 }
 
-int Part1(const std::vector<std::vector<int>>& numberGrid)
+static int Part1(const std::vector<std::vector<int>>& numberGrid)
 {
     int sum = 0;
-    const size_t lastCol = numberGrid[0].size() - 1;
-    const size_t lastRow = numberGrid.size() - 1;
 
-    // Corners
-    if (numberGrid[0][0] < numberGrid[0][1]
-        && numberGrid[0][0] < numberGrid[1][0])
-        sum += GetRiskLevel(numberGrid, 0, 0);
+    const size_t numRows = numberGrid.size();
+    const size_t numCols = numberGrid[0].size();
 
-    if (numberGrid[0][lastCol] < numberGrid[0][lastCol - 1]
-        && numberGrid[0][lastCol] < numberGrid[1][lastCol])
-        sum += GetRiskLevel(numberGrid, 0, lastCol);
+    const std::array rowSearch = {0, 1, 0, -1};
+    const std::array colSearch = {1, 0, -1, 0};
 
-    if (numberGrid[lastRow][0] < numberGrid[lastRow][1]
-        && numberGrid[lastRow][0] < numberGrid[lastRow - 1][0])
-        sum += GetRiskLevel(numberGrid, lastRow, 0);
-
-    if (numberGrid[lastRow][lastCol] < numberGrid[lastRow][lastCol - 1]
-        && numberGrid[lastRow][lastCol] < numberGrid[lastRow - 1][lastCol])
-        sum += GetRiskLevel(numberGrid, lastRow, lastCol);
-
-    // Edges
-    for (size_t row = 1; row < numberGrid.size() - 1; row++)
-        if (numberGrid[row][0] < numberGrid[row - 1][0]
-            && numberGrid[row][0] < numberGrid[row + 1][0]
-            && numberGrid[row][0] < numberGrid[row][1])
-            sum += GetRiskLevel(numberGrid, row, 0);
-
-    for (size_t row = 1; row < numberGrid.size() - 1; row++)
-        if (numberGrid[row][lastCol] < numberGrid[row - 1][lastCol]
-            && numberGrid[row][lastCol] < numberGrid[row + 1][lastCol]
-            && numberGrid[row][lastCol] < numberGrid[row][lastCol - 1])
-            sum += GetRiskLevel(numberGrid, row, lastCol);
-
-    for (size_t col = 1; col < numberGrid[0].size() - 1; col++)
-        if (numberGrid[0][col] < numberGrid[0][col - 1]
-            && numberGrid[0][col] < numberGrid[0][col + 1]
-            && numberGrid[0][col] < numberGrid[1][col])
-            sum += GetRiskLevel(numberGrid, 0, col);
-
-    for (size_t col = 1; col < numberGrid[0].size() - 1; col++)
-        if (numberGrid[lastRow][col] < numberGrid[lastRow][col - 1]
-            && numberGrid[lastRow][col] < numberGrid[lastRow][col + 1]
-            && numberGrid[lastRow][col] < numberGrid[lastRow-1][col])
-            sum += GetRiskLevel(numberGrid, lastRow, col);
-
-    // Insides
-    for (size_t row = 1; row < numberGrid.size() - 1; row++)
-        for (size_t col = 1; col < numberGrid[0].size() - 1; col++)
-            if (numberGrid[row][col] < numberGrid[row - 1][col]
-                && numberGrid[row][col] < numberGrid[row + 1][col]
-                && numberGrid[row][col] < numberGrid[row][col - 1]
-                && numberGrid[row][col] < numberGrid[row][col + 1])
+    for (size_t row = 0; row < numRows; row++)
+    {
+        for (size_t col = 0; col < numCols; col++)
+        {
+            bool isLowPoint = true;
+            for (size_t k = 0; k < rowSearch.size(); k++)
+            {
+                int searchRow = row + rowSearch[k];
+                int searchCol = col + colSearch[k];
+                if ((searchRow >= 0) && (searchRow < static_cast<int>(numRows))
+                    && (searchCol >= 0)
+                    && (searchCol < static_cast<int>(numCols)))
+                    if (numberGrid[row][col]
+                        >= numberGrid[searchRow][searchCol])
+                        isLowPoint = false;
+            }
+            if (isLowPoint)
                 sum += GetRiskLevel(numberGrid, row, col);
+        }
+    }
 
     return sum;
+}
+
+static int Part2(const std::vector<std::vector<int>>& numberGrid)
+{
+    const size_t numRows = numberGrid.size();
+    const size_t numCols = numberGrid[0].size();
+
+    const std::array rowSearch = {0, 1, 0, -1};
+    const std::array colSearch = {1, 0, -1, 0};
+
+    std::vector<size_t> basinSizes;
+    std::set<std::pair<int, int>> visited;
+
+    for (size_t row = 0; row < numRows; row++)
+    {
+        for (size_t col = 0; col < numCols; col++)
+        {
+            if (!visited.count(std::make_pair(row, col))
+                && (numberGrid[row][col] != 9))
+            {
+                size_t basinSize = 0;
+                std::queue<std::pair<int, int>> frontier;
+                frontier.push(std::make_pair(row, col));
+                while (frontier.size())
+                {
+                    auto currentCoord = frontier.front();
+                    frontier.pop();
+                    if (visited.count(currentCoord))
+                        continue;
+                    visited.insert(currentCoord);
+                    basinSize++;
+                    for (size_t k = 0; k < rowSearch.size(); k++)
+                    {
+                        int searchRow = currentCoord.first + rowSearch[k];
+                        int searchCol = currentCoord.second + colSearch[k];
+                        if ((searchRow >= 0)
+                            && (searchRow < static_cast<int>(numRows))
+                            && (searchCol >= 0)
+                            && (searchCol < static_cast<int>(numCols)))
+                            if (numberGrid[searchRow][searchCol] != 9)
+                            {
+                                frontier.push(
+                                    std::make_pair(searchRow, searchCol));
+                            }
+                    }
+                }
+                basinSizes.push_back(basinSize);
+            }
+        }
+    }
+    std::sort(basinSizes.rbegin(), basinSizes.rend());
+    return basinSizes[0] * basinSizes[1] * basinSizes[2];
 }
 
 /**
@@ -134,4 +163,5 @@ void Day9(const char* fileName)
     std::string text = ReadTextFile(fileName);
     auto numberGrid = ParseTextToNumberGrid(text);
     std::cout << "Part 1: " << Part1(numberGrid) << "\n";
+    std::cout << "Part 2: " << Part2(numberGrid) << "\n";
 }
