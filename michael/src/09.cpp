@@ -30,7 +30,12 @@
                             Function Definitions
 ================================================================================
 */
-
+/**
+ * @brief Convert text to number grid
+ *
+ * @param text to be converted
+ * @return std::vector<std::vector<int>> 2D vector of ints from text file data
+ */
 std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text)
 {
     std::vector<std::vector<int>> numberGrid;
@@ -49,6 +54,13 @@ std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text)
     return numberGrid;
 }
 
+/**
+ * @brief Print number grid vector in human readable format
+ *
+ * Should match the input file on output.
+ *
+ * @param numberGrid Data to be printed
+ */
 void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid)
 {
     for (const auto& line : numberGrid)
@@ -61,6 +73,14 @@ void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid)
     }
 }
 
+/**
+ * @brief Get the Risk Level on the grid at a given location (elevation + 1)
+ *
+ * @param numberGrid representing ground elevation
+ * @param row row to check
+ * @param col col to check
+ * @return int value at location + 1
+ */
 int GetRiskLevel(const std::vector<std::vector<int>>& numberGrid, size_t row,
                  size_t col)
 {

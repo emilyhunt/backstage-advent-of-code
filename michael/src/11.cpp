@@ -30,6 +30,13 @@
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Get the Input Data from the text file
+ *
+ * @param text from the text file
+ * @return std::array<std::array<int, 10>, 10> Fixed array of squid energy
+ * levels
+ */
 std::array<std::array<int, 10>, 10> GetInputData(const std::string text)
 {
     std::array<std::array<int, 10>, 10> data;
@@ -49,6 +56,11 @@ std::array<std::array<int, 10>, 10> GetInputData(const std::string text)
     return data;
 }
 
+/**
+ * @brief Print squid energy level array
+ *
+ * @param data energy levels of the squids in a fixed array grid
+ */
 void PrintData(const std::array<std::array<int, 10>, 10>& data)
 {
     for (const auto& row : data)
@@ -60,6 +72,11 @@ void PrintData(const std::array<std::array<int, 10>, 10>& data)
     std::cout << "\n";
 }
 
+/**
+ * @brief Increment all squid energy levels in the grid
+ *
+ * @param grid energy levels of the squids in a fixed array grid
+ */
 void IncrementGrid(std::array<std::array<int, 10>, 10>& grid)
 {
     for (auto& row : grid)
@@ -67,6 +84,12 @@ void IncrementGrid(std::array<std::array<int, 10>, 10>& grid)
             element++;
 }
 
+/**
+ * @brief Flash all squids that can be
+ *
+ * @param grid energy levels of the squids in a fixed array grid
+ * @return size_t Amount of squids that flashed
+ */
 size_t Flash(std::array<std::array<int, 10>, 10>& grid)
 {
     size_t flashes = 0;

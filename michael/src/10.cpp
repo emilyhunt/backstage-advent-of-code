@@ -29,6 +29,15 @@
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Replace all occurrences of 'what' with 'with' in the 'inOutStr'
+ *
+ * @param inOutStr Reference to string to be modifed with replacements
+ * @param what Search for this and replace with 'with'
+ * @param with Replace all occurrences of 'what' with this
+ * @return true Something has been replaced
+ * @return false Nothing has been replaced
+ */
 bool ReplaceAll(std::string& inOutStr, const std::string_view& what,
                 const std::string_view& with)
 {
@@ -52,6 +61,12 @@ static std::string& Reduce(std::string& line)
     return line;
 }
 
+/**
+ * @brief Find the first closing bracket for a simplified/reduced input
+ *
+ * @param line Line to find if there is illegal closing bracket
+ * @return char the illegal closing bracket, otherwise '\0'
+ */
 char FindIllegalChar(std::string& line)
 {
     line = Reduce(line);
@@ -77,6 +92,13 @@ char FindIllegalChar(std::string& line)
     }
     return '\0';
 }
+
+/**
+ * @brief Solve part 1
+ *
+ * @param lines Data from text file
+ * @return int Solution
+ */
 static int Part1(std::vector<std::string>& lines)
 {
     const int curlyScore = 3;
@@ -131,6 +153,12 @@ static int Part1(std::vector<std::string>& lines)
     return points;
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param lines data from text file
+ * @return long int Solution will be large int
+ */
 static long int Part2(std::vector<std::string> lines)
 {
     std::vector<long int> scores(lines.size(), 0L);

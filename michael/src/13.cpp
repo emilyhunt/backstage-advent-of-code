@@ -25,6 +25,10 @@
                                 Classes
 ================================================================================
 */
+/**
+ * @brief Axis to fold in
+ *
+ */
 enum class FoldDirection
 {
     X,
@@ -36,6 +40,13 @@ enum class FoldDirection
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Convert text into data structure as lists of coords and folds
+ *
+ * @param text File input text
+ * @return std::pair<std::list<std::pair<int, int>>,
+ * std::list<std::pair<FoldDirection, int>>> Pair of lists for coords and folds
+ */
 std::pair<std::list<std::pair<int, int>>,
           std::list<std::pair<FoldDirection, int>>>
 GetPaperAndInstructions(const std::string& text)
@@ -76,6 +87,11 @@ GetPaperAndInstructions(const std::string& text)
     return data;
 }
 
+/**
+ * @brief Print file data to console, should output similar to actual file
+ *
+ * @param data to be printed
+ */
 void PrintPaperAndInstructions(
     const std::pair<std::list<std::pair<int, int>>,
                     std::list<std::pair<FoldDirection, int>>>& data)
@@ -95,6 +111,12 @@ void PrintPaperAndInstructions(
     }
 }
 
+/**
+ * @brief Fold the grid
+ *
+ * @param grid Grid to be folded
+ * @param fold Fold instruction
+ */
 void Fold(std::vector<std::vector<bool>>& grid,
           std::pair<FoldDirection, int> fold)
 {
@@ -124,6 +146,12 @@ void Fold(std::vector<std::vector<bool>>& grid,
     }
 }
 
+/**
+ * @brief Represent the grid as a string
+ *
+ * @param grid Grid to be converted to string
+ * @return std::string Grid as a #/. grid
+ */
 std::string GridToString(const std::vector<std::vector<bool>>& grid)
 {
     std::stringstream ss;
@@ -141,6 +169,11 @@ std::string GridToString(const std::vector<std::vector<bool>>& grid)
     return ss.str();
 }
 
+/**
+ * @brief Solve and print part 1 and 2
+ *
+ * @param data Data extracted from file
+ */
 void Part1And2(const std::pair<std::list<std::pair<int, int>>,
                                std::list<std::pair<FoldDirection, int>>>& data)
 {

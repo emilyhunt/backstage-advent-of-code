@@ -28,6 +28,10 @@
                                 Classes
 ================================================================================
 */
+/**
+ * @brief Node graph implemented as a map of lists
+ *
+ */
 class NodeGraph
 {
 private:
@@ -45,6 +49,11 @@ private:
     }
 
 public:
+    /**
+     * @brief Construct a new Node Graph object
+     *
+     * @param fileText text file used to create data structure
+     */
     NodeGraph(const std::string& fileText)
     {
         std::set<std::string> nodeNames;
@@ -71,6 +80,12 @@ public:
             AddLink(left, right);
     }
 
+    /**
+     * @brief Solve part 1 or part 2
+     *
+     * @param isPart1 set to true to solve part 1 otherwise part 2 is solved
+     * @return int Solution
+     */
     int Solve(bool isPart1)
     {
         int numberOfPaths = 0;
@@ -120,6 +135,13 @@ public:
                                     const NodeGraph& nodeGraph);
 };
 
+/**
+ * @brief Output stream override for NodeGraph class
+ *
+ * @param os Output stream, will be modified by reference
+ * @param nodeGraph Node graph to output
+ * @return std::ostream& Reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const NodeGraph& nodeGraph)
 {
     for (const auto& baseNode : nodeGraph.m_nodes)
