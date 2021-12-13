@@ -76,6 +76,10 @@ int main(int argc, char** argv)
         Day11(argv[2]);
         break;
 
+    case 12:
+        Day12(argv[2]);
+        break;
+
     default:
         throw std::invalid_argument(argv[1]);
         break;
