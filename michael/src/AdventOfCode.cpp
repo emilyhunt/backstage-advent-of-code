@@ -85,6 +85,54 @@ int main(int argc, char** argv)
         Day13(argv[2]);
         break;
 
+    case 14:
+        Day14(argv[2]);
+        break;
+
+    case 15:
+        Day15(argv[2]);
+        break;
+
+    case 16:
+        Day16(argv[2]);
+        break;
+
+    case 17:
+        Day17(argv[2]);
+        break;
+
+    case 18:
+        Day18(argv[2]);
+        break;
+
+    case 19:
+        Day19(argv[2]);
+        break;
+
+    case 20:
+        Day20(argv[2]);
+        break;
+
+    case 21:
+        Day21(argv[2]);
+        break;
+
+    case 22:
+        Day22(argv[2]);
+        break;
+
+    case 23:
+        Day23(argv[2]);
+        break;
+
+    case 24:
+        Day24(argv[2]);
+        break;
+
+    case 25:
+        Day25(argv[2]);
+        break;
+
     default:
         throw std::invalid_argument(argv[1]);
         break;
