@@ -49,8 +49,8 @@ enum class Rating
                             Function Declarations
 ================================================================================
 */
-int Part1(const std::vector<std::string>& lines);
-int Part2(const std::vector<std::string>& lines);
+static int Part1(const std::vector<std::string>& lines);
+static int Part2(const std::vector<std::string>& lines);
 std::vector<std::string> ExtractLines(const std::string& text);
 int BinaryToDecimal(const std::vector<unsigned int>& binaryVector);
 int CalculateRate(const std::vector<std::string>& lines, Rate option);
@@ -68,7 +68,7 @@ std::vector<unsigned int> CountBits(const std::vector<std::string>& lines);
  * @param lines Puzzle input
  * @return int Solution
  */
-int Part1(const std::vector<std::string>& lines)
+static int Part1(const std::vector<std::string>& lines)
 {
     return CalculateRate(lines, Rate::Gamma)
            * CalculateRate(lines, Rate::Epsilon);
@@ -80,7 +80,7 @@ int Part1(const std::vector<std::string>& lines)
  * @param lines Puzzle input
  * @return int Solution
  */
-int Part2(const std::vector<std::string>& lines)
+static int Part2(const std::vector<std::string>& lines)
 {
     return CalculateRating(lines, Rating::OxygenGenerator)
            * CalculateRating(lines, Rating::Co2Scrubber);
@@ -249,7 +249,7 @@ std::vector<unsigned int> CountBits(const std::vector<std::string>& lines)
  *
  * @param fileName to read as puzzle input
  */
-void Day3(const char* fileName)
+void Day03(const char* fileName)
 {
     std::string text = ReadTextFile(fileName);
     auto lines = ExtractLines(text);

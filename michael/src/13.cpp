@@ -174,8 +174,9 @@ std::string GridToString(const std::vector<std::vector<bool>>& grid)
  *
  * @param data Data extracted from file
  */
-void Part1And2(const std::pair<std::list<std::pair<int, int>>,
-                               std::list<std::pair<FoldDirection, int>>>& data)
+static void
+Part1And2(const std::pair<std::list<std::pair<int, int>>,
+                          std::list<std::pair<FoldDirection, int>>>& data)
 {
     const auto& [coords, folds] = data;
 

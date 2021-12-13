@@ -32,9 +32,15 @@
 class BingoCard
 {
 private:
-    std::array<std::array<int, 5>, 5> m_grid;
-    std::array<std::array<bool, 5>, 5> m_blotted;
+    std::array<std::array<int, 5>, 5> m_grid;     ///< Card grid of numbers
+    std::array<std::array<bool, 5>, 5> m_blotted; ///< Blotted grid on card
 
+    /**
+     * @brief Check if there is a line win on the rows
+     *
+     * @return true A line win is found on a row
+     * @return false A line win is not found on a row
+     */
     bool CheckRowsForLine() const
     {
         bool rowLineFound = false;
@@ -49,6 +55,12 @@ private:
         return rowLineFound;
     }
 
+    /**
+     * @brief Check if there is a line win on the columns
+     *
+     * @return true A line win is found on a column
+     * @return false A line win is not found on a columns
+     */
     bool CheckColsForLine() const
     {
         bool colLineFound = false;
@@ -134,9 +146,9 @@ public:
 class BingoGame
 {
 private:
-    std::list<BingoCard> m_cards;
-    std::vector<int> m_balls;
-    std::vector<int>::iterator m_ballsIter;
+    std::list<BingoCard> m_cards;           ///< List of bingo cards (players)
+    std::vector<int> m_balls;               ///< Vector of drawn numbers (balls)
+    std::vector<int>::iterator m_ballsIter; ///< Iterator for drawing numbers
 
 public:
     /**
@@ -288,8 +300,8 @@ std::ostream& operator<<(std::ostream& os, const BingoGame& bingoGame)
                             Function Declarations
 ================================================================================
 */
-int Part1(BingoGame& game);
-int Part2(BingoGame& game);
+static int Part1(BingoGame& game);
+static int Part2(BingoGame& game);
 
 /*
 ================================================================================
@@ -302,7 +314,7 @@ int Part2(BingoGame& game);
  * @param game bingo game to play
  * @return int Solution
  */
-int Part1(BingoGame& game)
+static int Part1(BingoGame& game)
 {
     game.BlotCards();
 
@@ -321,7 +333,7 @@ int Part1(BingoGame& game)
  * @param game bingo game to play
  * @return int Solution
  */
-int Part2(BingoGame& game)
+static int Part2(BingoGame& game)
 {
     game.RemoveWinners();
 
@@ -340,7 +352,7 @@ int Part2(BingoGame& game)
  *
  * @param fileName to read as puzzle input
  */
-void Day4(const char* fileName)
+void Day04(const char* fileName)
 {
     std::string text = ReadTextFile(fileName);
     BingoGame bingoGame(text);

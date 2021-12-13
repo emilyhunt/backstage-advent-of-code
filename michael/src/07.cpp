@@ -31,7 +31,7 @@
  *
  * @param fileName to read as puzzle input
  */
-void Day7(const char* fileName)
+void Day07(const char* fileName)
 {
     (void)fileName;
     std::cout << "Part 1 and 2: "

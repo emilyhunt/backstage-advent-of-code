@@ -35,13 +35,25 @@
 class NodeGraph
 {
 private:
+    /// Map of nodes on the graph
     std::map<std::string, std::list<std::string>> m_nodes;
 
+    /**
+     * @brief Add a node to the node graph, if it's not unique then is overidden
+     *
+     * @param name or ID of the node
+     */
     void AddNode(const std::string& name)
     {
         m_nodes.insert(std::make_pair(name, std::list<std::string>()));
     }
 
+    /**
+     * @brief Add a link between nodes
+     *
+     * @param from First node
+     * @param to Second node
+     */
     void AddLink(const std::string& from, const std::string& to)
     {
         m_nodes[from].push_back(to);

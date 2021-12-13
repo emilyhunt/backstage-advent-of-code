@@ -21,8 +21,8 @@
                             Function Declarations
 ================================================================================
 */
-int Part1(const std::vector<int>& numbers);
-int Part2(const std::vector<int>& numbers);
+static int Part1(const std::vector<int>& numbers);
+static int Part2(const std::vector<int>& numbers);
 
 /*
 ================================================================================
@@ -35,7 +35,7 @@ int Part2(const std::vector<int>& numbers);
  * @param numbers File input numbers
  * @return int Solution
  */
-int Part1(const std::vector<int>& numbers)
+static int Part1(const std::vector<int>& numbers)
 {
     std::vector<int> diff(numbers.size(), 0);
     std::adjacent_difference(numbers.begin(), numbers.end(), diff.begin());
@@ -54,7 +54,7 @@ int Part1(const std::vector<int>& numbers)
  * @param numbers File input numbers
  * @return int Solution
  */
-int Part2(const std::vector<int>& numbers)
+static int Part2(const std::vector<int>& numbers)
 {
     std::vector<int> windowed;
     for (size_t i = 0; i < numbers.size() - 2; i++)
@@ -68,7 +68,7 @@ int Part2(const std::vector<int>& numbers)
  *
  * @param fileName to read as puzzle input
  */
-void Day1(const char* fileName)
+void Day01(const char* fileName)
 {
     std::vector<int> numbers = ReadNumbersFile<int>(fileName);
     std::cout << "Part 1: " << Part1(numbers) << "\n";

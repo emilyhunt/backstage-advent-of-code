@@ -113,11 +113,17 @@ void PrintSevenSegmentData(
     }
 }
 
-static const size_t oneDigitLen = 2;
-static const size_t fourDigitLen = 4;
-static const size_t sevenDigitLen = 3;
-static const size_t eightDigitLen = 7;
+static const size_t oneDigitLen = 2;   ///< Amount of segments for one digit
+static const size_t fourDigitLen = 4;  ///< Amount of segments for four digit
+static const size_t sevenDigitLen = 3; ///< Amount of segments for seven digit
+static const size_t eightDigitLen = 7; ///< Amount of segments for eight digit
 
+/**
+ * @brief Solve part 1
+ *
+ * @param data Data extracted from text file
+ * @return int Solution to part 1
+ */
 static int
 Part1(const std::vector<
       std::pair<std::vector<std::string>, std::vector<std::string>>>& data)
@@ -168,6 +174,12 @@ bool CheckAllAInB(const std::string& a, const std::string& b)
     return true;
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param data Data extracted from text file
+ * @return int Solution to part 2
+ */
 static int
 Part2(const std::vector<
       std::pair<std::vector<std::string>, std::vector<std::string>>>& data)
@@ -274,7 +286,7 @@ Part2(const std::vector<
  *
  * @param fileName to read as puzzle input
  */
-void Day8(const char* fileName)
+void Day08(const char* fileName)
 {
     auto t0 = std::chrono::high_resolution_clock::now();
     std::string text = ReadTextFile(fileName);

@@ -142,6 +142,12 @@ size_t Flash(std::array<std::array<int, 10>, 10>& grid)
     return flashes;
 }
 
+/**
+ * @brief Solve part 1
+ *
+ * @param data from text input file
+ * @return int Solution
+ */
 static int Part1(const std::array<std::array<int, 10>, 10>& data)
 {
     std::array<std::array<int, 10>, 10> grid;
@@ -157,6 +163,12 @@ static int Part1(const std::array<std::array<int, 10>, 10>& data)
     return amountOfFlashes;
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param data from text input file
+ * @return int Solution
+ */
 static int Part2(const std::array<std::array<int, 10>, 10>& data)
 {
     std::array<std::array<int, 10>, 10> grid;

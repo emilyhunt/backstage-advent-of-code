@@ -87,6 +87,12 @@ int GetRiskLevel(const std::vector<std::vector<int>>& numberGrid, size_t row,
     return numberGrid[row][col] + 1;
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param numberGrid from text input file
+ * @return int Solution
+ */
 static int Part1(const std::vector<std::vector<int>>& numberGrid)
 {
     int sum = 0;
@@ -121,6 +127,12 @@ static int Part1(const std::vector<std::vector<int>>& numberGrid)
     return sum;
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param numberGrid from text input file
+ * @return int Solution
+ */
 static int Part2(const std::vector<std::vector<int>>& numberGrid)
 {
     const size_t numRows = numberGrid.size();
@@ -178,7 +190,7 @@ static int Part2(const std::vector<std::vector<int>>& numberGrid)
  *
  * @param fileName to read as puzzle input
  */
-void Day9(const char* fileName)
+void Day09(const char* fileName)
 {
     std::string text = ReadTextFile(fileName);
     auto numberGrid = ParseTextToNumberGrid(text);

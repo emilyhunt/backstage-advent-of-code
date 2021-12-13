@@ -22,8 +22,8 @@
                             Function Declarations
 ================================================================================
 */
-int Part1(const std::vector<std::pair<std::string, int>>& instructions);
-int Part2(const std::vector<std::pair<std::string, int>>& instructions);
+static int Part1(const std::vector<std::pair<std::string, int>>& instructions);
+static int Part2(const std::vector<std::pair<std::string, int>>& instructions);
 
 std::vector<std::pair<std::string, int>>
 ExtractInstructions(const std::string& text);
@@ -39,7 +39,7 @@ ExtractInstructions(const std::string& text);
  * @param instructions file input
  * @return int Solution
  */
-int Part1(const std::vector<std::pair<std::string, int>>& instructions)
+static int Part1(const std::vector<std::pair<std::string, int>>& instructions)
 {
     int coords[2] = {0, 0};
     for (auto& instruction : instructions)
@@ -64,7 +64,7 @@ int Part1(const std::vector<std::pair<std::string, int>>& instructions)
  * @param instructions file input
  * @return int Solution
  */
-int Part2(const std::vector<std::pair<std::string, int>>& instructions)
+static int Part2(const std::vector<std::pair<std::string, int>>& instructions)
 {
     int aim = 0;
     int coords[2] = {0, 0};
@@ -117,7 +117,7 @@ ExtractInstructions(const std::string& text)
  *
  * @param fileName to read as puzzle input
  */
-void Day2(const char* fileName)
+void Day02(const char* fileName)
 {
     std::string text = ReadTextFile(fileName);
     auto instructions = ExtractInstructions(text);

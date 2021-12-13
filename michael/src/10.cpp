@@ -52,6 +52,12 @@ bool ReplaceAll(std::string& inOutStr, const std::string_view& what,
     return count;
 }
 
+/**
+ * @brief Reduce by removing all matched brackets
+ *
+ * @param line Line from text file
+ * @return std::string& Modified line
+ */
 static std::string& Reduce(std::string& line)
 {
     while (ReplaceAll(line, "()", "") || ReplaceAll(line, "[]", "")
