@@ -18,6 +18,7 @@
 #include <set>
 #include <stack>
 #include <string>
+#include <tuple>
 
 #include "Days.h"
 #include "Utilities.h"
@@ -70,15 +71,15 @@ public:
             AddLink(left, right);
     }
 
-    int Part1()
+    int Solve(bool isPart1)
     {
         int numberOfPaths = 0;
-        std::stack<std::pair<std::string, std::set<std::string>>> dfs;
-        dfs.emplace("start", std::set<std::string>{"start"});
+        std::stack<std::tuple<std::string, std::set<std::string>, bool>> dfs;
+        dfs.emplace("start", std::set<std::string>{"start"}, false);
 
         while (!dfs.empty())
         {
-            auto [currentPos, visitedSmallCaves] = dfs.top();
+            auto [currentPos, visitedSmallCaves, visitedTwice] = dfs.top();
             dfs.pop();
 
             if (currentPos == "end")
@@ -102,7 +103,13 @@ public:
 
                     if (lowerName == node)
                         nextVisitedSmallCaves.insert(node);
-                    dfs.push(std::make_pair(node, nextVisitedSmallCaves));
+                    dfs.push(std::make_tuple(node, nextVisitedSmallCaves,
+                                             visitedTwice));
+                }
+                else if (visitedSmallCaves.count(node) && !visitedTwice
+                         && (node != "start") && (node != "end") && !isPart1)
+                {
+                    dfs.push(std::make_tuple(node, visitedSmallCaves, true));
                 }
             }
         }
@@ -140,7 +147,7 @@ void Day12(const char* fileName)
 {
     const std::string text = ReadTextFile(fileName);
     NodeGraph nodeGraph(text);
-    std::cout << nodeGraph;
 
-    std::cout << "Part 1: " << nodeGraph.Part1() << "\n";
+    std::cout << "Part 1: " << nodeGraph.Solve(true) << "\n";
+    std::cout << "Part 2: " << nodeGraph.Solve(false) << "\n";
 }
