@@ -1,22 +1,23 @@
 /**
- * @file 07.cpp
+ * @file 22.cpp
  * @author Michael Otty (michael.otty@gmail.com)
- * @brief Advent of Code 2021 day 7
+ * @brief Advent of Code 2021 day 22
  * @version 1.0.0
- * @date 2021-12-07
+ * @date 2021-12-22
  *
  * @copyright Copyright (c) 2021
  *
  */
 
 #include <iostream>
+#include <string>
 
 #include "Days.h"
 #include "Utilities.h"
 
 /*
 ================================================================================
-                            Function Declarations
+                                Classes
 ================================================================================
 */
 
@@ -27,15 +28,12 @@
 */
 
 /**
- * @brief Day 7 of Advent of Code
+ * @brief Day 22 of Advent of Code
  *
  * @param fileName to read as puzzle input
  */
-void Day07(const char* fileName)
+void Day22(const char* fileName)
 {
-    (void)fileName;
-    std::cout << "Part 1 and 2: "
-                 "https://docs.google.com/spreadsheets/d/"
-                 "1Jn2FnVbrSW1sGMGhrnGRo5Xz2PUrvFs-bKzXlFLDRAw/edit?usp=sharing"
-              << "\n";
+    const std::string text = ReadTextFile(fileName);
+    std::cout << text << "\n";
 }

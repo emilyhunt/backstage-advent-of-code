@@ -34,8 +34,8 @@
 class Point
 {
 private:
-    int m_x;
-    int m_y;
+    int m_x; ///< X coordinate
+    int m_y; ///< Y coordinate
 
 public:
     /**
@@ -133,8 +133,8 @@ struct hash<Point>
 class Line
 {
 private:
-    Point m_start;
-    Point m_end;
+    Point m_start; ///< First point on line
+    Point m_end;   ///< Final point on line
 
 public:
     /**
@@ -199,8 +199,8 @@ public:
 class Lines
 {
 private:
-    std::vector<Line> m_lines;
-    std::unordered_map<Point, int> m_grid;
+    std::vector<Line> m_lines;             ///< All lines on grid
+    std::unordered_map<Point, int> m_grid; ///< Grid of lines
 
     /**
      * @brief Paint the line onto the grid
@@ -349,8 +349,8 @@ std::ostream& operator<<(std::ostream& os, const Lines& lines)
                             Function Declarations
 ================================================================================
 */
-int Part1(Lines& lines);
-int Part2(Lines& lines);
+static int Part1(Lines& lines);
+static int Part2(Lines& lines);
 
 /*
 ================================================================================
@@ -363,7 +363,7 @@ int Part2(Lines& lines);
  * @param lines lines object to use
  * @return int Solution
  */
-int Part1(Lines& lines)
+static int Part1(Lines& lines)
 {
     lines.PaintHorizontalAndVerticalLines();
     return lines.CountIntersections();
@@ -375,7 +375,7 @@ int Part1(Lines& lines)
  * @param lines lines object to use
  * @return int Solution
  */
-int Part2(Lines& lines)
+static int Part2(Lines& lines)
 {
     lines.PaintDiagonalLines();
     return lines.CountIntersections();
@@ -386,7 +386,7 @@ int Part2(Lines& lines)
  *
  * @param fileName to read as puzzle input
  */
-void Day5(const char* fileName)
+void Day05(const char* fileName)
 {
     std::string text = ReadTextFile(fileName);
     Lines lines(text);

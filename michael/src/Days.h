@@ -4,22 +4,22 @@
  * @brief Function declarations for each day
  * @version 1.0.0
  * @date 2021-12-06
- * 
+ *
  * @copyright Copyright (c) 2021
- * 
+ *
  */
 
 #pragma once
 
-void Day1(const char* fileName);
-void Day2(const char* fileName);
-void Day3(const char* fileName);
-void Day4(const char* fileName);
-void Day5(const char* fileName);
-void Day6(const char* fileName);
-void Day7(const char* fileName);
-void Day8(const char* fileName);
-void Day9(const char* fileName);
+void Day01(const char* fileName);
+void Day02(const char* fileName);
+void Day03(const char* fileName);
+void Day04(const char* fileName);
+void Day05(const char* fileName);
+void Day06(const char* fileName);
+void Day07(const char* fileName);
+void Day08(const char* fileName);
+void Day09(const char* fileName);
 void Day10(const char* fileName);
 void Day11(const char* fileName);
 void Day12(const char* fileName);

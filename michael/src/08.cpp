@@ -10,6 +10,7 @@
  */
 
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <list>
 #include <regex>
@@ -18,7 +19,6 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <chrono>
 
 #include "Days.h"
 #include "Utilities.h"
@@ -34,6 +34,13 @@
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Parse seven segment data from file to data structure
+ *
+ * @param text from input data file
+ * @return std::vector<std::pair<std::vector<std::string>,
+ * std::vector<std::string>>> file contents in data structure
+ */
 std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>
 ParseSevenSegmentData(const std::string text)
 {
@@ -83,6 +90,11 @@ ParseSevenSegmentData(const std::string text)
     return data;
 }
 
+/**
+ * @brief Print the seven segment data for debugging
+ *
+ * @param data data to be printed
+ */
 void PrintSevenSegmentData(
     const std::vector<
         std::pair<std::vector<std::string>, std::vector<std::string>>>& data)
@@ -101,18 +113,20 @@ void PrintSevenSegmentData(
     }
 }
 
-const size_t oneDigitLen = 2;
-const size_t fourDigitLen = 4;
-const size_t sevenDigitLen = 3;
-const size_t eightDigitLen = 7;
+static const size_t oneDigitLen = 2;   ///< Amount of segments for one digit
+static const size_t fourDigitLen = 4;  ///< Amount of segments for four digit
+static const size_t sevenDigitLen = 3; ///< Amount of segments for seven digit
+static const size_t eightDigitLen = 7; ///< Amount of segments for eight digit
 
-// const std::map<std::string, int> digitMapping = {
-//     {"abcefg", 0}, {"cf", 1},     {"acdeg", 2}, {"acdfg", 3},   {"bcdf", 4},
-//     {"abdfg", 5},  {"abdefg", 6}, {"acf", 7},   {"abcdefg", 8}, {"abcdfg",
-//     9}};
-
-int Part1(const std::vector<
-          std::pair<std::vector<std::string>, std::vector<std::string>>>& data)
+/**
+ * @brief Solve part 1
+ *
+ * @param data Data extracted from text file
+ * @return int Solution to part 1
+ */
+static int
+Part1(const std::vector<
+      std::pair<std::vector<std::string>, std::vector<std::string>>>& data)
 {
     int sum = 0;
 
@@ -126,8 +140,14 @@ int Part1(const std::vector<
     return sum;
 }
 
-
-
+/**
+ * @brief Check if the character is in the string
+ *
+ * @param ch Character to check for
+ * @param str String to check in
+ * @return true Character was found in string
+ * @return false Character was not found in string
+ */
 bool CheckCharInStr(char ch, const std::string& str)
 {
     for (auto i = str.begin(); i != str.end(); i++)
@@ -137,6 +157,14 @@ bool CheckCharInStr(char ch, const std::string& str)
     return false;
 }
 
+/**
+ * @brief Check if the whole of the A string is in B
+ *
+ * @param a String to check for
+ * @param b String to check in
+ * @return true All of A is in B
+ * @return false Not all of A is in B
+ */
 bool CheckAllAInB(const std::string& a, const std::string& b)
 {
     for (auto i = a.begin(); i != a.end(); i++)
@@ -146,8 +174,15 @@ bool CheckAllAInB(const std::string& a, const std::string& b)
     return true;
 }
 
-int Part2(const std::vector<
-          std::pair<std::vector<std::string>, std::vector<std::string>>>& data)
+/**
+ * @brief Solve part 2
+ *
+ * @param data Data extracted from text file
+ * @return int Solution to part 2
+ */
+static int
+Part2(const std::vector<
+      std::pair<std::vector<std::string>, std::vector<std::string>>>& data)
 {
     int sum = 0;
 
@@ -251,7 +286,7 @@ int Part2(const std::vector<
  *
  * @param fileName to read as puzzle input
  */
-void Day8(const char* fileName)
+void Day08(const char* fileName)
 {
     auto t0 = std::chrono::high_resolution_clock::now();
     std::string text = ReadTextFile(fileName);
@@ -264,9 +299,15 @@ void Day8(const char* fileName)
     std::cout << "Part 2: " << Part2(data) << "\n";
     auto t4 = std::chrono::high_resolution_clock::now();
 
-    auto readFileTime = std::chrono::duration_cast<std::chrono::microseconds>(t2-t0).count();
-    auto solvePart1Time = std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count();
-    auto solvePart2Time = std::chrono::duration_cast<std::chrono::microseconds>(t4-t3).count();
+    auto readFileTime
+        = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t0)
+              .count();
+    auto solvePart1Time
+        = std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2)
+              .count();
+    auto solvePart2Time
+        = std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3)
+              .count();
 
     std::cout << "File read and parsed in: " << readFileTime << "us\n";
     std::cout << "Part 1 completed in: " << solvePart1Time << "us\n";

@@ -28,16 +28,32 @@
                                 Classes
 ================================================================================
 */
+/**
+ * @brief Node graph implemented as a map of lists
+ *
+ */
 class NodeGraph
 {
 private:
+    /// Map of nodes on the graph
     std::map<std::string, std::list<std::string>> m_nodes;
 
+    /**
+     * @brief Add a node to the node graph, if it's not unique then is overidden
+     *
+     * @param name or ID of the node
+     */
     void AddNode(const std::string& name)
     {
         m_nodes.insert(std::make_pair(name, std::list<std::string>()));
     }
 
+    /**
+     * @brief Add a link between nodes
+     *
+     * @param from First node
+     * @param to Second node
+     */
     void AddLink(const std::string& from, const std::string& to)
     {
         m_nodes[from].push_back(to);
@@ -45,6 +61,11 @@ private:
     }
 
 public:
+    /**
+     * @brief Construct a new Node Graph object
+     *
+     * @param fileText text file used to create data structure
+     */
     NodeGraph(const std::string& fileText)
     {
         std::set<std::string> nodeNames;
@@ -71,6 +92,12 @@ public:
             AddLink(left, right);
     }
 
+    /**
+     * @brief Solve part 1 or part 2
+     *
+     * @param isPart1 set to true to solve part 1 otherwise part 2 is solved
+     * @return int Solution
+     */
     int Solve(bool isPart1)
     {
         int numberOfPaths = 0;
@@ -120,6 +147,13 @@ public:
                                     const NodeGraph& nodeGraph);
 };
 
+/**
+ * @brief Output stream override for NodeGraph class
+ *
+ * @param os Output stream, will be modified by reference
+ * @param nodeGraph Node graph to output
+ * @return std::ostream& Reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const NodeGraph& nodeGraph)
 {
     for (const auto& baseNode : nodeGraph.m_nodes)

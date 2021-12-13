@@ -94,7 +94,7 @@ long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
  *
  * @param fileName to read as puzzle input
  */
-void Day6(const char* fileName)
+void Day06(const char* fileName)
 {
     std::vector<int> lanternfish = ReadNumbersFile<int>(fileName);
 
