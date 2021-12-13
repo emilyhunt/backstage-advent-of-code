@@ -33,5 +33,9 @@
  */
 void Day7(const char* fileName)
 {
-    std::cout << "Part 1 and 2: https://docs.google.com/spreadsheets/d/1Jn2FnVbrSW1sGMGhrnGRo5Xz2PUrvFs-bKzXlFLDRAw/edit?usp=sharing" << "\n";
+    (void)fileName;
+    std::cout << "Part 1 and 2: "
+                 "https://docs.google.com/spreadsheets/d/"
+                 "1Jn2FnVbrSW1sGMGhrnGRo5Xz2PUrvFs-bKzXlFLDRAw/edit?usp=sharing"
+              << "\n";
 }
