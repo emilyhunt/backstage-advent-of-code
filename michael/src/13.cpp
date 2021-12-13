@@ -98,16 +98,40 @@ void PrintPaperAndInstructions(
 void Fold(std::vector<std::vector<bool>>& grid,
           std::pair<FoldDirection, int> fold)
 {
+    if (fold.first == FoldDirection::X)
+    {
+        size_t i, j;
+        for (size_t row = 0; row < grid.size(); row++)
+        {
+            for (i = fold.second + 1, j = fold.second - 1; i < grid[0].size();
+                 i++, j--)
+            {
+                grid[row][j] = grid[row][j] | grid[row][i];
+            }
+        }
+        for (auto& row : grid)
+            row.erase(row.begin() + fold.second, row.end());
+    }
+    else
+    {
+        size_t i, j;
+        for (i = fold.second + 1, j = fold.second - 1; i < grid.size();
+             i++, j--)
+            for (size_t col = 0; col < grid[0].size(); col++)
+                grid[j][col] = grid[j][col] | grid[i][col];
+
+        grid.erase(grid.begin() + fold.second, grid.end());
+    }
 }
 
 std::string GridToString(const std::vector<std::vector<bool>>& grid)
 {
     std::stringstream ss;
-    for (size_t i = 0; i < grid.size(); i++)
+    for (const auto& row : grid)
     {
-        for (size_t j = 0; j < grid[0].size(); j++)
+        for (const auto& element : row)
         {
-            if (grid[i][j])
+            if (element)
                 ss << "#";
             else
                 ss << ".";
@@ -117,9 +141,8 @@ std::string GridToString(const std::vector<std::vector<bool>>& grid)
     return ss.str();
 }
 
-static std::string
-Part1(const std::pair<std::list<std::pair<int, int>>,
-                      std::list<std::pair<FoldDirection, int>>>& data)
+void Part1And2(const std::pair<std::list<std::pair<int, int>>,
+                               std::list<std::pair<FoldDirection, int>>>& data)
 {
     const auto& [coords, folds] = data;
 
@@ -137,7 +160,17 @@ Part1(const std::pair<std::list<std::pair<int, int>>,
 
     Fold(grid, *folds.begin());
 
-    return GridToString(grid);
+    std::string output(GridToString(grid));
+
+    std::cout << "Part 1: " << std::count(output.begin(), output.end(), '#')
+              << "\n";
+
+    for (auto i = ++folds.begin(); i != folds.end(); i++)
+    {
+        Fold(grid, *i);
+    }
+
+    std::cout << "Part 2:\n" << GridToString(grid) << "\n";
 }
 
 /**
@@ -149,7 +182,5 @@ void Day13(const char* fileName)
 {
     const std::string text = ReadTextFile(fileName);
     auto data = GetPaperAndInstructions(text);
-    // PrintPaperAndInstructions(data);
-
-    std::cout << "Part 1:\n" << Part1(data) << "\n";
+    Part1And2(data);
 }
