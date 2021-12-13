@@ -16,8 +16,9 @@
 
 /**
  * @brief Start of program execution
- * 
- * @param argc Count of arguments, includes the command running the program itself
+ *
+ * @param argc Count of arguments, includes the command running the program
+ * itself
  * @param argv Arguments, first is always the program itself
  * @return int Return 0 for normal exit
  */
@@ -63,7 +64,7 @@ int main(int argc, char** argv)
     case 8:
         Day8(argv[2]);
         break;
-    
+
     case 9:
         Day9(argv[2]);
         break;
@@ -78,6 +79,10 @@ int main(int argc, char** argv)
 
     case 12:
         Day12(argv[2]);
+        break;
+
+    case 13:
+        Day13(argv[2]);
         break;
 
     default:
