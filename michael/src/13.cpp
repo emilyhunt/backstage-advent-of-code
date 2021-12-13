@@ -173,6 +173,7 @@ std::string GridToString(const std::vector<std::vector<bool>>& grid)
  * @brief Solve and print part 1 and 2
  *
  * @param data Data extracted from file
+ * @return None
  */
 static void
 Part1And2(const std::pair<std::list<std::pair<int, int>>,
