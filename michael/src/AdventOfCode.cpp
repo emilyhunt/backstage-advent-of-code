@@ -34,39 +34,39 @@ int main(int argc, char** argv)
     switch (std::atoi(argv[1]))
     {
     case 1:
-        Day1(argv[2]);
+        Day01(argv[2]);
         break;
 
     case 2:
-        Day2(argv[2]);
+        Day02(argv[2]);
         break;
 
     case 3:
-        Day3(argv[2]);
+        Day03(argv[2]);
         break;
 
     case 4:
-        Day4(argv[2]);
+        Day04(argv[2]);
         break;
 
     case 5:
-        Day5(argv[2]);
+        Day05(argv[2]);
         break;
 
     case 6:
-        Day6(argv[2]);
+        Day06(argv[2]);
         break;
 
     case 7:
-        Day7(argv[2]);
+        Day07(argv[2]);
         break;
 
     case 8:
-        Day8(argv[2]);
+        Day08(argv[2]);
         break;
 
     case 9:
-        Day9(argv[2]);
+        Day09(argv[2]);
         break;
 
     case 10:
