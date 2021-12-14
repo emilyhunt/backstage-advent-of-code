@@ -21,15 +21,16 @@
 
 /*
 ================================================================================
-                                Classes
-================================================================================
-*/
-
-/*
-================================================================================
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Create a map from the list in the file text
+ *
+ * @param text File text
+ * @return std::unordered_map<std::string, std::string> Mapping pair of letters
+ * to single letter
+ */
 std::unordered_map<std::string, std::string> CreateMap(const std::string& text)
 {
     std::unordered_map<std::string, std::string> map;
@@ -47,9 +48,18 @@ std::unordered_map<std::string, std::string> CreateMap(const std::string& text)
     return map;
 }
 
-long int Solve(std::string polymer,
-               const std::unordered_map<std::string, std::string>& map,
-               size_t iterations)
+/**
+ * @brief Solve part 1 and 2
+ *
+ * @param polymer The polymer string (i.e file input first line)
+ * @param map Unordered map data structure for list in file
+ * @param iterations Amount of iterations
+ * @return long int Solution may be a large number for >10 iterations
+ */
+static unsigned long int
+Solve(std::string polymer,
+      const std::unordered_map<std::string, std::string>& map,
+      size_t iterations)
 {
     std::unordered_map<std::string, long int> counts;
     std::set<char> letters;

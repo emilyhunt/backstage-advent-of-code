@@ -67,6 +67,9 @@ void PrintVector(const std::vector<T>& vec, const char* sep = " ")
  * @tparam T1 unordered_map key type
  * @tparam T2 unordered_map val type
  * @param map The map to print
+ * @param keyValSep Optional seperator between keys and values. Default is ": "
+ * @param elemSep Optional seperator between each key value pair. Default is ",
+ * "
  */
 template <typename T1, typename T2>
 void PrintMap(const std::unordered_map<T1, T2>& map,
