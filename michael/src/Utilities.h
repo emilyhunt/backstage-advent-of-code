@@ -69,11 +69,21 @@ void PrintVector(const std::vector<T>& vec, const char* sep = " ")
  * @param map The map to print
  */
 template <typename T1, typename T2>
-void PrintMap(const std::unordered_map<T1, T2>& map)
+void PrintMap(const std::unordered_map<T1, T2>& map,
+              const char* keyValSep = ": ", const char* elemSep = ", ")
 {
     std::cout << "{";
+    bool isFirst = true;
     for (const auto& [key, val] : map)
-        std::cout << key << ": " << val << ", ";
+    {
+        if (isFirst)
+        {
+            std::cout << key << keyValSep << val;
+            isFirst = false;
+        }
+        else
+            std::cout << elemSep << key << keyValSep << val;
+    }
     std::cout << "}\n";
 }
 
