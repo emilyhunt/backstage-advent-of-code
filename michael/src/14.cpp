@@ -47,9 +47,9 @@ std::unordered_map<std::string, std::string> CreateMap(const std::string& text)
     return map;
 }
 
-int Solve(std::string polymer,
-          const std::unordered_map<std::string, std::string>& map,
-          size_t iterations)
+long int Solve(std::string polymer,
+               const std::unordered_map<std::string, std::string>& map,
+               size_t iterations)
 {
     std::unordered_map<std::string, long int> counts;
     std::set<char> letters;
@@ -117,7 +117,7 @@ void Day14(const char* fileName)
 {
     const std::string text = ReadTextFile(fileName);
     const std::unordered_map<std::string, std::string> map = CreateMap(text);
-    auto polymer = text.substr(0, text.find('\n'));
+    const auto polymer = text.substr(0, text.find('\n'));
 
     std::cout << "Part 1: " << Solve(polymer, map, 10) << "\n";
     std::cout << "Part 2: " << Solve(polymer, map, 40) << "\n";
