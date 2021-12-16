@@ -31,49 +31,6 @@
 ================================================================================
 */
 /**
- * @brief Convert text to number grid
- *
- * @param text to be converted
- * @return std::vector<std::vector<int>> 2D vector of ints from text file data
- */
-std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text)
-{
-    std::vector<std::vector<int>> numberGrid;
-    std::vector<int> line;
-    for (const auto& ch : text)
-    {
-        if (ch == '\n')
-        {
-            numberGrid.push_back(line);
-            line.clear();
-        }
-        else
-            line.push_back(ch - '0');
-    }
-    numberGrid.push_back(line);
-    return numberGrid;
-}
-
-/**
- * @brief Print number grid vector in human readable format
- *
- * Should match the input file on output.
- *
- * @param numberGrid Data to be printed
- */
-void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid)
-{
-    for (const auto& line : numberGrid)
-    {
-        for (const auto& number : line)
-        {
-            std::cout << number;
-        }
-        std::cout << "\n";
-    }
-}
-
-/**
  * @brief Get the Risk Level on the grid at a given location (elevation + 1)
  *
  * @param numberGrid representing ground elevation

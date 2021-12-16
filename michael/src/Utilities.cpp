@@ -44,7 +44,7 @@ void PrintNumbers(const std::vector<int>& numbers, const char* sep = " ")
 
 /**
  * @brief Split lines
- * 
+ *
  * @param text String to split
  * @return std::vector<std::string> Split into vector of strings
  */
@@ -55,7 +55,7 @@ std::vector<std::string> SplitLines(const std::string& text)
 
 /**
  * @brief Split a string by a delimiter
- * 
+ *
  * @param text The string to split
  * @param delim Delimiter
  * @return std::vector<std::string> Split into vector of strings
@@ -73,4 +73,47 @@ std::vector<std::string> Split(const std::string& text,
     }
     splitString.push_back(text.substr(text.rfind("\n") + 1, text.length()));
     return splitString;
+}
+
+/**
+ * @brief Convert text to number grid
+ *
+ * @param text to be converted
+ * @return std::vector<std::vector<int>> 2D vector of ints from text file data
+ */
+std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text)
+{
+    std::vector<std::vector<int>> numberGrid;
+    std::vector<int> line;
+    for (const auto& ch : text)
+    {
+        if (ch == '\n')
+        {
+            numberGrid.push_back(line);
+            line.clear();
+        }
+        else
+            line.push_back(ch - '0');
+    }
+    numberGrid.push_back(line);
+    return numberGrid;
+}
+
+/**
+ * @brief Print number grid vector in human readable format
+ *
+ * Should match the input file on output.
+ *
+ * @param numberGrid Data to be printed
+ */
+void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid)
+{
+    for (const auto& line : numberGrid)
+    {
+        for (const auto& number : line)
+        {
+            std::cout << number;
+        }
+        std::cout << "\n";
+    }
 }
