@@ -32,7 +32,12 @@
                             Function Definitions
 ================================================================================
 */
-
+/**
+ * @brief Solve the maze
+ *
+ * @param grid Grid maze to solve
+ * @return int Path cost
+ */
 static int Solve(const std::vector<std::vector<int>>& grid)
 {
     using priorityAndCoord = std::pair<int, std::pair<int, int>>;
@@ -84,6 +89,7 @@ static int Solve(const std::vector<std::vector<int>>& grid)
         }
     }
 
+    // Trace back path
     auto currentPos = end;
     int ans = 0;
     do
@@ -92,6 +98,31 @@ static int Solve(const std::vector<std::vector<int>>& grid)
         currentPos = cameFrom[currentPos];
     } while (currentPos != start);
     return ans;
+}
+
+/**
+ * @brief Expand the grid for part 2
+ *
+ * @param grid Original grid
+ * @param expansionSize Scaling factor
+ * @return std::vector<std::vector<int>> Expanded grid
+ */
+std::vector<std::vector<int>> ExpandGrid(std::vector<std::vector<int>> grid,
+                                         size_t expansionSize)
+{
+    std::vector<std::vector<int>> newGrid;
+    newGrid.reserve(grid.size() * expansionSize);
+    for (size_t i = 0; i < grid.size() * expansionSize; i++)
+        newGrid.push_back(std::vector<int>(grid[0].size() * expansionSize, 0));
+
+    for (size_t i = 0; i < newGrid.size(); i++)
+        for (size_t j = 0; j < newGrid.size(); j++)
+            newGrid[i][j] = (grid[i % grid.size()][j % grid.size()]
+                             + (i / grid.size()) + (j / grid.size()) - 1)
+                                % 9
+                            + 1;
+
+    return newGrid;
 }
 
 /**
@@ -104,5 +135,7 @@ void Day15(const char* fileName)
     const std::string text = ReadTextFile(fileName);
     auto grid = ParseTextToNumberGrid(text);
 
-    std::cout << "Part1: " << Solve(grid) << "\n";
+    std::cout << "Part 1: " << Solve(grid) << "\n";
+    grid = ExpandGrid(grid, 5);
+    std::cout << "Part 2: " << Solve(grid) << "\n";
 }
