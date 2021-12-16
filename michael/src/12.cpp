@@ -101,13 +101,14 @@ public:
     int Solve(bool isPart1)
     {
         int numberOfPaths = 0;
-        std::stack<std::tuple<std::string, std::set<std::string>, bool>> dfs;
-        dfs.emplace("start", std::set<std::string>{"start"}, false);
+        std::stack<std::tuple<std::string, std::set<std::string>, bool>>
+            frontier;
+        frontier.emplace("start", std::set<std::string>{"start"}, false);
 
-        while (!dfs.empty())
+        while (!frontier.empty())
         {
-            auto [currentPos, visitedSmallCaves, visitedTwice] = dfs.top();
-            dfs.pop();
+            auto [currentPos, visitedSmallCaves, visitedTwice] = frontier.top();
+            frontier.pop();
 
             if (currentPos == "end")
             {
@@ -130,13 +131,14 @@ public:
 
                     if (lowerName == node)
                         nextVisitedSmallCaves.insert(node);
-                    dfs.push(std::make_tuple(node, nextVisitedSmallCaves,
-                                             visitedTwice));
+                    frontier.push(std::make_tuple(node, nextVisitedSmallCaves,
+                                                  visitedTwice));
                 }
                 else if (visitedSmallCaves.count(node) && !visitedTwice
                          && (node != "start") && (node != "end") && !isPart1)
                 {
-                    dfs.push(std::make_tuple(node, visitedSmallCaves, true));
+                    frontier.push(
+                        std::make_tuple(node, visitedSmallCaves, true));
                 }
             }
         }
