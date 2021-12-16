@@ -22,6 +22,8 @@ void PrintNumbers(const std::vector<int>& numbers, const char* sep);
 std::vector<std::string> SplitLines(const std::string& text);
 std::vector<std::string> Split(const std::string& text,
                                const std::string& delim);
+std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text);
+void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid);
 
 /**
  * @brief Read numbers to a vector of numbers, can be spaced by anything
