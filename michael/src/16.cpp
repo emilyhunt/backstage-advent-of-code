@@ -29,6 +29,7 @@ enum class State
     data,
     totalLength,
     numOfSubPackets,
+    end,
 };
 
 /*
@@ -54,13 +55,13 @@ std::string GetBinData(const std::string& hex)
     return bin;
 }
 
-int Part1(const std::string& bin, int subPackets)
+int Part1(const std::string& bin, int& index)
 {
     std::cout << bin << "\n";
     int answer = 0;
     State currentState = State::version;
-    int i = 0;
-    while (i < bin.size())
+
+    while (index < bin.size())
     {
         switch (currentState)
         {
@@ -70,7 +71,7 @@ int Part1(const std::string& bin, int subPackets)
             int total = 0;
 
             for (int j = len - 1; j >= 0; j--)
-                total += (bin[i++] - '0') << j;
+                total += (bin[index++] - '0') << j;
             std::cout << "Version: " << total << "\n";
             currentState = State::typeId;
             answer += total;
@@ -83,7 +84,7 @@ int Part1(const std::string& bin, int subPackets)
             int total = 0;
 
             for (int j = len - 1; j >= 0; j--)
-                total += (bin[i++] - '0') << j;
+                total += (bin[index++] - '0') << j;
 
             std::cout << "Type ID: " << total << "\n";
 
@@ -96,7 +97,7 @@ int Part1(const std::string& bin, int subPackets)
 
         case State::lengthId:
         {
-            int a = bin[i++] - '0';
+            int a = bin[index++] - '0';
             if (a)
                 currentState = State::numOfSubPackets;
             else
@@ -113,19 +114,14 @@ int Part1(const std::string& bin, int subPackets)
             const int highNum = -1;
 
             for (int j = len - 1; j >= 0; j--)
-                total += (bin[i++] - '0') << j;
+                total += (bin[index++] - '0') << j;
             std::cout << "Total Length: " << total << "\n";
-            if (subPackets)
+            const int start = index;
+            while ((index - start) < total)
             {
-                if (--subPackets)
-                    answer += Part1(bin.substr(i, total), highNum);
-                else
-                    return answer + Part1(bin.substr(i, total), highNum);
+                answer += Part1(bin, index);
             }
-            else
-                return answer + Part1(bin.substr(i, total), highNum);
-            i += total;
-            currentState = State::version;
+            currentState = State::end;
         }
         break;
 
@@ -135,21 +131,13 @@ int Part1(const std::string& bin, int subPackets)
             int total = 0;
 
             for (int j = len - 1; j >= 0; j--)
-                total += (bin[i++] - '0') << j;
+                total += (bin[index++] - '0') << j;
             std::cout << "Num of sub-packets: " << total << "\n";
 
-            if (subPackets)
+            for (int i = 0; i < total; i++)
             {
-                if (--subPackets)
-                {
-                    answer += Part1(bin.substr(i), total);
-                    i += bin.substr(i).length();
-                }
-                else
-                    return answer + Part1(bin.substr(i), total);
+                answer += Part1(bin, index);
             }
-            else
-                return answer + Part1(bin.substr(i), total);
             currentState = State::version;
         }
         break;
@@ -158,26 +146,19 @@ int Part1(const std::string& bin, int subPackets)
         {
             bool run = true;
             const int len = 5;
-            while (run)
-            {
-                int total = 0;
+            int total = 0;
 
-                for (int j = len - 1; j >= 0; j--)
-                    total += (bin[i++] - '0') << j;
-                run = total & 0x10;
-                std::cout << "Data: " << total << "\n";
-            }
-            if (subPackets)
-                if (--subPackets == 0)
-                    return answer;
-
-            currentState = State::version;
+            for (int j = len - 1; j >= 0; j--)
+                total += (bin[index++] - '0') << j;
+            currentState = (total & 0x10) ? State::data : State::end;
+            std::cout << "Data: " << total << "\n";
         }
         break;
 
-            // default:
-            //     i++;
-            //     break;
+        case State::end:
+        default:
+            return answer;
+            break;
         }
     }
 
@@ -192,12 +173,8 @@ int Part1(const std::string& bin, int subPackets)
  */
 void Day16(const char* fileName)
 {
-    const std::string hex = "C0015000016115A2E0802F182340";
-    // ReadTextFile(fileName);
+    const std::string hex = ReadTextFile(fileName);
     auto bin = GetBinData(hex);
-    std::cout << hex << "\n";
-    // std::cout << bin << "\n";
-
-    // Part1(bin);
-    std::cout << "Part 1:\n\n" << Part1(bin, 0) << "\n";
+    int index = 0;
+    std::cout << "Part 1:\n\n" << Part1(bin, index) << "\n";
 }
