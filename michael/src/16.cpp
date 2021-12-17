@@ -55,10 +55,10 @@ std::string GetBinData(const std::string& hex)
     return bin;
 }
 
-int Part1(const std::string& bin, int& index)
+long int Part1(const std::string& bin, int& index)
 {
     std::cout << bin << "\n";
-    int answer = 0;
+    long int answer = 0;
     State currentState = State::version;
 
     while (index < bin.size())
@@ -138,7 +138,7 @@ int Part1(const std::string& bin, int& index)
             {
                 answer += Part1(bin, index);
             }
-            currentState = State::version;
+            currentState = State::end;
         }
         break;
 
