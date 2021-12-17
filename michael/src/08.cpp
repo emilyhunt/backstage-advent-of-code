@@ -11,9 +11,10 @@
 
 #include <algorithm>
 #include <array>
-#include <chrono>
 #include <iostream>
 #include <iterator>
+#include <list>
+#include <map>
 #include <set>
 #include <sstream>
 #include <string>
@@ -23,12 +24,6 @@
 
 #include "Days.h"
 #include "Utilities.h"
-
-/*
-================================================================================
-                            Function Declarations
-================================================================================
-*/
 
 /*
 ================================================================================
@@ -43,11 +38,11 @@
  * std::vector<std::string>>> file contents in data structure
  */
 std::vector<
-    std::pair<std::array<std::set<char>, 10>, std::array<std::set<char>, 4>>>
+    std::pair<std::array<std::set<char>, 10>, std::array<std::string, 4>>>
 ParseSevenSegmentData(const std::string& text)
 {
-    std::vector<std::pair<std::array<std::set<char>, 10>,
-                          std::array<std::set<char>, 4>>>
+    std::vector<
+        std::pair<std::array<std::set<char>, 10>, std::array<std::string, 4>>>
         data;
 
     std::stringstream textStream(text);
@@ -60,7 +55,7 @@ ParseSevenSegmentData(const std::string& text)
         std::stringstream right(line.substr(pipeLocation + 2));
 
         std::array<std::set<char>, 10> leftvector;
-        std::array<std::set<char>, 4> rightvector;
+        std::array<std::string, 4> rightvector;
 
         std::string word;
 
@@ -70,8 +65,10 @@ ParseSevenSegmentData(const std::string& text)
 
         i = 0;
         while (right >> word)
-            rightvector[i++] = std::set<char>(word.begin(), word.end());
-
+        {
+            std::sort(word.begin(), word.end());
+            rightvector[i++] = word;
+        }
         data.push_back(std::make_pair(leftvector, rightvector));
     }
     return data;
@@ -84,7 +81,7 @@ ParseSevenSegmentData(const std::string& text)
  */
 void PrintSevenSegmentData(
     const std::vector<std::pair<std::array<std::set<char>, 10>,
-                                std::array<std::set<char>, 4>>>& data)
+                                std::array<std::string, 4>>>& data)
 {
     for (const auto& line : data)
     {
@@ -119,9 +116,8 @@ static const size_t eightDigitLen = 7; ///< Amount of segments for eight digit
  * @param data Data extracted from text file
  * @return int Solution to part 1
  */
-static int
-Part1(const std::vector<std::pair<std::array<std::set<char>, 10>,
-                                  std::array<std::set<char>, 4>>>& data)
+static int Part1(const std::vector<std::pair<std::array<std::set<char>, 10>,
+                                             std::array<std::string, 4>>>& data)
 {
     int sum = 0;
 
@@ -135,58 +131,24 @@ Part1(const std::vector<std::pair<std::array<std::set<char>, 10>,
 }
 
 /**
- * @brief Check if the character is in the string
- *
- * @param ch Character to check for
- * @param str String to check in
- * @return true Character was found in string
- * @return false Character was not found in string
- */
-bool CheckCharInStr(char ch, const std::string& str)
-{
-    for (auto i = str.begin(); i != str.end(); i++)
-        if (ch == *i)
-            return true;
-
-    return false;
-}
-
-/**
- * @brief Check if the whole of the A string is in B
- *
- * @param a String to check for
- * @param b String to check in
- * @return true All of A is in B
- * @return false Not all of A is in B
- */
-bool CheckAllAInB(const std::string& a, const std::string& b)
-{
-    for (auto i = a.begin(); i != a.end(); i++)
-        if (!CheckCharInStr(*i, b))
-            return false;
-
-    return true;
-}
-
-/**
  * @brief Solve part 2
  *
  * @param data Data extracted from text file
  * @return int Solution to part 2
  */
-static int
-Part2(const std::vector<std::pair<std::array<std::set<char>, 10>,
-                                  std::array<std::set<char>, 4>>>& data)
+static int Part2(const std::vector<std::pair<std::array<std::set<char>, 10>,
+                                             std::array<std::string, 4>>>& data)
 {
     int sum = 0;
 
     std::vector<std::unordered_map<std::string, int>> digitMappings;
-    std::stringstream ss;
 
     for (const auto& line : data)
     {
         std::unordered_map<int, std::set<char>> digitMapping;
-        std::vector<std::set<char>> digitsToFind;
+        std::list<std::set<char>> twoThreeFive;
+        std::list<std::set<char>> zeroSixNine;
+
         for (const auto& word : line.first)
         {
             if (word.size() == oneDigitLen)
@@ -197,120 +159,90 @@ Part2(const std::vector<std::pair<std::array<std::set<char>, 10>,
                 digitMapping[7] = word;
             else if (word.size() == eightDigitLen)
                 digitMapping[8] = word;
+            else if (word.size() == 5)
+                twoThreeFive.push_back(word);
+            else if (word.size() == 6)
+                zeroSixNine.push_back(word);
             else
-                digitsToFind.push_back(word);
+                throw std::logic_error("Unknown digit found");
         }
 
-        for (const auto& digit : digitsToFind)
+        for (const auto& digit : twoThreeFive)
         {
-            std::set<char> intersectOne;
-            std::set<char> intersectFour;
+            std::set<char> intersect;
             std::set_intersection(
                 digitMapping[1].begin(), digitMapping[1].end(), digit.begin(),
-                digit.end(), std::inserter(intersectOne, intersectOne.begin()));
-            std::set_intersection(
-                digitMapping[4].begin(), digitMapping[4].end(), digit.begin(),
-                digit.end(),
-                std::inserter(intersectFour, intersectFour.begin()));
-            if ((intersectOne == digitMapping[1])
-                && (intersectFour == digitMapping[4]))
+                digit.end(), std::inserter(intersect, intersect.begin()));
+            if (intersect == digitMapping[1])
             {
-                digitMapping[9] = digit;
+                digitMapping[3] = digit;
+                twoThreeFive.remove(digit);
                 break;
             }
         }
 
-        for (const auto& digit : digitsToFind)
+        for (const auto& digit : twoThreeFive)
         {
-            std::set<char> intersectOne;
-            std::set<char> intersectFour;
-            std::set_intersection(
-                digitMapping[1].begin(), digitMapping[1].end(), digit.begin(),
-                digit.end(), std::inserter(intersectOne, intersectOne.begin()));
+            std::set<char> intersect;
             std::set_intersection(
                 digitMapping[4].begin(), digitMapping[4].end(), digit.begin(),
-                digit.end(),
-                std::inserter(intersectFour, intersectFour.begin()));
-            if ((intersectOne == digitMapping[1])
-                && (intersectFour != digitMapping[4]))
+                digit.end(), std::inserter(intersect, intersect.begin()));
+            if (intersect.size() == 3)
             {
-                if (digit.size() == 5)
-                    digitMapping[3] = digit;
-                else
-                    digitMapping[0] = digit;
+                digitMapping[5] = digit;
+                twoThreeFive.remove(digit);
+                break;
+            }
+        }
+        digitMapping[2] = twoThreeFive.front();
+
+        for (const auto& digit : zeroSixNine)
+        {
+            std::set<char> intersect;
+            std::set_intersection(
+                digitMapping[4].begin(), digitMapping[4].end(), digit.begin(),
+                digit.end(), std::inserter(intersect, intersect.begin()));
+            if (intersect == digitMapping[4])
+            {
+                digitMapping[9] = digit;
+                zeroSixNine.remove(digit);
+                break;
             }
         }
 
-        for (const auto& [key, val]:digitMapping){
-            std::cout << key<<": ";
-            for (const auto& elem:val)
+        for (const auto& digit : zeroSixNine)
+        {
+            std::set<char> intersect;
+            std::set_intersection(
+                digitMapping[1].begin(), digitMapping[1].end(), digit.begin(),
+                digit.end(), std::inserter(intersect, intersect.begin()));
+            if (intersect == digitMapping[1])
             {
-                std::cout<<elem;
+                digitMapping[0] = digit;
+                zeroSixNine.remove(digit);
+                break;
             }
-            std::cout << ", ";
         }
-        std::cout << "\n";
+        digitMapping[6] = zeroSixNine.front();
 
-        // // 0, 2, 3, 5, 6
-        // // Use overlap of 1 with 0 and 6 to solve those
-        // for (const auto& digit : zeroSixAndNineDigits)
-        // {
-        //     std::set<char> intersection;
-        //     std::set_intersection(digitMapping[1].begin(),
-        //                           digitMapping[1].end(), digit.begin(),
-        //                           digit.end(), intersection.begin());
-        //     if (intersection == digitMapping[1])
-        //     {
-        //         digitMapping[0] = digit;
-        //     }
-        //     else
-        //     {
-        //         digitMapping[6] = digit;
-        //     }
-        // }
+        std::map<std::string, int> reverseDigitMapping;
+        for (const auto& [key, val] : digitMapping)
+        {
+            std::string s;
+            for (const auto& ch : val)
+                s.push_back(ch);
+            std::sort(s.begin(), s.end());
+            reverseDigitMapping[s] = key;
+        }
 
-        // // 2, 3, 5
-        // // Use overlap of 1 with 2, 3 and 5 to find 3
-        // for (const auto& digit : twoThreeAndFiveDigits)
-        // {
-        //     std::set<char> intersection;
-        //     std::set_intersection(digitMapping[1].begin(),
-        //                           digitMapping[1].end(), digit.begin(),
-        //                           digit.end(), intersection.begin());
-        //     if (intersection == digitMapping[1])
-        //     {
-        //         digitMapping[3] = digit;
-        //         break;
-        //     }
-        // }
-        // twoThreeAndFiveDigits.remove(digitMapping[3]);
-
-        // // 2, 5
-        // // Use overlap of 9 with 2 and 5 to find 5
-        // for (const auto& digit : twoThreeAndFiveDigits)
-        // {
-        //     std::set<char> intersection;
-        //     std::set_intersection(digitMapping[9].begin(),
-        //                           digitMapping[9].end(), digit.begin(),
-        //                           digit.end(), intersection.begin());
-        //     if (intersection == digitMapping[9])
-        //     {
-        //         digitMapping[5] = digit;
-        //     }
-        //     else
-        //     {
-        //         digitMapping[2] = digit;
-        //     }
-        // }
-
-        // for (const auto& digit : line.second)
-        // {
-        //     auto [key, val] = *std::find(digitMapping.begin(),
-        //     digitMapping.end(), digit); ss << key;
-        // }
-        // int val;
-        // ss >> val;
-        // sum += val;
+        std::stringstream ss;
+        for (const auto& digit : line.second)
+        {
+            ss << reverseDigitMapping[digit];
+        }
+        int val;
+        ss >> val;
+        sum += val;
     }
 
     return sum;
@@ -323,27 +255,8 @@ Part2(const std::vector<std::pair<std::array<std::set<char>, 10>,
  */
 void Day08(const char* fileName)
 {
-    auto t1 = std::chrono::high_resolution_clock::now();
     std::string text = ReadTextFile(fileName);
     auto data = ParseSevenSegmentData(text);
-    // PrintSevenSegmentData(data);
-    auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "Part 1: " << Part1(data) << "\n";
-    auto t3 = std::chrono::high_resolution_clock::now();
-    std::cout << "Part 2: \n" << Part2(data) << "\n";
-    auto t4 = std::chrono::high_resolution_clock::now();
-
-    auto readFileTime
-        = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-              .count();
-    auto solvePart1Time
-        = std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2)
-              .count();
-    auto solvePart2Time
-        = std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3)
-              .count();
-
-    std::cout << "File read and parsed in: " << readFileTime << "us\n";
-    std::cout << "Part 1 completed in: " << solvePart1Time << "us\n";
-    std::cout << "Part 2 completed in: " << solvePart2Time << "us\n";
+    std::cout << "Part 2: " << Part2(data) << "\n";
 }
