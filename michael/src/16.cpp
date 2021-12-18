@@ -11,7 +11,9 @@
 
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <string>
+#include <vector>
 
 #include "Days.h"
 #include "Utilities.h"
@@ -29,7 +31,20 @@ enum class State
     data,
     totalLength,
     numOfSubPackets,
+    ending,
     end,
+};
+
+enum class PacketType
+{
+    sum = 0,
+    product = 1,
+    min = 2,
+    max = 3,
+    data = 4,
+    greater = 5,
+    less = 6,
+    equal = 7,
 };
 
 /*
@@ -55,13 +70,16 @@ std::string GetBinData(const std::string& hex)
     return bin;
 }
 
-long int Part1(const std::string& bin, int& index)
+void Part1(const std::string& bin, int& index, long int& versionNumSum,
+           unsigned long long int& packetVal)
 {
-    std::cout << bin << "\n";
-    long int answer = 0;
+    // std::cout << bin << "\n";
     State currentState = State::version;
+    unsigned long long int data = 0;
+    std::vector<unsigned long long int> packetVals = {};
+    PacketType packetType = PacketType::data;
 
-    while (index < bin.size())
+    while (currentState != State::end)
     {
         switch (currentState)
         {
@@ -72,9 +90,9 @@ long int Part1(const std::string& bin, int& index)
 
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
-            std::cout << "Version: " << total << "\n";
+            // std::cout << "Version: " << total << "\n";
             currentState = State::typeId;
-            answer += total;
+            versionNumSum += total;
         }
         break;
 
@@ -86,23 +104,40 @@ long int Part1(const std::string& bin, int& index)
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
 
-            std::cout << "Type ID: " << total << "\n";
+            // std::cout << "Type ID: " << total << "\n";
 
-            if (total == 4)
+            packetType = static_cast<PacketType>(total);
+
+            switch (packetType)
+            {
+            case PacketType::data:
                 currentState = State::data;
-            else
+                break;
+
+            case PacketType::sum:
+            case PacketType::product:
+            case PacketType::min:
+            case PacketType::max:
+            case PacketType::greater:
+            case PacketType::less:
+            case PacketType::equal:
                 currentState = State::lengthId;
+                break;
+
+            default:
+                throw std::invalid_argument("Packet type id not valid");
+                break;
+            }
         }
         break;
 
         case State::lengthId:
         {
-            int a = bin[index++] - '0';
-            if (a)
+            if (bin[index++] - '0')
                 currentState = State::numOfSubPackets;
             else
                 currentState = State::totalLength;
-            std::cout << "Length ID: " << a << "\n";
+            // std::cout << "Length ID: " << a << "\n";
         }
         break;
 
@@ -111,17 +146,17 @@ long int Part1(const std::string& bin, int& index)
             const int len = 15;
             int total = 0;
 
-            const int highNum = -1;
-
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
-            std::cout << "Total Length: " << total << "\n";
+            // std::cout << "Total Length: " << total << "\n";
             const int start = index;
             while ((index - start) < total)
             {
-                answer += Part1(bin, index);
+                Part1(bin, index, versionNumSum, packetVal);
+                unsigned long long int packetValCopy = packetVal;
+                packetVals.push_back(packetValCopy);
             }
-            currentState = State::end;
+            currentState = State::ending;
         }
         break;
 
@@ -132,38 +167,84 @@ long int Part1(const std::string& bin, int& index)
 
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
-            std::cout << "Num of sub-packets: " << total << "\n";
+            // std::cout << "Num of sub-packets: " << total << "\n";
 
             for (int i = 0; i < total; i++)
             {
-                answer += Part1(bin, index);
+                Part1(bin, index, versionNumSum, packetVal);
+                unsigned long long int packetValCopy = packetVal;
+                packetVals.push_back(packetValCopy);
             }
-            currentState = State::end;
+            currentState = State::ending;
         }
         break;
 
         case State::data:
         {
-            bool run = true;
-            const int len = 5;
-            int total = 0;
+            currentState = (bin[index++] == '1') ? State::data : State::ending;
+            const int len = 4;
 
-            for (int j = len - 1; j >= 0; j--)
-                total += (bin[index++] - '0') << j;
-            currentState = (total & 0x10) ? State::data : State::end;
-            std::cout << "Data: " << total << "\n";
+            for (int i = 0; i < len; i++)
+            {
+                data <<= 1;
+                data += bin[index++] - '0';
+            }
+
+            // std::cout << "Data: " << total << "\n";
         }
         break;
 
-        case State::end:
         default:
-            return answer;
-            break;
+        case State::ending:
+            switch (packetType)
+            {
+            case PacketType::sum:
+                packetVal
+                    = std::accumulate(packetVals.begin(), packetVals.end(), 0);
+                break;
+
+            case PacketType::product:
+                packetVal = 1;
+                for (const auto& subPacketVal : packetVals)
+                    packetVal *= subPacketVal;
+                break;
+
+            case PacketType::min:
+                packetVal
+                    = *std::min_element(packetVals.begin(), packetVals.end());
+                break;
+
+            case PacketType::max:
+                packetVal
+                    = *std::max_element(packetVals.begin(), packetVals.end());
+                break;
+
+            case PacketType::data:
+                packetVal = data;
+                break;
+
+            case PacketType::greater:
+                packetVal = packetVals[0] > packetVals[1];
+                break;
+
+            case PacketType::less:
+                packetVal = packetVals[0] < packetVals[1];
+                break;
+
+            case PacketType::equal:
+                packetVal = packetVals[0] == packetVals[1];
+                break;
+
+            default:
+                break;
+            }
+            currentState = State::end;
+            return;
         }
     }
 
-    std::cout << "<=====\n";
-    return answer;
+    // std::cout << "<=====\n";
+    return;
 }
 
 /**
@@ -175,6 +256,13 @@ void Day16(const char* fileName)
 {
     const std::string hex = ReadTextFile(fileName);
     auto bin = GetBinData(hex);
+    std::cout << hex << "\n";
+
     int index = 0;
-    std::cout << "Part 1:\n\n" << Part1(bin, index) << "\n";
+    long int part1 = 0;
+    unsigned long long int part2 = 0;
+
+    Part1(bin, index, part1, part2);
+    std::cout << "Part 1: " << part1 << "\n";
+    std::cout << "Part 2: " << part2 << "\n";
 }
