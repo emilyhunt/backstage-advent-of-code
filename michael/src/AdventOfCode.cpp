@@ -33,11 +33,8 @@ int main(int argc, char **argv)
             "Too many args, format is ./AdventOfCode <dayId> <inputFile>");
 
     const auto select = std::atoi(argv[1]);
-    if ((select < 1) || (select > 25))
-        throw std::invalid_argument("Only days 1 to 25, no more, no less");
 
     char fileName[32] = {};
-
     if (argc == 2)
     {
         const char *fileNameBase = "data/xx/input.txt";
@@ -48,14 +45,13 @@ int main(int argc, char **argv)
     else
         std::strcpy(fileName, argv[2]);
 
-    std::unordered_map<int, void (*)(const char *)> functionMap{{1, Day01},
-    {2, Day02}, {3, Day03}, {4, Day04}, {5, Day05}, {6, Day06}, {7, Day07},
-    {8, Day08}, {9, Day09}, {10, Day10}, {11, Day11}, {12, Day12}, {13, Day13},
-    {14, Day14}, {15, Day15}, {16, Day16}, {17, Day17}, {18, Day18},
-    {19, Day19}, {20, Day20}, {21, Day21}, {22, Day22}, {23, Day23},
-    {24, Day24}, {25, Day25}};
+    const std::unordered_map<int, void (*)(const char *)> functionMap{
+    {1, Day01}, {2, Day02}, {3, Day03}, {4, Day04}, {5, Day05}, {6, Day06},
+    {7, Day07}, {8, Day08}, {9, Day09}, {10, Day10}, {11, Day11}, {12, Day12},
+    {13, Day13}, {14, Day14}, {15, Day15}, {16, Day16}, {17, Day17},
+    {18, Day18}, {19, Day19}, {20, Day20}, {21, Day21}, {22, Day22},
+    {23, Day23}, {24, Day24}, {25, Day25}};
 
-    functionMap[select](fileName);
-
+    functionMap.at(select)(fileName);
     return 0;
 }
