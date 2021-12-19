@@ -23,6 +23,9 @@
                                 Classes
 ================================================================================
 */
+/**
+ * @brief States of the state machine
+ */
 enum class State
 {
     version,
@@ -35,6 +38,9 @@ enum class State
     end,
 };
 
+/**
+ * @brief Packet type ID
+ */
 enum class PacketType
 {
     sum = 0,
@@ -47,6 +53,18 @@ enum class PacketType
     equal = 7,
 };
 
+/*
+================================================================================
+                            Function Definitions
+================================================================================
+*/
+/**
+ * @brief Print out the PacketType as a string representation
+ * 
+ * @param os output stream
+ * @param p packet type enum
+ * @return std::ostream& reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const PacketType& p)
 {
     switch (p)
@@ -92,11 +110,12 @@ std::ostream& operator<<(std::ostream& os, const PacketType& p)
     return os;
 }
 
-/*
-================================================================================
-                            Function Definitions
-================================================================================
-*/
+/**
+ * @brief Map a hex character to a binary string part
+ * 
+ * @param ch hex character
+ * @return std::string binary string of length 4
+ */
 std::string HexCharToBin(char ch)
 {
     std::map<char, std::string> map
@@ -107,6 +126,12 @@ std::string HexCharToBin(char ch)
     return map[ch];
 }
 
+/**
+ * @brief Get the binary string from hex string
+ * 
+ * @param hex string
+ * @return std::string of 1s and 0s
+ */
 std::string GetBinData(const std::string& hex)
 {
     std::string bin;
@@ -115,7 +140,15 @@ std::string GetBinData(const std::string& hex)
     return bin;
 }
 
-void Part1(const std::string& bin, int& index, long int& versionNumSum,
+/**
+ * @brief Solve part 1 and 2
+ * 
+ * @param bin binary string
+ * @param index current index position in binary string
+ * @param versionNumSum sum of version numbers (part 1)
+ * @param packetVal packet value (part 2)
+ */
+void Solve(const std::string& bin, int& index, long int& versionNumSum,
            long int& packetVal)
 {
     State currentState = State::version;
@@ -192,7 +225,7 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
             const int start = index;
             while ((index - start) < total)
             {
-                Part1(bin, index, versionNumSum, packetVal);
+                Solve(bin, index, versionNumSum, packetVal);
                 long int packetValCopy = packetVal;
                 packetVals.push_back(packetValCopy);
             }
@@ -210,7 +243,7 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
 
             for (int i = 0; i < total; i++)
             {
-                Part1(bin, index, versionNumSum, packetVal);
+                Solve(bin, index, versionNumSum, packetVal);
                 long int packetValCopy = packetVal;
                 packetVals.push_back(packetValCopy);
             }
@@ -297,7 +330,7 @@ void Day16(const char* fileName)
     long int part1 = 0;
     long int part2 = 0;
 
-    Part1(bin, index, part1, part2);
+    Solve(bin, index, part1, part2);
     std::cout << "Part 1: " << part1 << "\n";
     std::cout << "Part 2: " << part2 << "\n";
 }
