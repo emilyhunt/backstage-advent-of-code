@@ -10,6 +10,7 @@
  */
 
 #include <exception>
+#include <unordered_map>
 
 #include "Days.h"
 #include "Utilities.h"
@@ -32,6 +33,8 @@ int main(int argc, char **argv)
             "Too many args, format is ./AdventOfCode <dayId> <inputFile>");
 
     const auto select = std::atoi(argv[1]);
+    if ((select < 1) || (select > 25))
+        throw std::invalid_argument("Only days 1 to 25, no more, no less");
 
     char fileName[32] = {};
 
@@ -45,110 +48,14 @@ int main(int argc, char **argv)
     else
         std::strcpy(fileName, argv[2]);
 
-    switch (select)
-    {
-    case 1:
-        Day01(fileName);
-        break;
+    std::unordered_map<int, void (*)(const char *)> functionMap{{1, Day01},
+    {2, Day02}, {3, Day03}, {4, Day04}, {5, Day05}, {6, Day06}, {7, Day07},
+    {8, Day08}, {9, Day09}, {10, Day10}, {11, Day11}, {12, Day12}, {13, Day13},
+    {14, Day14}, {15, Day15}, {16, Day16}, {17, Day17}, {18, Day18},
+    {19, Day19}, {20, Day20}, {21, Day21}, {22, Day22}, {23, Day23},
+    {24, Day24}, {25, Day25}};
 
-    case 2:
-        Day02(fileName);
-        break;
+    functionMap[select](fileName);
 
-    case 3:
-        Day03(fileName);
-        break;
-
-    case 4:
-        Day04(fileName);
-        break;
-
-    case 5:
-        Day05(fileName);
-        break;
-
-    case 6:
-        Day06(fileName);
-        break;
-
-    case 7:
-        Day07(fileName);
-        break;
-
-    case 8:
-        Day08(fileName);
-        break;
-
-    case 9:
-        Day09(fileName);
-        break;
-
-    case 10:
-        Day10(fileName);
-        break;
-
-    case 11:
-        Day11(fileName);
-        break;
-
-    case 12:
-        Day12(fileName);
-        break;
-
-    case 13:
-        Day13(fileName);
-        break;
-
-    case 14:
-        Day14(fileName);
-        break;
-
-    case 15:
-        Day15(fileName);
-        break;
-
-    case 16:
-        Day16(fileName);
-        break;
-
-    case 17:
-        Day17(fileName);
-        break;
-
-    case 18:
-        Day18(fileName);
-        break;
-
-    case 19:
-        Day19(fileName);
-        break;
-
-    case 20:
-        Day20(fileName);
-        break;
-
-    case 21:
-        Day21(fileName);
-        break;
-
-    case 22:
-        Day22(fileName);
-        break;
-
-    case 23:
-        Day23(fileName);
-        break;
-
-    case 24:
-        Day24(fileName);
-        break;
-
-    case 25:
-        Day25(fileName);
-        break;
-
-    default:
-        throw std::invalid_argument(argv[1]);
-        break;
-    }
+    return 0;
 }
