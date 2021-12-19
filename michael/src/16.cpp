@@ -116,12 +116,11 @@ std::string GetBinData(const std::string& hex)
 }
 
 void Part1(const std::string& bin, int& index, long int& versionNumSum,
-           long long int& packetVal)
+           long int& packetVal)
 {
-    // std::cout << bin.substr(index) << "\n";
     State currentState = State::version;
-    long long int data = 0;
-    std::vector<long long int> packetVals = {};
+    long int data = 0;
+    std::vector<long int> packetVals = {};
     PacketType packetType = PacketType::data;
 
     while (currentState != State::end)
@@ -135,7 +134,6 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
 
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
-            // std::cout << "Version: " << total << "\n";
             currentState = State::typeId;
             versionNumSum += total;
         }
@@ -172,7 +170,6 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
                 throw std::invalid_argument("Packet type id not valid");
                 break;
             }
-            // std::cout << "Packet type ID: " << packetType << "\n";
         }
         break;
 
@@ -182,7 +179,6 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
                 currentState = State::numOfSubPackets;
             else
                 currentState = State::totalLength;
-            // std::cout << "Length ID: " << a << "\n";
         }
         break;
 
@@ -193,12 +189,11 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
 
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
-            // std::cout << "Total Length: " << total << "\n";
             const int start = index;
             while ((index - start) < total)
             {
                 Part1(bin, index, versionNumSum, packetVal);
-                long long int packetValCopy = packetVal;
+                long int packetValCopy = packetVal;
                 packetVals.push_back(packetValCopy);
             }
             currentState = State::ending;
@@ -212,12 +207,11 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
 
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
-            // std::cout << "Num of sub-packets: " << total << "\n";
 
             for (int i = 0; i < total; i++)
             {
                 Part1(bin, index, versionNumSum, packetVal);
-                long long int packetValCopy = packetVal;
+                long int packetValCopy = packetVal;
                 packetVals.push_back(packetValCopy);
             }
             currentState = State::ending;
@@ -234,9 +228,6 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
                 data <<= 1;
                 data += bin[index++] - '0';
             }
-
-            // if (currentState == State::ending)
-            //     std::cout << "Data: " << data << "\n";
         }
         break;
 
@@ -246,7 +237,7 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
             {
             case PacketType::sum:
                 packetVal
-                    = std::accumulate(packetVals.begin(), packetVals.end(), 0ll);
+                    = std::accumulate(packetVals.begin(), packetVals.end(), 0L);
                 break;
 
             case PacketType::product:
@@ -267,7 +258,6 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
 
             case PacketType::data:
                 packetVal = data;
-                data = 0;
                 break;
 
             case PacketType::greater:
@@ -286,7 +276,6 @@ void Part1(const std::string& bin, int& index, long int& versionNumSum,
                 break;
             }
             currentState = State::end;
-            // std::cout << "<=====\n";
             return;
         }
     }
@@ -303,11 +292,10 @@ void Day16(const char* fileName)
 {
     const std::string hex = ReadTextFile(fileName);
     auto bin = GetBinData(hex);
-    // std::cout << hex << "\n";
 
     int index = 0;
     long int part1 = 0;
-    long long int part2 = 0;
+    long int part2 = 0;
 
     Part1(bin, index, part1, part2);
     std::cout << "Part 1: " << part1 << "\n";
