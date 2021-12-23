@@ -15,8 +15,8 @@
 #include <iostream>
 #include <numeric>
 #include <regex>
-#include <set>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include <eigen/Dense>
@@ -68,7 +68,7 @@
 //     vec);
 // };
 
-double DegToRad(double angle) { return M_PI / 180.0 * angle; }
+static double DegToRad(double angle) { return M_PI / 180.0 * angle; }
 
 Eigen::Matrix3d CreateRotation(double yaw, double pitch, double roll)
 {
@@ -195,6 +195,29 @@ using Scanners = std::vector<std::vector<Eigen::Vector3d>>;
 ================================================================================
 */
 
+namespace std
+{
+/**
+ * @brief Hash function for Vector3d
+ */
+template <>
+struct hash<Eigen::Vector3d>
+{
+    /**
+     * @brief Call operator for hash object, for use with std::unordered_map
+     *
+     * @param point point object to hash
+     * @return std::size_t hash of object
+     */
+    size_t operator()(const Eigen::Vector3d& vec) const
+    {
+        std::stringstream ss;
+        ss << vec;
+        return std::hash<std::string>{}(ss.str());
+    }
+};
+}
+
 Scanners CreateScannerData(const std::string& text)
 {
     std::regex scannerRegex(
@@ -232,7 +255,8 @@ Scanners CreateScannerData(const std::string& text)
     return scanners;
 }
 
-void PrintScannerData(const std::vector<Eigen::Vector3d>& scanner)
+template<typename T>
+void PrintScannerData(const T& scanner)
 {
     for (const auto& coord : scanner)
         std::cout << coord.transpose() << "\n";
@@ -270,7 +294,7 @@ TranslateVectors(const Eigen::Translation3d& translation,
     return translatedVectors;
 }
 
-std::vector<Eigen::Vector3d>
+std::unordered_set<Eigen::Vector3d>
 FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
                       const std::vector<Eigen::Vector3d>& vectorsB)
 {
@@ -284,7 +308,7 @@ FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
                 Eigen::Translation3d translate(vecA - vecB);
                 std::vector<Eigen::Vector3d> transfVecs
                     = TranslateVectors(translate, rotatedVecs);
-                std::vector<Eigen::Vector3d> currentMatches;
+                std::unordered_set<Eigen::Vector3d> currentMatches;
 
                 for (const auto& originalVec : vectorsA)
                 {
@@ -292,7 +316,7 @@ FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
                     {
                         if (transfVec.isApprox(originalVec, 0.1))
                         {
-                            currentMatches.push_back(transfVec);
+                            currentMatches.insert(transfVec);
                             break;
                         }
                     }
@@ -305,8 +329,11 @@ FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
             }
         }
     }
-    return std::vector<Eigen::Vector3d>();
+    return std::unordered_set<Eigen::Vector3d>();
 }
+
+// 564 too high
+// 142 too low
 
 /**
  * @brief Solve part 1
@@ -319,21 +346,21 @@ FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
  * @param scanners Input data
  * @return long int Amount of beacons found by all scanners
  */
-std::vector<Eigen::Vector3d> Part1(const Scanners& scanners)
+std::unordered_set<Eigen::Vector3d> Part1(const Scanners& scanners)
 {
     std::unordered_map<int, std::pair<Eigen::Vector3d, Eigen::Matrix3d>>
         scannerMap;
 
-    std::vector<Eigen::Vector3d> matches;
+    std::unordered_set<Eigen::Vector3d> matches;
     for (size_t vectorAIdx = 0; vectorAIdx < scanners.size(); vectorAIdx++)
     {
-        for (size_t vectorBIdx = vectorAIdx + 1; vectorBIdx < scanners.size();
-             vectorBIdx++)
+        for (size_t vectorBIdx = 0; vectorBIdx < scanners.size(); vectorBIdx++)
         {
+            if (vectorAIdx == vectorBIdx)
+                continue;
             auto currentMatches = FindIntersectionGroup(scanners[vectorAIdx],
                                                         scanners[vectorBIdx]);
-            matches.insert(matches.end(), currentMatches.begin(),
-                           currentMatches.end());
+            matches.insert(currentMatches.begin(), currentMatches.end());
         }
     }
 
@@ -362,6 +389,8 @@ void Day19(const char* fileName)
     // }};
 
     auto matches = Part1(scannerData);
+
+    PrintScannerData(matches);
 
     // PrintVector(matches, "\n\n");
 
