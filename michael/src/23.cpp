@@ -11,8 +11,10 @@
 
 #include <array>
 #include <iostream>
+#include <queue>
 #include <stack>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include "Days.h"
@@ -23,8 +25,8 @@
                             Function Definitions
 ================================================================================
 */
-static std::unordered_map<std::string, int> cost{
-    {"A", 1}, {"B", 10}, {"C", 100}, {"D", 1000}};
+static std::unordered_map<char, int> cost{
+    {'A', 1}, {'B', 10}, {'C', 100}, {'D', 1000}};
 
 /**
  * @brief Solution to part 1, solved by hand
@@ -33,57 +35,137 @@ static std::unordered_map<std::string, int> cost{
  */
 static int Part1()
 {
-    int answer = 2 * cost["D"];
-    answer += 3 * cost["A"];
-    answer += 3 * cost["D"];
-    answer += 6 * cost["A"];
-    answer += 5 * cost["D"];
-    answer += 5 * cost["C"];
-    answer += 5 * cost["C"];
-    answer += 5 * cost["B"];
-    answer += 5 * cost["B"];
-    answer += 3 * cost["A"];
-    answer += 8 * cost["A"];
+    int answer = 2 * cost['D'];
+    answer += 3 * cost['A'];
+    answer += 3 * cost['D'];
+    answer += 6 * cost['A'];
+    answer += 5 * cost['D'];
+    answer += 5 * cost['C'];
+    answer += 5 * cost['C'];
+    answer += 5 * cost['B'];
+    answer += 5 * cost['B'];
+    answer += 3 * cost['A'];
+    answer += 8 * cost['A'];
 
     return answer;
+}
+
+using PuzzleGrid = std::array<std::string, 11>;
+
+namespace std
+{
+/**
+ * @brief Hash function for PuzzleGrid
+ */
+template <>
+struct hash<PuzzleGrid>
+{
+    /**
+     * @brief Call operator for hash object, for use with std::unordered_map
+     *
+     * @param grid PuzzleGrid object to hash
+     * @return std::size_t hash of object
+     */
+    std::size_t operator()(const PuzzleGrid& grid) const
+    {
+        std::stringstream ss;
+        for (const auto& elem : grid)
+            ss << elem;
+        return std::hash<std::string>{}(ss.str());
+    }
+};
 }
 
 static int Part2()
 {
     // #############
-    // #EF.G.H.I.JK#
-    // ###A#B#C#D###
+    // #01.3.5.7.9A#
+    // ###2#4#6#8###
     //   #.#.#.#.#
     //   #.#.#.#.#
     //   #.#.#.#.#
     //   #########
 
-    std::unordered_map<std::string, std::vector<std::string>> puzzleMap{
-        {"A", {"F", "G"}},
-        {"B", {"G", "H"}},
-        {"C", {"H", "I"}},
-        {"D", {"I", "J"}},
-        {"E", {"F"}},
-        {"F", {"A", "G"}},
-        {"G", {"F", "A", "B", "H"}},
-        {"H", {"G", "B", "C", "I"}},
-        {"I", {"H", "C", "D", "J"}},
-        {"J", {"I", "D"}},
-        {"K", {"J"}},
-    };
+    int totalCost = 0;
+    PuzzleGrid start{".",    ".", "BDDB", ".", "CBCC", ".",
+                     "DABA", ".", "ACAD", ".", "."};
+    PuzzleGrid end{".",    ".", "AAAA", ".", "BBBB", ".",
+                   "CCCC", ".", "DDDD", ".", "."};
 
-    std::array<std::stack<char>, 4> destinations;
+    std::queue<PuzzleGrid> frontier;
+    frontier.push(start);
+    std::unordered_set<PuzzleGrid> visited{start};
 
-    int answer = 0;
+    std::array<int, 2> searchDirs{-1, 1};
+    std::array<std::size_t, 4> columns{2, 4, 6, 8};
 
-    // destinations[0].emplace("B", "D", "D", "B");
-    // destinations[1].emplace("C", "C", "B", "C");
-    // destinations[2].emplace("A", "B", "A", "D");
-    // destinations[3].emplace("D", "A", "C", "A");
+    while (!frontier.empty())
+    {
+        PuzzleGrid current = frontier.front();
+        frontier.pop();
 
-    // std::cout << destinations[2].top() << "\n";
+        // Expand
+        for (size_t i = 0; i < current.size(); i++)
+        {
+            for (const auto& searchDir : searchDirs)
+            {
+                int index = i + searchDir;
+                // If nothing here or out of bounds
+                if ((index < 0) || (index >= static_cast<int>(current.size()))
+                    || (current[i] == "."))
+                    continue;
 
-    return answer;
+                // If moving to a column and it's full
+                if (current[index].length() == 4)
+                    continue;
+
+                // If moving to waiting area but it's full
+                if (!std::count(columns.begin(), columns.end(), index)
+                    && !(current[index] == "."))
+                    continue;
+
+                PuzzleGrid next = current;
+
+                char letter = current[i][current[i].size() - 1];
+
+                if (next[index].length() == 1)
+                    next[index].pop_back();
+                next[index].push_back(letter);
+                next[i].pop_back();
+                if (next[i].length() == 0)
+                    next[i].push_back('.');
+
+                if (!visited.count(next))
+                {
+                    frontier.push(next);
+                    visited.insert(next);
+                }
+
+                totalCost += cost[letter];
+
+                if (next == end)
+                    return totalCost;
+
+                // PrintVector(next);
+            }
+        }
+    }
+
+    // std::unordered_map<std::string, std::vector<std::string>> puzzleMap{
+    //     {"A", {"F", "G"}},
+    //     {"B", {"G", "H"}},
+    //     {"C", {"H", "I"}},
+    //     {"D", {"I", "J"}},
+    //     {"E", {"F"}},
+    //     {"F", {"A", "G"}},
+    //     {"G", {"F", "A", "B", "H"}},
+    //     {"H", {"G", "B", "C", "I"}},
+    //     {"I", {"H", "C", "D", "J"}},
+    //     {"J", {"I", "D"}},
+    //     {"K", {"J"}},
+    // };
+
+    return totalCost;
 }
 
 // 68796 too high!
@@ -100,7 +182,7 @@ static int Part2()
  */
 void Day23(const char* fileName)
 {
-    bool printMaps = false;
+    bool printMaps = true;
     std::string text = ReadTextFile(fileName);
 
     if (printMaps)
