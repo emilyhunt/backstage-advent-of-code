@@ -17,36 +17,15 @@
 
 #pragma once
 
-std::string ReadTextFile(const char* fileName);
-void PrintNumbers(const std::vector<int>& numbers, const char* sep);
-std::vector<std::string> SplitLines(const std::string& text);
-std::vector<std::string> Split(const std::string& text,
-                               const std::string& delim);
-std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text);
-void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid);
-
-/**
- * @brief Read numbers to a vector of numbers, can be spaced by anything
- *
- * @tparam T data will be read as this integer type
- * @param fileName Path to file to read from
- * @return std::vector<T> Vector of integer type
- */
-template <typename T>
-std::vector<T> ReadNumbersFile(const char* fileName)
-{
-    std::vector<T> numbers;
-    std::string text = ReadTextFile(fileName);
-    std::regex numberRegex("\\d+");
-
-    auto begin = std::sregex_iterator(text.begin(), text.end(), numberRegex);
-    auto end = std::sregex_iterator();
-
-    for (std::sregex_iterator iter = begin; iter != end; iter++)
-        numbers.push_back(std::atoi((*iter).str().c_str()));
-
-    return numbers;
-}
+std::string ReadTextFile(const char *fileName);
+void PrintNumbers(const std::vector<int> &numbers, const char *sep);
+std::vector<std::string> SplitLines(const std::string &text);
+std::vector<std::string> Split(const std::string &text,
+                               const std::string &delim);
+std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string &text);
+void PrintNumberGrid(const std::vector<std::vector<int>> &numberGrid);
+std::vector<int> ReadNumbers(const std::string &text);
+std::vector<int> ReadNumbersFile(const char *fileName);
 
 /**
  * @brief Prints all elements of a vector
@@ -56,9 +35,9 @@ std::vector<T> ReadNumbersFile(const char* fileName)
  * @param sep Seperator between elements
  */
 template <typename T>
-void PrintVector(const std::vector<T>& vec, const char* sep = " ")
+void PrintVector(const std::vector<T> &vec, const char *sep = " ")
 {
-    for (const auto& item : vec)
+    for (const auto &item : vec)
         std::cout << item << sep;
     std::cout << "\n";
 }
@@ -74,12 +53,12 @@ void PrintVector(const std::vector<T>& vec, const char* sep = " ")
  * "
  */
 template <typename T1, typename T2>
-void PrintMap(const std::unordered_map<T1, T2>& map,
-              const char* keyValSep = ": ", const char* elemSep = ", ")
+void PrintMap(const std::unordered_map<T1, T2> &map,
+              const char *keyValSep = ": ", const char *elemSep = ", ")
 {
     std::cout << "{";
     bool isFirst = true;
-    for (const auto& [key, val] : map)
+    for (const auto &[key, val] : map)
     {
         if (isFirst)
         {

@@ -21,7 +21,7 @@
  * @param fileName Path to file to read
  * @return std::string Text from file copied to string
  */
-std::string ReadTextFile(const char* fileName)
+std::string ReadTextFile(const char *fileName)
 {
     std::ifstream file(fileName);
     if (!file)
@@ -37,7 +37,7 @@ std::string ReadTextFile(const char* fileName)
  * @param numbers Vector of numbers to print
  * @param sep Seperator between values when printed
  */
-void PrintNumbers(const std::vector<int>& numbers, const char* sep = " ")
+void PrintNumbers(const std::vector<int> &numbers, const char *sep = " ")
 {
     PrintVector<int>(numbers, sep);
 }
@@ -48,7 +48,7 @@ void PrintNumbers(const std::vector<int>& numbers, const char* sep = " ")
  * @param text String to split
  * @return std::vector<std::string> Split into vector of strings
  */
-std::vector<std::string> SplitLines(const std::string& text)
+std::vector<std::string> SplitLines(const std::string &text)
 {
     return Split(text, "\n");
 }
@@ -60,8 +60,8 @@ std::vector<std::string> SplitLines(const std::string& text)
  * @param delim Delimiter
  * @return std::vector<std::string> Split into vector of strings
  */
-std::vector<std::string> Split(const std::string& text,
-                               const std::string& delim)
+std::vector<std::string> Split(const std::string &text,
+                               const std::string &delim)
 {
     std::vector<std::string> splitString;
     size_t last = 0;
@@ -81,11 +81,11 @@ std::vector<std::string> Split(const std::string& text,
  * @param text to be converted
  * @return std::vector<std::vector<int>> 2D vector of ints from text file data
  */
-std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text)
+std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string &text)
 {
     std::vector<std::vector<int>> numberGrid;
     std::vector<int> line;
-    for (const auto& ch : text)
+    for (const auto &ch : text)
     {
         if (ch == '\n')
         {
@@ -106,14 +106,47 @@ std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text)
  *
  * @param numberGrid Data to be printed
  */
-void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid)
+void PrintNumberGrid(const std::vector<std::vector<int>> &numberGrid)
 {
-    for (const auto& line : numberGrid)
+    for (const auto &line : numberGrid)
     {
-        for (const auto& number : line)
+        for (const auto &number : line)
         {
             std::cout << number;
         }
         std::cout << "\n";
     }
+}
+
+/**
+ * @brief Read numbers spaced by any delimiter
+ * 
+ * @param text text to seperate
+ * @return std::vector<int> numbers from string
+ */
+std::vector<int> ReadNumbers(const std::string &text)
+{
+    std::vector<int> numbers;
+    std::regex numberRegex(R"(\d+)");
+
+    auto begin = std::sregex_iterator(text.begin(), text.end(), numberRegex);
+    auto end = std::sregex_iterator();
+
+    for (std::sregex_iterator iter = begin; iter != end; iter++)
+        numbers.push_back(std::atoi((*iter).str().c_str()));
+
+    return numbers;
+}
+
+/**
+ * @brief Read numbers to a vector of numbers, can be spaced by anything
+ *
+ * @param fileName Path to file to read from
+ * @return std::vector<int> Vector of integer type
+ */
+std::vector<int> ReadNumbersFile(const char *fileName)
+{
+    std::string text = ReadTextFile(fileName);
+    std::vector<int> numbers(ReadNumbers(text));
+    return numbers;
 }
