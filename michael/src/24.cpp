@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <utility>
 
 #include "Days.h"
 #include "Utilities.h"
@@ -27,13 +29,50 @@
 ================================================================================
 */
 
+using Instructions = std::vector<std::pair<std::string, std::vector<int>>>;
+
+static Instructions ExtractInstructions(const std::string &text)
+{
+    Instructions instructions;
+    auto lines = SplitLines(text);
+    for (const auto &line : lines)
+    {
+        std::string instuction = line.substr(0, 3);
+        std::vector<int> numbers = ReadNumbers(line.substr(3));
+        instructions.push_back(std::make_pair(instuction, numbers));
+    }
+    return instructions;
+}
+
+static void PrintInstructions(const Instructions &instructions)
+{
+    for (const auto &instruction : instructions)
+    {
+        std::cout << instruction.first << " ";
+        for (const auto number : instruction.second)
+        {
+            std::cout << number << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
+static int Part1(const Instructions &instructions)
+{
+    return 0;
+}
+
 /**
  * @brief Day 24 of Advent of Code
  *
  * @param fileName to read as puzzle input
  */
-void Day24(const char* fileName)
+void Day24(const char *fileName)
 {
-    const std::string text = ReadTextFile(fileName);
-    std::cout << text << "\n";
+    const auto text = ReadTextFile(fileName);
+    auto instructions = ExtractInstructions(text);
+
+    PrintInstructions(instructions);
+
+    std::cout << Part1(instructions) << "\n";
 }
