@@ -9,7 +9,9 @@
  *
  */
 
+#include <algorithm>
 #include <array>
+#include <functional>
 #include <iostream>
 #include <queue>
 #include <stack>
@@ -51,6 +53,7 @@ static int Part1()
 }
 
 using PuzzleGrid = std::array<std::string, 11>;
+using PriorityElement = std::pair<PuzzleGrid, int>;
 
 namespace std
 {
@@ -70,13 +73,168 @@ struct hash<PuzzleGrid>
     {
         std::stringstream ss;
         for (const auto& elem : grid)
-            ss << elem;
+            ss << elem << "-";
         return std::hash<std::string>{}(ss.str());
     }
 };
+
+/**
+ * @brief Hash function for enroute ((from, to) pair)
+ */
+template <>
+struct hash<std::pair<int, int>>
+{
+    /**
+     * @brief Call operator for hash object, for use with std::unordered_map
+     *
+     * @param grid std::pair<int, int> object to hash
+     * @return std::size_t hash of object
+     */
+    std::size_t operator()(const std::pair<int, int>& fromTo) const
+    {
+        std::stringstream ss;
+        ss << fromTo.first << "-" << fromTo.second;
+        return std::hash<std::string>{}(ss.str());
+    }
+};
+
 }
 
-static int Part2()
+std::ostream& operator<<(std::ostream& os, const PuzzleGrid& grid)
+{
+    {
+        std::array<std::string, 7> row = {".", ".", ".", ".", ".", ".", "."};
+        if (grid[0].length())
+            row[0] = grid[0];
+        if (grid[10].length())
+            row[6] = grid[10];
+
+        for (int i = 0; i < 5; i++)
+        {
+            std::size_t index = (i * 2) + 1;
+            if (grid[index].length())
+                row[i + 1] = grid[index];
+        }
+
+        os << "#############\n#" << row[0] << row[1] << "." << row[2] << "."
+           << row[3] << "." << row[4] << "." << row[5] << row[6] << "#\n";
+    }
+    bool firstRun = true;
+    for (int i = 3; i >= 0; i--)
+    {
+        if (firstRun)
+            os << "##";
+        else
+            os << "  ";
+
+        std::array<char, 4> row = {'.', '.', '.', '.'};
+        // = {grid[2][i], grid[4][i], grid[6][i], grid[8][i]};
+
+        for (int j = 0; j < 4; j++)
+        {
+            int index = (j * 2) + 2;
+            if (static_cast<int>(grid[index].length()) > i)
+                row[j] = grid[index][i];
+        }
+
+        os << "#" << row[0] << "#" << row[1] << "#" << row[2] << "#" << row[3]
+           << "#";
+        if (firstRun)
+        {
+            os << "##\n";
+            firstRun = false;
+        }
+        else
+            os << "\n";
+    }
+
+    os << "  #########";
+    return os;
+}
+
+static void
+PrintRoute(const std::unordered_map<PuzzleGrid, PuzzleGrid>& cameFrom,
+           const std::unordered_map<PuzzleGrid, int>& costs,
+           const PuzzleGrid& end)
+{
+    std::stack<PuzzleGrid> route;
+    route.push(end);
+
+    PuzzleGrid key = end;
+    while (cameFrom.count(key))
+    {
+        key = cameFrom.at(key);
+        route.push(key);
+    }
+
+    int lastCost = 0;
+
+    while (!route.empty())
+    {
+        std::cout << route.top() << "\n";
+        int cost = costs.at(route.top());
+        std::cout << cost << "\n" << cost - lastCost << "\n\n";
+        route.pop();
+        lastCost = cost;
+    }
+}
+
+bool operator<(const PriorityElement& a, const PriorityElement& b)
+{
+    return a.second < b.second;
+}
+
+bool operator>(const PriorityElement& a, const PriorityElement& b)
+{
+    return a.second > b.second;
+}
+
+bool operator==(const PuzzleGrid& a, const PuzzleGrid& b)
+{
+    return std::hash<PuzzleGrid>{}(a) == std::hash<PuzzleGrid>{}(b);
+}
+
+bool operator!=(const PuzzleGrid& a, const PuzzleGrid& b) { return !(a == b); }
+
+static const std::array<std::size_t, 4> columns{2, 4, 6, 8};
+
+static bool IsColumnInsertionAllowed(char letter, std::size_t index,
+                                     const std::string& columnContents)
+{
+    switch (letter)
+    {
+    case 'A':
+        return index == columns[0]
+               && (columnContents.find('B') == std::string::npos)
+               && (columnContents.find('C') == std::string::npos)
+               && (columnContents.find('D') == std::string::npos);
+
+    case 'B':
+        return index == columns[1]
+               && (columnContents.find('A') == std::string::npos)
+               && (columnContents.find('C') == std::string::npos)
+               && (columnContents.find('D') == std::string::npos);
+
+    case 'C':
+        return index == columns[2]
+               && (columnContents.find('A') == std::string::npos)
+               && (columnContents.find('B') == std::string::npos)
+               && (columnContents.find('D') == std::string::npos);
+
+    case 'D':
+        return index == columns[3]
+               && (columnContents.find('A') == std::string::npos)
+               && (columnContents.find('B') == std::string::npos)
+               && (columnContents.find('C') == std::string::npos);
+
+    default:
+        break;
+    }
+
+    throw std::invalid_argument("Unknown letter");
+}
+
+static int Part2(bool doPrint)
 {
     // #############
     // #01.3.5.7.9A#
@@ -86,94 +244,213 @@ static int Part2()
     //   #.#.#.#.#
     //   #########
 
-    int totalCost = 0;
-    PuzzleGrid start{".",    ".", "BDDB", ".", "CBCC", ".",
-                     "DABA", ".", "ACAD", ".", "."};
-    PuzzleGrid end{".",    ".", "AAAA", ".", "BBBB", ".",
-                   "CCCC", ".", "DDDD", ".", "."};
+    std::unordered_map<std::pair<int, int>, std::vector<int>> enroute{
+        {{0, 2}, {1}},
+        {{0, 4}, {1, 3}},
+        {{0, 6}, {1, 3, 5}},
+        {{0, 8}, {1, 3, 5, 7}},
 
-    std::queue<PuzzleGrid> frontier;
-    frontier.push(start);
+        {{1, 2}, {}},
+        {{1, 4}, {3}},
+        {{1, 6}, {3, 5}},
+        {{1, 8}, {3, 5, 7}},
+
+        {{2, 3}, {}},
+        {{3, 4}, {}},
+        {{3, 6}, {5}},
+        {{3, 8}, {5, 7}},
+
+        {{2, 5}, {3}},
+        {{4, 5}, {}},
+        {{5, 6}, {}},
+        {{5, 8}, {7}},
+
+        {{2, 7}, {3, 5}},
+        {{4, 7}, {5}},
+        {{6, 7}, {}},
+        {{7, 8}, {}},
+
+        {{2, 9}, {3, 5, 7}},
+        {{4, 9}, {5, 7}},
+        {{6, 9}, {7}},
+        {{8, 9}, {}},
+
+        {{2, 10}, {3, 5, 7, 9}},
+        {{4, 10}, {5, 7, 9}},
+        {{6, 10}, {7, 9}},
+        {{8, 10}, {9}},
+
+        {{2, 4}, {3}},
+        {{2, 6}, {3, 5}},
+        {{2, 8}, {3, 5, 7}},
+
+        {{4, 6}, {5}},
+        {{4, 8}, {5, 7}},
+
+        {{6, 8}, {7}},
+    };
+
+    // Pair of route and cost (steps)
+    std::unordered_map<int, std::vector<std::pair<int, int>>> puzzleMap{
+        {0, {{2, 3}, {4, 5}, {6, 7}, {8, 9}}},
+        {1, {{2, 2}, {4, 4}, {6, 6}, {8, 8}}},
+        {3, {{2, 2}, {4, 2}, {6, 4}, {8, 6}}},
+        {5, {{2, 4}, {4, 2}, {6, 2}, {8, 4}}},
+        {7, {{2, 6}, {4, 4}, {6, 2}, {8, 2}}},
+        {9, {{2, 8}, {4, 6}, {6, 4}, {8, 2}}},
+        {10, {{2, 9}, {4, 7}, {6, 5}, {8, 3}}},
+
+        {2,
+         {{0, 3},
+          {1, 2},
+          {3, 2},
+          {4, 4},
+          {5, 4},
+          {6, 6},
+          {7, 6},
+          {8, 8},
+          {9, 8},
+          {10, 9}}},
+        {4,
+         {{0, 5},
+          {1, 4},
+          {2, 4},
+          {3, 2},
+          {5, 2},
+          {6, 4},
+          {7, 4},
+          {8, 6},
+          {9, 6},
+          {10, 7}}},
+        {6,
+         {{0, 7},
+          {1, 6},
+          {2, 6},
+          {3, 4},
+          {4, 4},
+          {5, 2},
+          {7, 2},
+          {8, 4},
+          {9, 4},
+          {10, 5}}},
+        {8,
+         {{0, 9},
+          {1, 8},
+          {2, 8},
+          {3, 6},
+          {4, 6},
+          {5, 4},
+          {6, 4},
+          {7, 2},
+          {9, 2},
+          {10, 3}}},
+    };
+
+    PuzzleGrid start{"",     "", "BDDB", "", "CBCC", "",
+                     "DABA", "", "ACAD", "", ""};
+    PuzzleGrid end{"", "", "AAAA", "", "BBBB", "", "CCCC", "", "DDDD", "", ""};
+
+    std::priority_queue<PriorityElement> frontier;
+    frontier.push(std::make_pair(start, 0));
     std::unordered_set<PuzzleGrid> visited{start};
+    std::unordered_map<PuzzleGrid, int> costs;
+    std::unordered_map<PuzzleGrid, PuzzleGrid> cameFrom;
 
-    std::array<int, 2> searchDirs{-1, 1};
-    std::array<std::size_t, 4> columns{2, 4, 6, 8};
+    costs[start] = 0;
 
     while (!frontier.empty())
     {
-        PuzzleGrid current = frontier.front();
+        auto [current, priority] = frontier.top();
         frontier.pop();
 
-        // Expand
-        for (size_t i = 0; i < current.size(); i++)
+        if (current == end)
         {
-            for (const auto& searchDir : searchDirs)
+            if (doPrint)
+                PrintRoute(cameFrom, costs, current);
+            return costs[current];
+        }
+
+        // Expand
+        for (int fromIndex = 0; fromIndex < static_cast<int>(current.size());
+             fromIndex++)
+        {
+            for (const auto& [toIndex, steps] : puzzleMap[fromIndex])
             {
-                int index = i + searchDir;
-                // If nothing here or out of bounds
-                if ((index < 0) || (index >= static_cast<int>(current.size()))
-                    || (current[i] == "."))
+                // If moving to out of bounds or from empty position
+                if ((toIndex < 0)
+                    || (toIndex >= static_cast<int>(current.size()))
+                    || (current[fromIndex].length() == 0))
                     continue;
 
                 // If moving to a column and it's full
-                if (current[index].length() == 4)
+                if (current[toIndex].length() == 4)
                     continue;
+
+                bool movingToRoom
+                    = std::count(columns.begin(), columns.end(), toIndex);
+                bool movingFromRoom
+                    = std::count(columns.begin(), columns.end(), fromIndex);
 
                 // If moving to waiting area but it's full
-                if (!std::count(columns.begin(), columns.end(), index)
-                    && !(current[index] == "."))
+                if (!(movingToRoom || (current[toIndex].length() == 0)))
                     continue;
 
-                PuzzleGrid next = current;
+                // If blocked path
+                bool blockedPath = false;
+                for (const auto& pointOnRoute :
+                     enroute[std::make_pair(std::min(fromIndex, toIndex),
+                                            std::max(fromIndex, toIndex))])
+                    if (current[pointOnRoute].length())
+                    {
+                        blockedPath = true;
+                        break;
+                    }
+                if (blockedPath)
+                    continue;
 
-                char letter = current[i][current[i].size() - 1];
+                char letter = current[fromIndex][current[fromIndex].size() - 1];
 
-                if (next[index].length() == 1)
-                    next[index].pop_back();
-                next[index].push_back(letter);
-                next[i].pop_back();
-                if (next[i].length() == 0)
-                    next[i].push_back('.');
+                // If moving to a room, if it's not allowed, skip
+                if (movingToRoom)
+                    if (!IsColumnInsertionAllowed(letter, toIndex,
+                                                  current[toIndex]))
+                        continue;
 
-                if (!visited.count(next))
-                {
-                    frontier.push(next);
-                    visited.insert(next);
-                }
+                PuzzleGrid next;
+                std::copy(current.begin(), current.end(), next.begin());
 
-                totalCost += cost[letter];
+                next[toIndex].push_back(letter);
+                if (!next[fromIndex].empty())
+                    next[fromIndex].pop_back();
 
-                if (next == end)
-                    return totalCost;
+                if (visited.count(next))
+                    continue;
 
-                // PrintVector(next);
+                cameFrom[next] = current;
+
+                int roomFromSteps = 0;
+                int roomToSteps = 0;
+
+                if (movingFromRoom)
+                    roomFromSteps = 4 - current[fromIndex].length();
+
+                if (movingToRoom)
+                    roomToSteps = 3 - current[toIndex].length();
+
+                costs[next]
+                    = (cost[letter] * (steps + roomFromSteps + roomToSteps))
+                      + costs[current];
+
+                frontier.push(std::make_pair(next, costs[next]));
+                visited.insert(next);
             }
         }
     }
 
-    // std::unordered_map<std::string, std::vector<std::string>> puzzleMap{
-    //     {"A", {"F", "G"}},
-    //     {"B", {"G", "H"}},
-    //     {"C", {"H", "I"}},
-    //     {"D", {"I", "J"}},
-    //     {"E", {"F"}},
-    //     {"F", {"A", "G"}},
-    //     {"G", {"F", "A", "B", "H"}},
-    //     {"H", {"G", "B", "C", "I"}},
-    //     {"I", {"H", "C", "D", "J"}},
-    //     {"J", {"I", "D"}},
-    //     {"K", {"J"}},
-    // };
+    std::cout << "Oops, finished early!\n";
 
-    return totalCost;
+    return 0;
 }
-
-// 68796 too high!
-// 42286 wrong
-// 45058 too low!
-// 42226 too low!
-
-// Lower bound: 35040
 
 /**
  * @brief Day 23 of Advent of Code
@@ -182,7 +459,7 @@ static int Part2()
  */
 void Day23(const char* fileName)
 {
-    bool printMaps = true;
+    bool printMaps = false;
     std::string text = ReadTextFile(fileName);
 
     if (printMaps)
@@ -193,5 +470,5 @@ void Day23(const char* fileName)
 
     if (printMaps)
         std::cout << "Puzzle:\n" << text << "\n\n";
-    std::cout << "Part 2: " << Part2() << "\n";
+    std::cout << "Part 2: " << Part2(printMaps) << "\n";
 }
