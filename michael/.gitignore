@@ -5,6 +5,9 @@ obj/
 # Doxygen
 html/
 
+# 3rd Party Lib
+include/eigen/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
