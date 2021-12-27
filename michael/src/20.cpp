@@ -21,7 +21,10 @@
                                 Classes
 ================================================================================
 */
-
+/**
+ * @brief Trench map image and enchancement algoritm
+ *
+ */
 class TrenchMap
 {
 private:
@@ -48,6 +51,28 @@ private:
     {
         for (std::size_t i = 0; i < n; i++)
             m_image.push_back(line);
+    }
+
+    void EnhanceStep()
+    {
+        const std::size_t sizeChange = 2;
+        char gutterChar = (m_image[0][0] == '#')
+                              ? m_algoritm[m_algoritm.length() - 1]
+                              : m_algoritm[0];
+        std::vector<std::string> newImage(
+            m_image.size() + sizeChange,
+            std::string(m_image[0].length() + sizeChange, gutterChar));
+
+        for (std::size_t i = 0; i < (m_image.size() - sizeChange); i++)
+        {
+            for (std::size_t j = 0; j < (m_image[0].length() - sizeChange); j++)
+            {
+                std::size_t idx = GetIndex(i, j);
+                newImage[i + 2].replace(j + 2, 1, 1, m_algoritm[idx]);
+            }
+        }
+
+        m_image = std::move(newImage);
     }
 
 public:
@@ -79,28 +104,17 @@ public:
         PushNBack(firstLine, gutterSize);
     }
 
-    void Enhance()
+    void Enhance(std::size_t n)
     {
-        const std::size_t sizeChange = 2;
-        char gutterChar = (m_image[0][0] == '#')
-                              ? m_algoritm[m_algoritm.length() - 1]
-                              : m_algoritm[0];
-        std::vector<std::string> newImage(
-            m_image.size() + sizeChange,
-            std::string(m_image[0].length() + sizeChange, gutterChar));
-
-        for (std::size_t i = 0; i < (m_image.size() - sizeChange); i++)
-        {
-            for (std::size_t j = 0; j < (m_image[0].length() - sizeChange); j++)
-            {
-                std::size_t idx = GetIndex(i, j);
-                newImage[i + 2].replace(j + 2, 1, 1, m_algoritm[idx]);
-            }
-        }
-
-        m_image = std::move(newImage);
+        for (std::size_t i = 0; i < n; i++)
+            EnhanceStep();
     }
 
+    /**
+     * @brief Count number of light pixels that are on
+     *
+     * @return int Number of light pixels
+     */
     int CountLightPixels() const
     {
         int count = 0;
@@ -113,6 +127,13 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const TrenchMap& map);
 };
 
+/**
+ * @brief Print to ostream
+ *
+ * @param os ostream to print to
+ * @param map to print
+ * @return std::ostream& reference to modified ostream
+ */
 std::ostream& operator<<(std::ostream& os, const TrenchMap& map)
 {
     os << map.m_algoritm << "\n\n";
@@ -126,7 +147,6 @@ std::ostream& operator<<(std::ostream& os, const TrenchMap& map)
                             Function Definitions
 ================================================================================
 */
-
 /**
  * @brief Day 20 of Advent of Code
  *
@@ -135,10 +155,8 @@ std::ostream& operator<<(std::ostream& os, const TrenchMap& map)
 void Day20(const char* fileName)
 {
     TrenchMap trenchMap(ReadTextFile(fileName));
-    std::cout << trenchMap;
-    trenchMap.Enhance();
-    std::cout << trenchMap;
-    trenchMap.Enhance();
-    std::cout << trenchMap;
+    trenchMap.Enhance(2);
     std::cout << "Part 1: " << trenchMap.CountLightPixels() << "\n";
+    trenchMap.Enhance(50 - 2);
+    std::cout << "Part 2: " << trenchMap.CountLightPixels() << "\n";
 }
