@@ -56,7 +56,7 @@ def can_i_visit_this_small_cave(small_cave,path_count):
 	#Condition 1: can only visit each small cave once per path
 	#Exception 1: may visit one of the small caves a 2nd time per path
 	
-	visit_small_cave_bool = ''
+	visit_small_cave_bool = True
 	
 	#Find if a small cave has been visited
 	if small_cave in path_count:
@@ -67,26 +67,13 @@ def can_i_visit_this_small_cave(small_cave,path_count):
 			if cave.islower() is True and cave_occurances >= 2:
 				#Another cave has been visited twice. We cannot visit our small cave again.
 				visit_small_cave_bool = False
-		
-		if visit_small_cave_bool == '':
-			#no other small cave has occured twice. We may visit this one again.
-			visit_small_cave_bool = True
-		
-	else:
-		#Small cave has not been visited. You may visit it
-		visit_small_cave_bool = True
-	
-	
-	
 	return visit_small_cave_bool
 
 
-
-
-def produce_new_paths(path,nodesdict,paths,path_count):
+def produce_new_paths(path,nodesdict):
 	#Produce new paths from path
 	
-	new_paths = []
+	new_paths = set()
 	
 	connected_nodes = nodesdict[path[-1]]
 	
@@ -94,61 +81,37 @@ def produce_new_paths(path,nodesdict,paths,path_count):
 		if node == 'start':
 			continue
 		
-		if node.islower() is True:
+		if node.islower():
+			path_count = Counter(path)
 			visit_small_cave_bool = can_i_visit_this_small_cave(node,path_count)
 			
 			if visit_small_cave_bool == False:
 				continue
 		
-		new_path = path + [node]
+		new_path = *path, node
 		
-		if new_path in paths:
-			continue
-		else:
-			new_paths.append(new_path)
-		
+		new_paths.add(new_path)
 	
 	return new_paths
 
-def check_all_paths_are_ended(paths):
-	
-	end_nodes = []
-	
-	for path in paths:
-		if path[-1] == 'end':
-			end_nodes.append(True)
-		else:
-			end_nodes.append(False)
-	
-	bool = all(end_nodes)
-	
-	return bool
 
 def find_all_small_town_x1_paths(nodesdict):
-	
-	paths = [['start']]
-	len_paths_old = 0
-	
-	while check_all_paths_are_ended(paths) is False:
-		len_paths_old = len(paths)
-		
+	paths = set()
+	unchecked_paths = set([("start",)])
+
+	while unchecked_paths:
 		new_paths = []
 		
-		for path in paths:
-			if path[len(path)-1] == 'end':
-				new_paths = new_paths + [path]
+		for path in unchecked_paths:
+			if path[-1] == 'end':
+				paths.add(path)
 				continue
 			
 			#Count occurances of caves in path
-			path_count = Counter(path)
+			paths_found = produce_new_paths(path,nodesdict)
+			new_paths.append(paths_found)
 			
-			paths_found = produce_new_paths(path,nodesdict,paths,path_count)
-			new_paths = new_paths + paths_found
-			
-			
-			
-			
-		paths = new_paths
+		unchecked_paths = set().union(*new_paths)
 	
 	return paths
 
@@ -160,9 +123,9 @@ with open("input_12.txt") as edgesf:
 	for line in edgesf:
 		#Import operations
 		
-		line = line.strip("\n")#Remove EOL symbol
+		line = line.strip("\n")  #Remove EOL symbol
 		
-		line = line.split("-")#Split start / end of edge
+		line = line.split("-")  #Split start / end of edge
 		
 		edges.append(line)
 
@@ -179,7 +142,7 @@ no_of_unique_paths = len(paths)
 #Result
 print(edges)
 print(nodesdict)
-print(paths)
+# print(paths)
 print(no_of_unique_paths)
 
 #Time Code
