@@ -113,61 +113,47 @@ public:
         do
         {
             didReduce = false;
-            for (auto& row : m_rows)
+            auto& row = m_rows[0];
+            for (std::size_t idx = 0; idx < row.size(); idx++)
             {
-                std::size_t idx = 0;
-                for (auto& [value, depth] : row)
+                auto [value, depth] = row[idx];
+                if (depth > 4)
                 {
-                    if (depth > 4)
-                    {
-                        // Explode
-                        if (idx != 0)
-                            row[idx - 1].first += value;
+                    // Explode
+                    if (idx != 0)
+                        row[idx - 1].first += value;
 
-                        if (idx != row.size() - 1)
-                            row[idx + 2].first += row[idx + 1].first;
+                    if (idx != row.size() - 1)
+                        row[idx + 2].first += row[idx + 1].first;
 
-                        row.erase(row.begin() + idx, row.begin() + idx + 2);
-                        row.insert(row.begin() + idx,
-                                   std::make_pair(0, depth - 1));
+                    row.erase(row.begin() + idx, row.begin() + idx + 2);
+                    row.insert(row.begin() + idx, std::make_pair(0, depth - 1));
 
-                        didReduce = true;
-                        break;
-                    }
-                    idx++;
-                }
-                if (didReduce)
+                    didReduce = true;
                     break;
+                }
             }
 
             if (didReduce)
                 continue;
 
-            for (auto& row : m_rows)
+            for (std::size_t idx = 0; idx < row.size(); idx++)
             {
-                std::size_t idx = 0;
-                for (auto& [value, depth] : row)
+                auto [value, depth] = row[idx];
+                if (value >= 10)
                 {
-                    if (value >= 10)
-                    {
-                        // Split
-                        std::cout << "\n" << row;
-                        double fValue = value;
-                        row.erase(row.begin() + idx);
-                        row.insert(row.begin() + idx,
-                                   {{static_cast<int>(std::floor(fValue / 2.0)),
-                                     depth + 1},
-                                    {static_cast<int>(std::ceil(fValue / 2.0)),
-                                     depth + 1}});
-                        std::cout << row;
+                    // Split
+                    double fValue = value;
+                    row.erase(row.begin() + idx);
+                    row.insert(row.begin() + idx,
+                               {{static_cast<int>(std::floor(fValue / 2.0)),
+                                 depth + 1},
+                                {static_cast<int>(std::ceil(fValue / 2.0)),
+                                 depth + 1}});
 
-                        didReduce = true;
-                        break;
-                    }
-                }
-                if (didReduce)
+                    didReduce = true;
                     break;
-                idx++;
+                }
             }
         } while (didReduce);
     }
@@ -186,6 +172,7 @@ public:
             m_rows.insert(m_rows.begin(), newRow);
             Reduce();
         }
+        Reduce();
     }
 
     /**
@@ -253,7 +240,6 @@ std::ostream& operator<<(std::ostream& os, const Snailfish& fish)
 void Day18(const char* fileName)
 {
     Snailfish snailfish(ReadTextFile(fileName));
-    std::cout << snailfish;
     snailfish.FindSum();
-    std::cout << snailfish.GetMagnitude() << "\n";
+    std::cout << "Part 1: " << snailfish.GetMagnitude() << "\n";
 }
