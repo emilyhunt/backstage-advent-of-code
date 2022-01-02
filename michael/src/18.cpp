@@ -25,64 +25,45 @@
 */
 
 /// Pair is value, depth
-using Row = std::vector<std::pair<int, int>>;
-
-std::ostream& operator<<(std::ostream& os, const Row& row)
-{
-    for (const auto& elem : row)
-        os << "(" << elem.first << "," << elem.second << ")";
-    os << "\n";
-    return os;
-}
-
-class Snailfish
+class Row
 {
 private:
-    std::vector<Row> m_rows;
+    std::vector<std::pair<int, int>> m_valueDepthPair;
+
+    void Explode(std::size_t idx, int depth, int value)
+    {
+        if (idx != 0)
+            m_valueDepthPair[idx - 1].first += value;
+
+        if (idx != m_valueDepthPair.size() - 1)
+            m_valueDepthPair[idx + 2].first += m_valueDepthPair[idx + 1].first;
+
+        m_valueDepthPair.erase(m_valueDepthPair.begin() + idx,
+                               m_valueDepthPair.begin() + idx + 2);
+        m_valueDepthPair.insert(m_valueDepthPair.begin() + idx,
+                                std::make_pair(0, depth - 1));
+    }
+
+    void Split(std::size_t idx, int depth, double fValue)
+    {
+        m_valueDepthPair.erase(m_valueDepthPair.begin() + idx);
+        m_valueDepthPair.insert(
+            m_valueDepthPair.begin() + idx,
+            {{static_cast<int>(std::floor(fValue / 2.0)), depth + 1},
+             {static_cast<int>(std::ceil(fValue / 2.0)), depth + 1}});
+    }
+
+    int GetMaxDepth() const
+    {
+        int level = 0;
+        for (const auto& [_, depth] : m_valueDepthPair)
+            return std::max(level, depth);
+        return level;
+    }
 
 public:
-    Snailfish(const std::string& text)
+    Row(const std::string& line)
     {
-        std::size_t lineStart = 0;
-        std::size_t lineEnd;
-        std::size_t lineIdx = 0;
-
-        while ((lineEnd = text.find('\n', lineStart)) != std::string::npos)
-        {
-            m_rows.push_back(Row());
-
-            std::string line
-                = text.substr(lineStart, (lineEnd - 1) - lineStart);
-            int depth = 0;
-
-            for (const auto& ch : line)
-            {
-                switch (ch)
-                {
-                case '[':
-                    depth++;
-                    break;
-
-                case ']':
-                    depth--;
-                    break;
-
-                case ',':
-                    break;
-
-                default:
-                    m_rows[lineIdx].push_back(std::make_pair(ch - '0', depth));
-                    break;
-                }
-            }
-
-            lineStart = lineEnd + 1;
-            lineIdx++;
-        }
-
-        m_rows.push_back(Row());
-
-        std::string line = text.substr(lineStart);
         int depth = 0;
 
         for (const auto& ch : line)
@@ -101,92 +82,41 @@ public:
                 break;
 
             default:
-                m_rows[lineIdx].push_back(std::make_pair(ch - '0', depth));
+                m_valueDepthPair.push_back(std::make_pair(ch - '0', depth));
                 break;
             }
         }
     }
 
-    void Reduce()
+    bool Reduce()
     {
-        bool didReduce;
-        do
+        for (std::size_t idx = 0; idx < m_valueDepthPair.size(); idx++)
         {
-            didReduce = false;
-            auto& row = m_rows[0];
-            for (std::size_t idx = 0; idx < row.size(); idx++)
+            auto [value, depth] = m_valueDepthPair[idx];
+            if (depth > 4)
             {
-                auto [value, depth] = row[idx];
-                if (depth > 4)
-                {
-                    // Explode
-                    if (idx != 0)
-                        row[idx - 1].first += value;
 
-                    if (idx != row.size() - 1)
-                        row[idx + 2].first += row[idx + 1].first;
-
-                    row.erase(row.begin() + idx, row.begin() + idx + 2);
-                    row.insert(row.begin() + idx, std::make_pair(0, depth - 1));
-
-                    didReduce = true;
-                    break;
-                }
+                Explode(idx, depth, value);
+                return true;
             }
-
-            if (didReduce)
-                continue;
-
-            for (std::size_t idx = 0; idx < row.size(); idx++)
-            {
-                auto [value, depth] = row[idx];
-                if (value >= 10)
-                {
-                    // Split
-                    double fValue = value;
-                    row.erase(row.begin() + idx);
-                    row.insert(row.begin() + idx,
-                               {{static_cast<int>(std::floor(fValue / 2.0)),
-                                 depth + 1},
-                                {static_cast<int>(std::ceil(fValue / 2.0)),
-                                 depth + 1}});
-
-                    didReduce = true;
-                    break;
-                }
-            }
-        } while (didReduce);
-    }
-
-    void FindSum()
-    {
-        while (m_rows.size() > 1)
-        {
-            Row newRow = m_rows[0];
-            newRow.insert(newRow.end(), m_rows[1].begin(), m_rows[1].end());
-
-            for (auto& elem : newRow)
-                elem.second++;
-
-            m_rows.erase(m_rows.begin(), m_rows.begin() + 2);
-            m_rows.insert(m_rows.begin(), newRow);
-            Reduce();
         }
-        Reduce();
+
+        for (std::size_t idx = 0; idx < m_valueDepthPair.size(); idx++)
+        {
+            auto [value, depth] = m_valueDepthPair[idx];
+            if (value >= 10)
+            {
+                Split(idx, depth, value);
+                return true;
+            }
+        }
+        return false;
     }
 
-    /**
-     * @brief Get the magnitude of the first row. Should be the only row after
-     * sum
-     *
-     * @return int the magnitude
-     */
     int GetMagnitude() const
     {
-        int level = 0;
-        auto row = m_rows.front();
-        for (const auto& [_, depth] : row)
-            level = std::max(level, depth);
+        int level = this->GetMaxDepth();
+        auto row = m_valueDepthPair;
 
         for (std::size_t i = level; i >= 1; i--)
         {
@@ -212,6 +142,116 @@ public:
         }
 
         return row[0].first * 3 + row[1].first * 2;
+    }
+    std::size_t size() const { return m_valueDepthPair.size(); }
+
+    Row operator+(const Row& other) const
+    {
+        Row newRow = *this;
+
+        newRow.m_valueDepthPair.insert(newRow.m_valueDepthPair.end(),
+                                       other.m_valueDepthPair.begin(),
+                                       other.m_valueDepthPair.end());
+
+        for (auto& elem : newRow.m_valueDepthPair)
+            elem.second++;
+
+        newRow.Reduce();
+        return newRow;
+    }
+
+    Row& operator+=(const Row& other)
+    {
+        *this = *this + other;
+        return *this;
+    }
+
+    std::pair<int, int>& operator[](std::size_t i)
+    {
+        return m_valueDepthPair[i];
+    }
+
+    std::pair<int, int> operator[](std::size_t i) const
+    {
+        return m_valueDepthPair[i];
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Row& row);
+};
+
+std::ostream& operator<<(std::ostream& os, const Row& row)
+{
+    for (const auto& elem : row.m_valueDepthPair)
+        os << "(" << elem.first << "," << elem.second << ")";
+    os << "\n";
+    return os;
+}
+
+class Snailfish
+{
+private:
+    std::vector<Row> m_rows;
+
+public:
+    Snailfish(const std::string& text)
+    {
+        std::size_t lineStart = 0;
+        std::size_t lineEnd;
+        std::size_t lineIdx = 0;
+
+        while ((lineEnd = text.find('\n', lineStart)) != std::string::npos)
+        {
+            std::string line
+                = text.substr(lineStart, (lineEnd - 1) - lineStart);
+            m_rows.push_back(Row(line));
+        }
+
+        lineStart = lineEnd + 1;
+        lineIdx++;
+
+        std::string line = text.substr(lineStart);
+        m_rows.push_back(Row(line));
+    }
+
+    void Reduce()
+    {
+        bool didReduce;
+        do
+        {
+            didReduce = false;
+            auto& row = m_rows[0];
+            didReduce = row.Reduce();
+        } while (didReduce);
+    }
+
+    Row FindTotalSum() const
+    {
+        auto rows = *this;
+
+        while (rows.m_rows.size() > 1)
+        {
+            rows.m_rows[0] += rows.m_rows[1];
+            rows.m_rows.erase(rows.m_rows.begin() + 1, rows.m_rows.begin() + 2);
+        }
+        rows.Reduce();
+        return rows.m_rows[0];
+    }
+
+    std::vector<int> FindAllSumCombinations() const
+    {
+        std::vector<int> sums{0};
+        return sums;
+    }
+
+    /**
+     * @brief Get the magnitude of the first row. Should be the only row after
+     * sum
+     *
+     * @return int the magnitude
+     */
+    int GetMagnitude(std::size_t index) const
+    {
+        return m_rows[index].GetMagnitude();
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Snailfish& fish);
@@ -240,6 +280,9 @@ std::ostream& operator<<(std::ostream& os, const Snailfish& fish)
 void Day18(const char* fileName)
 {
     Snailfish snailfish(ReadTextFile(fileName));
-    snailfish.FindSum();
-    std::cout << "Part 1: " << snailfish.GetMagnitude() << "\n";
+    auto sums = snailfish.FindAllSumCombinations();
+    auto totalSum = snailfish.FindTotalSum();
+    std::cout << "Part 1: " << totalSum.GetMagnitude() << "\n";
+    std::cout << "Part 2: " << *std::max_element(sums.begin(), sums.end())
+              << "\n";
 }
