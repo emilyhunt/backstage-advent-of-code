@@ -24,6 +24,8 @@
 ================================================================================
 */
 
+static bool debugMode = false;
+
 /// Pair is value, depth
 class Row
 {
@@ -32,6 +34,11 @@ private:
 
     void Explode(std::size_t idx, int depth, int value)
     {
+        if (debugMode)
+            std::cout << "Explode(" << value << "," << depth << ")[" << idx
+                      << "]\n"
+                      << *this << "\n";
+
         if (idx != 0)
             m_valueDepthPair[idx - 1].first += value;
 
@@ -42,15 +49,24 @@ private:
                                m_valueDepthPair.begin() + idx + 2);
         m_valueDepthPair.insert(m_valueDepthPair.begin() + idx,
                                 std::make_pair(0, depth - 1));
+
+        if (debugMode)
+            std::cout << *this << "\n\n";
     }
 
     void Split(std::size_t idx, int depth, double fValue)
     {
+        if (debugMode)
+            std::cout << "Split(" << fValue << "," << depth << ")[" << idx
+                      << "]\n"
+                      << *this << "\n";
         m_valueDepthPair.erase(m_valueDepthPair.begin() + idx);
         m_valueDepthPair.insert(
             m_valueDepthPair.begin() + idx,
             {{static_cast<int>(std::floor(fValue / 2.0)), depth + 1},
              {static_cast<int>(std::ceil(fValue / 2.0)), depth + 1}});
+        if (debugMode)
+            std::cout << *this << "\n\n";
     }
 
     int GetMaxDepth() const
@@ -61,7 +77,44 @@ private:
         return level;
     }
 
+    bool ReduceStep()
+    {
+        for (std::size_t idx = 0; idx < m_valueDepthPair.size(); idx++)
+        {
+            auto [value, depth] = m_valueDepthPair[idx];
+            if (depth > 4)
+            {
+                Explode(idx, depth, value);
+                return true;
+            }
+        }
+
+        for (std::size_t idx = 0; idx < m_valueDepthPair.size(); idx++)
+        {
+            auto [value, depth] = m_valueDepthPair[idx];
+            if (value >= 10)
+            {
+                Split(idx, depth, value);
+                return true;
+            }
+        }
+        return false;
+    }
+
 public:
+    Row(const Row& row)
+    {
+        std::copy(row.m_valueDepthPair.begin(), row.m_valueDepthPair.end(),
+                  this->m_valueDepthPair.begin());
+    }
+
+    Row& operator=(const Row& row)
+    {
+        std::copy(row.m_valueDepthPair.begin(), row.m_valueDepthPair.end(),
+                  this->m_valueDepthPair.begin());
+        return *this;
+    }
+
     Row(const std::string& line)
     {
         int depth = 0;
@@ -88,29 +141,11 @@ public:
         }
     }
 
-    bool Reduce()
+    void Reduce()
     {
-        for (std::size_t idx = 0; idx < m_valueDepthPair.size(); idx++)
+        while (ReduceStep())
         {
-            auto [value, depth] = m_valueDepthPair[idx];
-            if (depth > 4)
-            {
-
-                Explode(idx, depth, value);
-                return true;
-            }
         }
-
-        for (std::size_t idx = 0; idx < m_valueDepthPair.size(); idx++)
-        {
-            auto [value, depth] = m_valueDepthPair[idx];
-            if (value >= 10)
-            {
-                Split(idx, depth, value);
-                return true;
-            }
-        }
-        return false;
     }
 
     int GetMagnitude() const
@@ -183,7 +218,6 @@ std::ostream& operator<<(std::ostream& os, const Row& row)
 {
     for (const auto& elem : row.m_valueDepthPair)
         os << "(" << elem.first << "," << elem.second << ")";
-    os << "\n";
     return os;
 }
 
@@ -197,31 +231,17 @@ public:
     {
         std::size_t lineStart = 0;
         std::size_t lineEnd;
-        std::size_t lineIdx = 0;
 
         while ((lineEnd = text.find('\n', lineStart)) != std::string::npos)
         {
             std::string line
                 = text.substr(lineStart, (lineEnd - 1) - lineStart);
-            m_rows.push_back(Row(line));
+            m_rows.push_back(line);
+            lineStart = lineEnd + 1;
         }
-
-        lineStart = lineEnd + 1;
-        lineIdx++;
 
         std::string line = text.substr(lineStart);
         m_rows.push_back(Row(line));
-    }
-
-    void Reduce()
-    {
-        bool didReduce;
-        do
-        {
-            didReduce = false;
-            auto& row = m_rows[0];
-            didReduce = row.Reduce();
-        } while (didReduce);
     }
 
     Row FindTotalSum() const
@@ -232,14 +252,30 @@ public:
         {
             rows.m_rows[0] += rows.m_rows[1];
             rows.m_rows.erase(rows.m_rows.begin() + 1, rows.m_rows.begin() + 2);
+            rows.m_rows[0].Reduce();
         }
-        rows.Reduce();
+        rows.m_rows[0].Reduce();
+
         return rows.m_rows[0];
     }
 
     std::vector<int> FindAllSumCombinations() const
     {
-        std::vector<int> sums{0};
+        std::vector<int> sums;
+
+        for (std::size_t i = 0; i < m_rows.size(); i++)
+        {
+            for (std::size_t j = 0; j < m_rows.size(); j++)
+            {
+                if (i == j)
+                    continue;
+
+                auto summedRow = m_rows[i] + m_rows[j];
+                summedRow.Reduce();
+                sums.push_back(summedRow.GetMagnitude());
+            }
+        }
+
         return sums;
     }
 
