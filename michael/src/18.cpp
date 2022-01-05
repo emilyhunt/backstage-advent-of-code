@@ -9,6 +9,7 @@
  *
  */
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -42,7 +43,7 @@ private:
         if (idx != 0)
             m_valueDepthPair[idx - 1].first += value;
 
-        if (idx != m_valueDepthPair.size() - 1)
+        if (idx < m_valueDepthPair.size() - 2)
             m_valueDepthPair[idx + 2].first += m_valueDepthPair[idx + 1].first;
 
         m_valueDepthPair.erase(m_valueDepthPair.begin() + idx,
@@ -102,24 +103,11 @@ private:
     }
 
 public:
-    Row(const Row& row)
-    {
-        std::copy(row.m_valueDepthPair.begin(), row.m_valueDepthPair.end(),
-                  this->m_valueDepthPair.begin());
-    }
-
-    Row& operator=(const Row& row)
-    {
-        std::copy(row.m_valueDepthPair.begin(), row.m_valueDepthPair.end(),
-                  this->m_valueDepthPair.begin());
-        return *this;
-    }
-
     Row(const std::string& line)
     {
         int depth = 0;
 
-        for (const auto& ch : line)
+        for (auto ch : line)
         {
             switch (ch)
             {
@@ -150,8 +138,10 @@ public:
 
     int GetMagnitude() const
     {
+        if (!this->m_valueDepthPair.size())
+            return 0;
         int level = this->GetMaxDepth();
-        auto row = m_valueDepthPair;
+        Row row = *this;
 
         for (std::size_t i = level; i >= 1; i--)
         {
@@ -159,26 +149,35 @@ public:
             do
             {
                 didMerge = false;
-                for (std::size_t j = 0; j < row.size(); j++)
+                for (std::size_t j = 0; j < row.m_valueDepthPair.size(); j++)
                 {
-                    if (row[j].second == static_cast<int>(i))
+                    if (row.m_valueDepthPair[j].second == static_cast<int>(i))
                     {
                         auto pair = std::make_pair(
-                            3 * row[j].first + 2 * row[j + 1].first, i - 1);
-                        row.erase(row.begin() + j, row.begin() + j + 2);
-                        row.insert(row.begin() + j, pair);
+                            3 * row.m_valueDepthPair[j].first
+                                + 2 * row.m_valueDepthPair[j + 1].first,
+                            i - 1);
+                        row.m_valueDepthPair.erase(
+                            row.m_valueDepthPair.begin() + j,
+                            row.m_valueDepthPair.begin() + j + 2);
+                        if (j >= row.m_valueDepthPair.size())
+                            row.m_valueDepthPair.insert(
+                                row.m_valueDepthPair.end(), pair);
+                        else
+                            row.m_valueDepthPair.insert(
+                                row.m_valueDepthPair.begin() + j, pair);
                         didMerge = true;
                         break;
                     }
                 }
             } while (didMerge);
-            if (row.size() == 2)
+            if (row.m_valueDepthPair.size() == 2)
                 break;
         }
 
-        return row[0].first * 3 + row[1].first * 2;
+        return row.m_valueDepthPair[0].first * 3
+               + row.m_valueDepthPair[1].first * 2;
     }
-    std::size_t size() const { return m_valueDepthPair.size(); }
 
     Row operator+(const Row& other) const
     {
@@ -197,18 +196,14 @@ public:
 
     Row& operator+=(const Row& other)
     {
-        *this = *this + other;
+        this->m_valueDepthPair.insert(this->m_valueDepthPair.end(),
+                                      other.m_valueDepthPair.begin(),
+                                      other.m_valueDepthPair.end());
+        for (auto& elem : this->m_valueDepthPair)
+            elem.second++;
+        this->Reduce();
+
         return *this;
-    }
-
-    std::pair<int, int>& operator[](std::size_t i)
-    {
-        return m_valueDepthPair[i];
-    }
-
-    std::pair<int, int> operator[](std::size_t i) const
-    {
-        return m_valueDepthPair[i];
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Row& row);
@@ -246,15 +241,15 @@ public:
 
     Row FindTotalSum() const
     {
-        auto rows = *this;
+        Snailfish rows(*this);
 
         while (rows.m_rows.size() > 1)
         {
             rows.m_rows[0] += rows.m_rows[1];
             rows.m_rows.erase(rows.m_rows.begin() + 1, rows.m_rows.begin() + 2);
-            rows.m_rows[0].Reduce();
+            // rows.m_rows[0].Reduce();
         }
-        rows.m_rows[0].Reduce();
+        // rows.m_rows[0].Reduce();
 
         return rows.m_rows[0];
     }
@@ -270,9 +265,10 @@ public:
                 if (i == j)
                     continue;
 
-                auto summedRow = m_rows[i] + m_rows[j];
+                Row summedRow = m_rows[i] + m_rows[j];
                 summedRow.Reduce();
-                sums.push_back(summedRow.GetMagnitude());
+                auto num = summedRow.GetMagnitude();
+                sums.push_back(num);
             }
         }
 
