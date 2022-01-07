@@ -39,7 +39,7 @@ std::string ReadTextFile(const char* fileName)
  */
 void PrintNumbers(const std::vector<int>& numbers, const char* sep = " ")
 {
-    PrintVector<int>(numbers, sep);
+    PrintVector(numbers, sep);
 }
 
 /**

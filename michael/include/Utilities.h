@@ -76,7 +76,7 @@ std::vector<T> ReadNumbersFile(const char* fileName)
  * @param sep Seperator between elements
  */
 template <typename T>
-void PrintVector(const std::vector<T>& vec, const char* sep = " ")
+void PrintVector(const T& vec, const char* sep = " ")
 {
     for (const auto& item : vec)
         std::cout << item << sep;
