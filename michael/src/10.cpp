@@ -165,9 +165,9 @@ static int Part1(std::vector<std::string>& lines)
  * @param lines data from text file
  * @return long int Solution will be large int
  */
-static long int Part2(std::vector<std::string> lines)
+static int64_t Part2(std::vector<std::string> lines)
 {
-    std::vector<long int> scores(lines.size(), 0L);
+    std::vector<int64_t> scores(lines.size(), 0L);
     for (size_t i = 0; i < lines.size(); i++)
     {
         for (auto j = lines[i].rbegin(); j != lines[i].rend(); j++)

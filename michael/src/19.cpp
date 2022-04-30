@@ -19,8 +19,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include <eigen/Dense>
-#include <eigen/Geometry>
+//#include <eigen/Dense>
+//#include <eigen/Geometry>
 
 #include "Days.h"
 #include "Utilities.h"
@@ -68,27 +68,27 @@
 //     vec);
 // };
 
-static double DegToRad(double angle) { return M_PI / 180.0 * angle; }
-
-Eigen::Matrix3d CreateRotation(double yaw, double pitch, double roll)
-{
-    yaw = DegToRad(yaw);
-    pitch = DegToRad(pitch);
-    roll = DegToRad(roll);
-
-    double c1 = std::cos(roll);
-    double c2 = std::cos(pitch);
-    double c3 = std::cos(yaw);
-    double s1 = std::sin(roll);
-    double s2 = std::sin(pitch);
-    double s3 = std::sin(yaw);
-
-    Eigen::Matrix3d m_matrix{
-        {(c2 * c3), (-s2), (c2 * s3)},
-        {(s1 * s3 + c1 * c3 * s2), (c1 * c2), (c1 * s2 * s3 - c3 * s1)},
-        {(c3 * s1 * s2 - c1 * s3), (c2 * s1), (c1 * c3 + s1 * s2 * s3)}};
-    return m_matrix;
-}
+//static double DegToRad(double angle) { return M_PI / 180.0 * angle; }
+//
+//Eigen::Matrix3d CreateRotation(double yaw, double pitch, double roll)
+//{
+//    yaw = DegToRad(yaw);
+//    pitch = DegToRad(pitch);
+//    roll = DegToRad(roll);
+//
+//    double c1 = std::cos(roll);
+//    double c2 = std::cos(pitch);
+//    double c3 = std::cos(yaw);
+//    double s1 = std::sin(roll);
+//    double s2 = std::sin(pitch);
+//    double s3 = std::sin(yaw);
+//
+//    Eigen::Matrix3d m_matrix{
+//        {(c2 * c3), (-s2), (c2 * s3)},
+//        {(s1 * s3 + c1 * c3 * s2), (c1 * c2), (c1 * s2 * s3 - c3 * s1)},
+//        {(c3 * s1 * s2 - c1 * s3), (c2 * s1), (c1 * c3 + s1 * s2 * s3)}};
+//    return m_matrix;
+//}
 
 // class Rotation
 // {
@@ -153,184 +153,184 @@ Eigen::Matrix3d CreateRotation(double yaw, double pitch, double roll)
 //         os << ", " << vec[i];
 //     return os;
 // }
-
-std::vector<Eigen::Matrix3d> rotations{
-    // Forward
-    CreateRotation(0, 0, 0),
-    CreateRotation(0, 0, 90),
-    CreateRotation(0, 0, 180),
-    CreateRotation(0, 0, -90),
-    // Up
-    CreateRotation(0, 90, 0),
-    CreateRotation(0, 90, 90),
-    CreateRotation(0, 90, 180),
-    CreateRotation(0, 90, -90),
-    // Down
-    CreateRotation(0, -90, 0),
-    CreateRotation(0, -90, 90),
-    CreateRotation(0, -90, 180),
-    CreateRotation(0, -90, -90),
-    // Right
-    CreateRotation(90, 0, 0),
-    CreateRotation(90, 0, 90),
-    CreateRotation(90, 0, 180),
-    CreateRotation(90, 0, -90),
-    // Left
-    CreateRotation(-90, 0, 0),
-    CreateRotation(-90, 0, 90),
-    CreateRotation(-90, 0, 180),
-    CreateRotation(-90, 0, -90),
-    // Back
-    CreateRotation(180, 0, 0),
-    CreateRotation(180, 0, 90),
-    CreateRotation(180, 0, 180),
-    CreateRotation(180, 0, -90),
-};
-
-using Scanners = std::vector<std::vector<Eigen::Vector3d>>;
+//
+//std::vector<Eigen::Matrix3d> rotations{
+//    // Forward
+//    CreateRotation(0, 0, 0),
+//    CreateRotation(0, 0, 90),
+//    CreateRotation(0, 0, 180),
+//    CreateRotation(0, 0, -90),
+//    // Up
+//    CreateRotation(0, 90, 0),
+//    CreateRotation(0, 90, 90),
+//    CreateRotation(0, 90, 180),
+//    CreateRotation(0, 90, -90),
+//    // Down
+//    CreateRotation(0, -90, 0),
+//    CreateRotation(0, -90, 90),
+//    CreateRotation(0, -90, 180),
+//    CreateRotation(0, -90, -90),
+//    // Right
+//    CreateRotation(90, 0, 0),
+//    CreateRotation(90, 0, 90),
+//    CreateRotation(90, 0, 180),
+//    CreateRotation(90, 0, -90),
+//    // Left
+//    CreateRotation(-90, 0, 0),
+//    CreateRotation(-90, 0, 90),
+//    CreateRotation(-90, 0, 180),
+//    CreateRotation(-90, 0, -90),
+//    // Back
+//    CreateRotation(180, 0, 0),
+//    CreateRotation(180, 0, 90),
+//    CreateRotation(180, 0, 180),
+//    CreateRotation(180, 0, -90),
+//};
+//
+//using Scanners = std::vector<std::vector<Eigen::Vector3d>>;
 
 /*
 ================================================================================
                             Function Definitions
 ================================================================================
 */
-
-namespace std
-{
-/**
- * @brief Hash function for Vector3d
- */
-template <>
-struct hash<Eigen::Vector3d>
-{
-    /**
-     * @brief Call operator for hash object, for use with std::unordered_map
-     *
-     * @param point point object to hash
-     * @return std::size_t hash of object
-     */
-    size_t operator()(const Eigen::Vector3d& vec) const
-    {
-        std::stringstream ss;
-        ss << vec;
-        return std::hash<std::string>{}(ss.str());
-    }
-};
-}
-
-Scanners CreateScannerData(const std::string& text)
-{
-    std::regex scannerRegex(
-        "--- scanner \\d+ ---\n((?:-*\\d+,){2}-*\\d+\\n*)+");
-    std::regex coordRegex("(-*\\d+),(-*\\d+),(-*\\d+)");
-    std::smatch scannerMatch, coordMatch;
-
-    auto beginScanner
-        = std::sregex_iterator(text.begin(), text.end(), scannerRegex);
-    auto end = std::sregex_iterator();
-
-    Scanners scanners;
-
-    int scannerId = 0;
-    for (auto i = beginScanner; i != end; i++)
-    {
-        scannerMatch = *i;
-        scanners.push_back(std::vector<Eigen::Vector3d>());
-        auto coordsStr = scannerMatch.str();
-        auto beginCoord = std::sregex_iterator(coordsStr.begin(),
-                                               coordsStr.end(), coordRegex);
-        // std::cout << "Scanner: " << scannerId << std::endl;
-        for (auto j = beginCoord; j != end; j++)
-        {
-            coordMatch = *j;
-            // std::cout << coordMatch.str() << std::endl;
-            auto coord = Eigen::Vector3d{std::stod(coordMatch[1].str()),
-                                         std::stod(coordMatch[2].str()),
-                                         std::stod(coordMatch[3].str())};
-            scanners[scannerId].push_back(coord);
-        }
-
-        scannerId++;
-    }
-    return scanners;
-}
-
-template<typename T>
-void PrintScannerData(const T& scanner)
-{
-    for (const auto& coord : scanner)
-        std::cout << coord.transpose() << "\n";
-}
-
-void PrintAllScanners(const Scanners& scanners)
-{
-    int scannerId = 0;
-    std::cout << "\nScanner: " << scannerId++ << "\n";
-    for (const auto& scanner : scanners)
-        PrintScannerData(scanner);
-}
-
-std::vector<Eigen::Vector3d>
-RotateVectors(const Eigen::Matrix3d& rotation,
-              const std::vector<Eigen::Vector3d>& vectors)
-{
-    std::vector<Eigen::Vector3d> rotatedVectors(vectors);
-    for (auto& vector : rotatedVectors)
-    {
-        vector = rotation * vector;
-    }
-    return rotatedVectors;
-}
-
-std::vector<Eigen::Vector3d>
-TranslateVectors(const Eigen::Translation3d& translation,
-                 const std::vector<Eigen::Vector3d>& vectors)
-{
-    std::vector<Eigen::Vector3d> translatedVectors(vectors);
-    for (auto& vector : translatedVectors)
-    {
-        vector = translation * vector;
-    }
-    return translatedVectors;
-}
-
-std::unordered_set<Eigen::Vector3d>
-FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
-                      const std::vector<Eigen::Vector3d>& vectorsB)
-{
-    for (const auto& rotation : rotations)
-    {
-        auto rotatedVecs = RotateVectors(rotation, vectorsB);
-        for (const auto& vecB : rotatedVecs)
-        {
-            for (const auto& vecA : vectorsA)
-            {
-                Eigen::Translation3d translate(vecA - vecB);
-                std::vector<Eigen::Vector3d> transfVecs
-                    = TranslateVectors(translate, rotatedVecs);
-                std::unordered_set<Eigen::Vector3d> currentMatches;
-
-                for (const auto& originalVec : vectorsA)
-                {
-                    for (const auto& transfVec : transfVecs)
-                    {
-                        if (transfVec.isApprox(originalVec, 0.1))
-                        {
-                            currentMatches.insert(transfVec);
-                            break;
-                        }
-                    }
-                }
-
-                if (currentMatches.size() >= 12)
-                {
-                    return currentMatches;
-                }
-            }
-        }
-    }
-    return std::unordered_set<Eigen::Vector3d>();
-}
+//
+//namespace std
+//{
+///**
+// * @brief Hash function for Vector3d
+// */
+//template <>
+//struct hash<Eigen::Vector3d>
+//{
+//    /**
+//     * @brief Call operator for hash object, for use with std::unordered_map
+//     *
+//     * @param point point object to hash
+//     * @return std::size_t hash of object
+//     */
+//    size_t operator()(const Eigen::Vector3d& vec) const
+//    {
+//        std::stringstream ss;
+//        ss << vec;
+//        return std::hash<std::string>{}(ss.str());
+//    }
+//};
+//}
+//
+//Scanners CreateScannerData(const std::string& text)
+//{
+//    std::regex scannerRegex(
+//        "--- scanner \\d+ ---\n((?:-*\\d+,){2}-*\\d+\\n*)+");
+//    std::regex coordRegex("(-*\\d+),(-*\\d+),(-*\\d+)");
+//    std::smatch scannerMatch, coordMatch;
+//
+//    auto beginScanner
+//        = std::sregex_iterator(text.begin(), text.end(), scannerRegex);
+//    auto end = std::sregex_iterator();
+//
+//    Scanners scanners;
+//
+//    int scannerId = 0;
+//    for (auto i = beginScanner; i != end; i++)
+//    {
+//        scannerMatch = *i;
+//        scanners.push_back(std::vector<Eigen::Vector3d>());
+//        auto coordsStr = scannerMatch.str();
+//        auto beginCoord = std::sregex_iterator(coordsStr.begin(),
+//                                               coordsStr.end(), coordRegex);
+//        // std::cout << "Scanner: " << scannerId << std::endl;
+//        for (auto j = beginCoord; j != end; j++)
+//        {
+//            coordMatch = *j;
+//            // std::cout << coordMatch.str() << std::endl;
+//            auto coord = Eigen::Vector3d{std::stod(coordMatch[1].str()),
+//                                         std::stod(coordMatch[2].str()),
+//                                         std::stod(coordMatch[3].str())};
+//            scanners[scannerId].push_back(coord);
+//        }
+//
+//        scannerId++;
+//    }
+//    return scanners;
+//}
+//
+//template<typename T>
+//void PrintScannerData(const T& scanner)
+//{
+//    for (const auto& coord : scanner)
+//        std::cout << coord.transpose() << "\n";
+//}
+//
+//void PrintAllScanners(const Scanners& scanners)
+//{
+//    int scannerId = 0;
+//    std::cout << "\nScanner: " << scannerId++ << "\n";
+//    for (const auto& scanner : scanners)
+//        PrintScannerData(scanner);
+//}
+//
+//std::vector<Eigen::Vector3d>
+//RotateVectors(const Eigen::Matrix3d& rotation,
+//              const std::vector<Eigen::Vector3d>& vectors)
+//{
+//    std::vector<Eigen::Vector3d> rotatedVectors(vectors);
+//    for (auto& vector : rotatedVectors)
+//    {
+//        vector = rotation * vector;
+//    }
+//    return rotatedVectors;
+//}
+//
+//std::vector<Eigen::Vector3d>
+//TranslateVectors(const Eigen::Translation3d& translation,
+//                 const std::vector<Eigen::Vector3d>& vectors)
+//{
+//    std::vector<Eigen::Vector3d> translatedVectors(vectors);
+//    for (auto& vector : translatedVectors)
+//    {
+//        vector = translation * vector;
+//    }
+//    return translatedVectors;
+//}
+//
+//std::unordered_set<Eigen::Vector3d>
+//FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
+//                      const std::vector<Eigen::Vector3d>& vectorsB)
+//{
+//    for (const auto& rotation : rotations)
+//    {
+//        auto rotatedVecs = RotateVectors(rotation, vectorsB);
+//        for (const auto& vecB : rotatedVecs)
+//        {
+//            for (const auto& vecA : vectorsA)
+//            {
+//                Eigen::Translation3d translate(vecA - vecB);
+//                std::vector<Eigen::Vector3d> transfVecs
+//                    = TranslateVectors(translate, rotatedVecs);
+//                std::unordered_set<Eigen::Vector3d> currentMatches;
+//
+//                for (const auto& originalVec : vectorsA)
+//                {
+//                    for (const auto& transfVec : transfVecs)
+//                    {
+//                        if (transfVec.isApprox(originalVec, 0.1))
+//                        {
+//                            currentMatches.insert(transfVec);
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                if (currentMatches.size() >= 12)
+//                {
+//                    return currentMatches;
+//                }
+//            }
+//        }
+//    }
+//    return std::unordered_set<Eigen::Vector3d>();
+//}
 
 // 564 too high
 // 142 too low
@@ -346,26 +346,26 @@ FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
  * @param scanners Input data
  * @return long int Amount of beacons found by all scanners
  */
-std::unordered_set<Eigen::Vector3d> Part1(const Scanners& scanners)
-{
-    std::unordered_map<int, std::pair<Eigen::Vector3d, Eigen::Matrix3d>>
-        scannerMap;
-
-    std::unordered_set<Eigen::Vector3d> matches;
-    for (size_t vectorAIdx = 0; vectorAIdx < scanners.size(); vectorAIdx++)
-    {
-        for (size_t vectorBIdx = 0; vectorBIdx < scanners.size(); vectorBIdx++)
-        {
-            if (vectorAIdx == vectorBIdx)
-                continue;
-            auto currentMatches = FindIntersectionGroup(scanners[vectorAIdx],
-                                                        scanners[vectorBIdx]);
-            matches.insert(currentMatches.begin(), currentMatches.end());
-        }
-    }
-
-    return matches;
-}
+//std::unordered_set<Eigen::Vector3d> Part1(const Scanners& scanners)
+//{
+//    std::unordered_map<int, std::pair<Eigen::Vector3d, Eigen::Matrix3d>>
+//        scannerMap;
+//
+//    std::unordered_set<Eigen::Vector3d> matches;
+//    for (size_t vectorAIdx = 0; vectorAIdx < scanners.size(); vectorAIdx++)
+//    {
+//        for (size_t vectorBIdx = 0; vectorBIdx < scanners.size(); vectorBIdx++)
+//        {
+//            if (vectorAIdx == vectorBIdx)
+//                continue;
+//            auto currentMatches = FindIntersectionGroup(scanners[vectorAIdx],
+//                                                        scanners[vectorBIdx]);
+//            matches.insert(currentMatches.begin(), currentMatches.end());
+//        }
+//    }
+//
+//    return matches;
+//}
 // 404 -588 -901
 // 686 422 578
 // -282 -1010 -1479
@@ -377,24 +377,25 @@ std::unordered_set<Eigen::Vector3d> Part1(const Scanners& scanners)
  */
 void Day19(const char* fileName)
 {
-    const std::string text = ReadTextFile(fileName);
-    auto scannerData = CreateScannerData(text);
-    // PrintAllScanners(scannerData);
+    //const std::string text = ReadTextFile(fileName);
+    //auto scannerData = CreateScannerData(text);
+    //// PrintAllScanners(scannerData);
 
-    // Scanners test = {{
-    //     {1, 0, 0},  {-1, 0, 0},  {0, 1, 0},   {1, 1, 0},   {-1, 1, 0},
-    //     {0, -1, 0}, {1, -1, 0},  {-1, -1, 0}, {0, 0, 1},   {1, 0, 1},
-    //     {-1, 0, 1}, {0, 1, 1},   {1, 1, 1},   {-1, 1, 1},  {0, -1, 1},
-    //     {1, -1, 1}, {-1, -1, 1}, {0, -1, -1}, {1, -1, -1}, {-1, -1, -1},
-    // }};
+    //// Scanners test = {{
+    ////     {1, 0, 0},  {-1, 0, 0},  {0, 1, 0},   {1, 1, 0},   {-1, 1, 0},
+    ////     {0, -1, 0}, {1, -1, 0},  {-1, -1, 0}, {0, 0, 1},   {1, 0, 1},
+    ////     {-1, 0, 1}, {0, 1, 1},   {1, 1, 1},   {-1, 1, 1},  {0, -1, 1},
+    ////     {1, -1, 1}, {-1, -1, 1}, {0, -1, -1}, {1, -1, -1}, {-1, -1, -1},
+    //// }};
 
-    auto matches = Part1(scannerData);
+    //auto matches = Part1(scannerData);
 
-    PrintScannerData(matches);
+    //PrintScannerData(matches);
 
-    // PrintVector(matches, "\n\n");
+    //// PrintVector(matches, "\n\n");
 
-    std::cout << "\nPart 1: " << matches.size() << "\n";
+    std::cout << "Part 1: " << "\n";
+    std::cout << "Part 2: " << "\n";
 
     // PrintAllScanners(test);
     // test[0] = RotateVectors(rotations[1], test[0]);

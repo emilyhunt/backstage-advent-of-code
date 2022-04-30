@@ -150,10 +150,10 @@ int BinaryToDecimal(const std::string& binaryString)
  */
 int CalculateRate(const std::vector<std::string>& lines, Rate option)
 {
-    const int width = lines[0].length();
+    const size_t width = lines[0].length();
     auto gammaRate = CountBits(lines);
 
-    for (int i = 0; i < width; i++)
+    for (size_t i = 0; i < width; i++)
     {
         if (gammaRate[i] > (lines.size() / 2))
             gammaRate[i] = 1;
@@ -234,10 +234,10 @@ int CalculateRating(const std::vector<std::string>& lines, Rating option)
  */
 std::vector<unsigned int> CountBits(const std::vector<std::string>& lines)
 {
-    int width = lines[0].length();
+    size_t width = lines[0].length();
     std::vector<unsigned int> bitCount(width, 0);
     for (auto line : lines)
-        for (int i = 0; i < width; i++)
+        for (size_t i = 0; i < width; i++)
             if (line[i] == '1')
                 bitCount[i]++;
 

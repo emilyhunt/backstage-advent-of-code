@@ -9,6 +9,7 @@
  *
  */
 
+#include <array>
 #include <iostream>
 #include <queue>
 #include <set>
@@ -39,7 +40,7 @@
  */
 std::array<std::array<int, 10>, 10> GetInputData(const std::string text)
 {
-    std::array<std::array<int, 10>, 10> data;
+    std::array<std::array<int, 10>, 10> data{};
     size_t i = 0;
     size_t j = 0;
     for (const auto& ch : text)
@@ -116,8 +117,8 @@ size_t Flash(std::array<std::array<int, 10>, 10>& grid)
                     {
                         for (int j = -1; j <= 1; j++)
                         {
-                            int checkRow = row + i;
-                            int checkCol = col + j;
+                            int checkRow = static_cast<int>(row + i);
+                            int checkCol = static_cast<int>(col + j);
                             auto flashCoord
                                 = std::make_pair(checkRow, checkCol);
                             if ((checkRow >= 0)
@@ -148,13 +149,13 @@ size_t Flash(std::array<std::array<int, 10>, 10>& grid)
  * @param data from text input file
  * @return int Solution
  */
-static int Part1(const std::array<std::array<int, 10>, 10>& data)
+static size_t Part1(const std::array<std::array<int, 10>, 10>& data)
 {
     std::array<std::array<int, 10>, 10> grid;
     std::copy(data.begin(), data.end(), grid.begin());
     size_t amountOfFlashes = 0;
 
-    for (int i = 0; i < 100; i++)
+    for (size_t i = 0; i < 100; i++)
     {
         IncrementGrid(grid);
         amountOfFlashes += Flash(grid);
@@ -169,7 +170,7 @@ static int Part1(const std::array<std::array<int, 10>, 10>& data)
  * @param data from text input file
  * @return int Solution
  */
-static int Part2(const std::array<std::array<int, 10>, 10>& data)
+static size_t Part2(const std::array<std::array<int, 10>, 10>& data)
 {
     std::array<std::array<int, 10>, 10> grid;
     std::copy(data.begin(), data.end(), grid.begin());

@@ -149,7 +149,8 @@ public:
             do
             {
                 didMerge = false;
-                for (std::size_t j = 0; j < row.m_valueDepthPair.size(); j++)
+                for (std::size_t j = 0; j < row.m_valueDepthPair.size() - 1;
+                     j++)
                 {
                     if (row.m_valueDepthPair[j].second == static_cast<int>(i))
                     {
