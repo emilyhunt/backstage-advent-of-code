@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <array>
 
 #include "Days.h"
 #include "Utilities.h"
@@ -265,7 +266,7 @@ public:
      *
      * @return int amount of intersections
      */
-    int CountIntersections() const
+    int64_t CountIntersections() const
     {
         return std::count_if(m_grid.begin(), m_grid.end(),
                              [](std::pair<Point, int> i)
@@ -349,8 +350,8 @@ std::ostream& operator<<(std::ostream& os, const Lines& lines)
                             Function Declarations
 ================================================================================
 */
-static int Part1(Lines& lines);
-static int Part2(Lines& lines);
+static int64_t Part1(Lines& lines);
+static int64_t Part2(Lines& lines);
 
 /*
 ================================================================================
@@ -363,7 +364,7 @@ static int Part2(Lines& lines);
  * @param lines lines object to use
  * @return int Solution
  */
-static int Part1(Lines& lines)
+static int64_t Part1(Lines& lines)
 {
     lines.PaintHorizontalAndVerticalLines();
     return lines.CountIntersections();
@@ -375,7 +376,7 @@ static int Part1(Lines& lines)
  * @param lines lines object to use
  * @return int Solution
  */
-static int Part2(Lines& lines)
+static int64_t Part2(Lines& lines)
 {
     lines.PaintDiagonalLines();
     return lines.CountIntersections();

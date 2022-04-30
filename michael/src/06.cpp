@@ -23,10 +23,10 @@
                             Function Declarations
 ================================================================================
 */
-void SimulateDay(std::deque<long int>& lanternfish);
-long int CountFish(const std::deque<long int>& lanternfish);
-std::deque<long int> ConvertToCounts(const std::vector<int>& lanternfish);
-long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps);
+void SimulateDay(std::deque<int64_t>& lanternfish);
+int64_t CountFish(const std::deque<int64_t>& lanternfish);
+std::deque<int64_t> ConvertToCounts(const std::vector<int>& lanternfish);
+int64_t SimulateLanternfish(const std::vector<int>& lanternfish, int steps);
 
 /*
 ================================================================================
@@ -38,9 +38,9 @@ long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps);
  *
  * @param lanternfish Previous day of fish, is modified by function
  */
-void SimulateDay(std::deque<long int>& lanternfish)
+void SimulateDay(std::deque<int64_t>& lanternfish)
 {
-    long int countAtZero = lanternfish.front();
+    int64_t countAtZero = lanternfish.front();
     lanternfish.pop_front();
     lanternfish[6] += countAtZero;
     lanternfish.push_back(countAtZero);
@@ -52,9 +52,10 @@ void SimulateDay(std::deque<long int>& lanternfish)
  * @param lanternfish Fish record
  * @return long int Count of fish
  */
-long int CountFish(const std::deque<long int>& lanternfish)
+int64_t CountFish(const std::deque<int64_t>& lanternfish)
 {
-    return std::accumulate(lanternfish.begin(), lanternfish.end(), 0L);
+    int64_t startingVal = 0;
+    return std::accumulate(lanternfish.begin(), lanternfish.end(), startingVal);
 }
 
 /**
@@ -63,9 +64,9 @@ long int CountFish(const std::deque<long int>& lanternfish)
  * @param lanternfish Vector of fish ages
  * @return std::deque<long int> Count of fish at each age
  */
-std::deque<long int> ConvertToCounts(const std::vector<int>& lanternfish)
+std::deque<int64_t> ConvertToCounts(const std::vector<int>& lanternfish)
 {
-    std::deque<long int> countedFish;
+    std::deque<int64_t> countedFish;
     for (int i = 0; i < 9; i++)
         countedFish.push_back(
             std::count(lanternfish.begin(), lanternfish.end(), i));
@@ -79,9 +80,9 @@ std::deque<long int> ConvertToCounts(const std::vector<int>& lanternfish)
  * @param steps Number of steps or days to simulate over
  * @return long int Amount of fish at end of simulation
  */
-long int SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
+int64_t SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
 {
-    std::deque<long int> fishes = ConvertToCounts(lanternfish);
+    std::deque<int64_t> fishes = ConvertToCounts(lanternfish);
 
     for (int i = 0; i < steps; i++)
         SimulateDay(fishes);

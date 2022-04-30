@@ -115,9 +115,9 @@ public:
      *
      * @return int Number of light pixels
      */
-    int CountLightPixels() const
+    int64_t CountLightPixels() const
     {
-        int count = 0;
+        int64_t count = 0;
         for (const auto& row : m_image)
             count += std::count(row.begin(), row.end(), '#');
 

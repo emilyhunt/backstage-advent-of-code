@@ -54,14 +54,14 @@ std::unordered_map<std::string, std::string> CreateMap(const std::string& text)
  * @param polymer The polymer string (i.e file input first line)
  * @param map Unordered map data structure for list in file
  * @param iterations Amount of iterations
- * @return long int Solution may be a large number for >10 iterations
+ * @return int64_t Solution may be a large number for >10 iterations
  */
-static unsigned long int
+static int64_t
 Solve(std::string polymer,
       const std::unordered_map<std::string, std::string>& map,
       size_t iterations)
 {
-    std::unordered_map<std::string, long int> counts;
+    std::unordered_map<std::string, int64_t> counts;
     std::set<char> letters;
     for (const auto& [left, right] : map)
         counts.insert(std::make_pair(left, 0));
@@ -95,12 +95,12 @@ Solve(std::string polymer,
     const char firstLetter = polymer[0];
     const char lastLetter = polymer[polymer.length() - 1];
 
-    std::unordered_map<char, size_t> letterCount(letters.size(),
+    std::unordered_map<char, uint64_t> letterCount(letters.size(),
                                                  letters.get_allocator());
 
     for (auto letter : letters)
     {
-        size_t count = 0;
+        uint64_t count = 0;
         for (const auto& [key, val] : counts)
         {
             count += std::count(key.begin(), key.end(), letter) * val;

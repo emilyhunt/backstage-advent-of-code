@@ -217,7 +217,7 @@ public:
      *
      * @return int Count of cards still in game
      */
-    int GetCardsRemaining() const { return m_cards.size(); }
+    size_t GetCardsRemaining() const { return m_cards.size(); }
 
     /**
      * @brief Draw the next number for the game
