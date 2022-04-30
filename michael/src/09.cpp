@@ -67,8 +67,8 @@ static int Part1(const std::vector<std::vector<int>>& numberGrid)
             bool isLowPoint = true;
             for (size_t k = 0; k < rowSearch.size(); k++)
             {
-                int searchRow = row + rowSearch[k];
-                int searchCol = col + colSearch[k];
+                int64_t searchRow = row + rowSearch[k];
+                int64_t searchCol = col + colSearch[k];
                 if ((searchRow >= 0) && (searchRow < static_cast<int>(numRows))
                     && (searchCol >= 0)
                     && (searchCol < static_cast<int>(numCols)))
@@ -90,7 +90,7 @@ static int Part1(const std::vector<std::vector<int>>& numberGrid)
  * @param numberGrid from text input file
  * @return int Solution
  */
-static int Part2(const std::vector<std::vector<int>>& numberGrid)
+static size_t Part2(const std::vector<std::vector<int>>& numberGrid)
 {
     const size_t numRows = numberGrid.size();
     const size_t numCols = numberGrid[0].size();

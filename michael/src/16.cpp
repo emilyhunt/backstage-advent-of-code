@@ -148,25 +148,27 @@ std::string GetBinData(const std::string& hex)
  * @param versionNumSum sum of version numbers (part 1)
  * @param packetVal packet value (part 2)
  */
-void Solve(const std::string& bin, int& index, long int& versionNumSum,
-           long int& packetVal)
+void Solve(const std::string& bin, int& index, int64_t& versionNumSum,
+           int64_t& packetVal)
 {
     State currentState = State::version;
-    long int data = 0;
-    std::vector<long int> packetVals = {};
+    int64_t data = 0;
+    std::vector<int64_t> packetVals = {};
     PacketType packetType = PacketType::data;
 
     while (currentState != State::end)
     {
+        int64_t startingVal = 0;
+
         switch (currentState)
         {
         case State::version:
         {
-            const int len = 3;
-            int total = 0;
+            const int64_t len = 3;
+            int64_t total = 0;
 
-            for (int j = len - 1; j >= 0; j--)
-                total += (bin[index++] - '0') << j;
+            for (int64_t j = len - 1; j >= 0; j--)
+                total += static_cast<int64_t>(bin[index++] - '0') << j;
             currentState = State::typeId;
             versionNumSum += total;
         }
@@ -226,7 +228,7 @@ void Solve(const std::string& bin, int& index, long int& versionNumSum,
             while ((index - start) < total)
             {
                 Solve(bin, index, versionNumSum, packetVal);
-                long int packetValCopy = packetVal;
+                int64_t packetValCopy = packetVal;
                 packetVals.push_back(packetValCopy);
             }
             currentState = State::ending;
@@ -244,7 +246,7 @@ void Solve(const std::string& bin, int& index, long int& versionNumSum,
             for (int i = 0; i < total; i++)
             {
                 Solve(bin, index, versionNumSum, packetVal);
-                long int packetValCopy = packetVal;
+                int64_t packetValCopy = packetVal;
                 packetVals.push_back(packetValCopy);
             }
             currentState = State::ending;
@@ -269,8 +271,8 @@ void Solve(const std::string& bin, int& index, long int& versionNumSum,
             switch (packetType)
             {
             case PacketType::sum:
-                packetVal
-                    = std::accumulate(packetVals.begin(), packetVals.end(), 0L);
+                packetVal = std::accumulate(packetVals.begin(),
+                                            packetVals.end(), startingVal);
                 break;
 
             case PacketType::product:
@@ -327,8 +329,8 @@ void Day16(const char* fileName)
     auto bin = GetBinData(hex);
 
     int index = 0;
-    long int part1 = 0;
-    long int part2 = 0;
+    int64_t part1 = 0;
+    int64_t part2 = 0;
 
     Solve(bin, index, part1, part2);
     std::cout << "Part 1: " << part1 << "\n";

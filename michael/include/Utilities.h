@@ -9,11 +9,13 @@
  *
  */
 
+#include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <regex>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #pragma once
 
@@ -27,6 +29,25 @@ void PrintNumberGrid(const std::vector<std::vector<int>> &numberGrid);
 std::vector<int> ReadNumbers(const std::string &text);
 std::vector<int> ReadNumbersFile(const char *fileName);
 
+class Timer
+{
+private:
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+    void Stop()
+    {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+                            end - m_start)
+                            .count();
+        double msDuration = duration * 0.001;
+        std::cout << "Time: " << msDuration << "ms\n";
+    }
+
+public:
+    Timer() { m_start = std::chrono::high_resolution_clock::now(); }
+    ~Timer() { Stop(); }
+};
+
 /**
  * @brief Prints all elements of a vector
  *
@@ -35,7 +56,7 @@ std::vector<int> ReadNumbersFile(const char *fileName);
  * @param sep Seperator between elements
  */
 template <typename T>
-void PrintVector(const std::vector<T> &vec, const char *sep = " ")
+void PrintVector(const T& vec, const char* sep = " ")
 {
     for (const auto &item : vec)
         std::cout << item << sep;

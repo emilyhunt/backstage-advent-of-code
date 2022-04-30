@@ -1,9 +1,24 @@
-# Makefile
-bin/
+# CMake
+build/
 obj/
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+.vs/
 
 # Doxygen
 html/
+
+# 3rd Party Lib
+include/eigen/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
