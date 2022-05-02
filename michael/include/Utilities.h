@@ -12,10 +12,11 @@
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
+#include <numeric>
 #include <regex>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #pragma once
 
@@ -124,4 +125,32 @@ template <typename T>
 int Sign(T val)
 {
     return (T(0) < val) - (val < T(0));
+}
+
+/**
+ * @brief Find the median of a list of numbers
+ *
+ * @tparam T Type of input used
+ * @param numbers The list of numbers
+ * @return Median of list of numbers
+ */
+template <typename T>
+T Median(std::vector<T> numbers)
+{
+    size_t n = numbers.size() / 2;
+    std::nth_element(numbers.begin(), numbers.begin() + n, numbers.end());
+    return numbers[n];
+}
+
+/**
+ * @brief Find the meean of a list of numbers
+ *
+ * @tparam T Type of input used
+ * @param numbers The list of numbers
+ * @return Mean of list of numbers
+ */
+template <typename T>
+T Mean(std::vector<T> numbers)
+{
+    return std::reduce(numbers.begin(), numbers.end()) / numbers.size();
 }
