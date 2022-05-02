@@ -26,14 +26,14 @@
 using Instruction = std::pair<std::string, std::vector<std::string>>;
 using Instructions = std::vector<Instruction>;
 
-using FunctionType = void (*)(Instruction);
+using FunctionType = void (*)(const Instruction&);
 
-void Input(Instruction instruction);
-void Add(Instruction instruction);
-void Multiply(Instruction instruction);
-void Divide(Instruction instruction);
-void Modulo(Instruction instruction);
-void Equal(Instruction instruction);
+void Input(const Instruction& instruction);
+void Add(const Instruction& instruction);
+void Multiply(const Instruction& instruction);
+void Divide(const Instruction& instruction);
+void Modulo(const Instruction& instruction);
+void Equal(const Instruction& instruction);
 
 int ParseValue(std::string input);
 
@@ -49,29 +49,29 @@ std::unordered_map<std::string, int> data{
                             Function Definitions
 ================================================================================
 */
-void Input(Instruction instruction) { return; }
+void Input(const Instruction& instruction) { return; }
 
-void Add(Instruction instruction)
+void Add(const Instruction& instruction)
 {
     data[instruction.second[0]] += ParseValue(instruction.second[1]);
 }
 
-void Multiply(Instruction instruction)
+void Multiply(const Instruction& instruction)
 {
     data[instruction.second[0]] *= ParseValue(instruction.second[1]);
 }
 
-void Divide(Instruction instruction)
+void Divide(const Instruction& instruction)
 {
     data[instruction.second[0]] /= ParseValue(instruction.second[1]);
 }
 
-void Modulo(Instruction instruction)
+void Modulo(const Instruction& instruction)
 {
     data[instruction.second[0]] %= ParseValue(instruction.second[1]);
 }
 
-void Equal(Instruction instruction)
+void Equal(const Instruction& instruction)
 {
     bool truthVal = ParseValue(instruction.second[0])
                     == ParseValue(instruction.second[1]);
