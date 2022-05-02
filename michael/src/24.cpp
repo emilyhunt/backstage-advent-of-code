@@ -29,15 +29,20 @@
 ================================================================================
 */
 
-using Instructions = std::vector<std::pair<std::string, std::string>>;
+using Instructions
+    = std::vector<std::pair<std::string, std::vector<std::string>>>;
 
 static Instructions ExtractInstructions(const std::string& text)
 {
     Instructions instructions;
     auto lines = SplitLines(text);
     for (const auto& line : lines)
-        instructions.push_back(
-            std::make_pair(line.substr(0, 3), line.substr(4)));
+    {
+        auto left = line.substr(0, 3);
+        auto right = Split(line.substr(4), " ");
+
+        instructions.push_back(std::make_pair(left, right));
+    }
 
     return instructions;
 }
@@ -47,7 +52,9 @@ static void PrintInstructions(const Instructions& instructions)
     for (const auto& instruction : instructions)
     {
         std::cout << instruction.first << " ";
-        std::cout << instruction.second << "\n";
+        for (const auto& item : instruction.second)
+            std::cout << item << " ";
+        std::cout << "\n";
     }
 }
 
