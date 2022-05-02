@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -19,23 +20,45 @@
 
 /*
 ================================================================================
-                                Classes
+                                Declarations
 ================================================================================
 */
+using Instruction = std::pair<std::string, std::vector<std::string>>;
+using Instructions = std::vector<Instruction>;
+
+using FunctionType = int (*)(Instruction);
+
+int Input(Instruction);
+int Add(Instruction);
+int Multiply(Instruction);
+int Divide(Instruction);
+int Modulo(Instruction);
+int Equal(Instruction);
+
+const std::unordered_map<std::string, FunctionType> functionMapping{
+    {"inp", Input},  {"add", Add},    {"mul", Multiply},
+    {"div", Divide}, {"mod", Modulo}, {"eql", Equal}};
+
+std::unordered_map<std::string, int> data{
+    {"w", 0}, {"x", 0}, {"y", 0}, {"z", 0}};
 
 /*
 ================================================================================
                             Function Definitions
 ================================================================================
 */
-
-using Instructions
-    = std::vector<std::pair<std::string, std::vector<std::string>>>;
+int Input(Instruction) { return 0; }
+int Add(Instruction) { return 0; }
+int Multiply(Instruction) { return 0; }
+int Divide(Instruction) { return 0; }
+int Modulo(Instruction) { return 0; }
+int Equal(Instruction) { return 0; }
 
 static Instructions ExtractInstructions(const std::string& text)
 {
     Instructions instructions;
     auto lines = SplitLines(text);
+
     for (const auto& line : lines)
     {
         auto left = line.substr(0, 3);
@@ -72,5 +95,5 @@ void Day24(const char* fileName)
 
     PrintInstructions(instructions);
 
-    std::cout << Part1(instructions) << "\n";
+    std::cout << "Part 1: " << Part1(instructions) << "\n";
 }
