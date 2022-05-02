@@ -9,22 +9,46 @@
  *
  */
 
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
 #include <iostream>
+#include <vector>
 
 #include "Days.h"
 #include "Utilities.h"
 
 /*
 ================================================================================
-                            Function Declarations
-================================================================================
-*/
-
-/*
-================================================================================
                             Function Definitions
 ================================================================================
 */
+
+static int Part1(const std::vector<int>& numbers)
+{
+    const int median = Median(numbers);
+    int answer = 0;
+
+    for (auto i : numbers)
+    {
+        answer += std::abs(median - i);
+    }
+
+    return answer;
+}
+
+static int Part2(const std::vector<int>& numbers)
+{
+    const int mean = Mean(numbers);
+    int answer = 0;
+
+    for (auto i : numbers)
+    {
+        int x = std::abs(mean - i);
+        answer += (x * (x + 1)) / 2;
+    }
+    return answer;
+}
 
 /**
  * @brief Day 7 of Advent of Code
@@ -33,9 +57,7 @@
  */
 void Day07(const char* fileName)
 {
-    (void)fileName;
-    std::cout << "Part 1 and 2: "
-                 "https://docs.google.com/spreadsheets/d/"
-                 "1Jn2FnVbrSW1sGMGhrnGRo5Xz2PUrvFs-bKzXlFLDRAw/edit?usp=sharing"
-              << "\n";
+    std::vector<int> numbers = ReadNumbersFile<int>(fileName);
+    std::cout << "Part 1: " << Part1(numbers) << "\n";
+    std::cout << "Part 2: " << Part2(numbers) << "\n";
 }
