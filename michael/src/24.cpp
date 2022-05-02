@@ -26,14 +26,16 @@
 using Instruction = std::pair<std::string, std::vector<std::string>>;
 using Instructions = std::vector<Instruction>;
 
-using FunctionType = int (*)(Instruction);
+using FunctionType = void (*)(Instruction);
 
-int Input(Instruction);
-int Add(Instruction);
-int Multiply(Instruction);
-int Divide(Instruction);
-int Modulo(Instruction);
-int Equal(Instruction);
+void Input(Instruction instruction);
+void Add(Instruction instruction);
+void Multiply(Instruction instruction);
+void Divide(Instruction instruction);
+void Modulo(Instruction instruction);
+void Equal(Instruction instruction);
+
+int ParseValue(std::string input);
 
 const std::unordered_map<std::string, FunctionType> functionMapping{
     {"inp", Input},  {"add", Add},    {"mul", Multiply},
@@ -47,12 +49,42 @@ std::unordered_map<std::string, int> data{
                             Function Definitions
 ================================================================================
 */
-int Input(Instruction) { return 0; }
-int Add(Instruction) { return 0; }
-int Multiply(Instruction) { return 0; }
-int Divide(Instruction) { return 0; }
-int Modulo(Instruction) { return 0; }
-int Equal(Instruction) { return 0; }
+void Input(Instruction instruction) { return; }
+
+void Add(Instruction instruction)
+{
+    data[instruction.second[0]] += ParseValue(instruction.second[1]);
+}
+
+void Multiply(Instruction instruction)
+{
+    data[instruction.second[0]] *= ParseValue(instruction.second[1]);
+}
+
+void Divide(Instruction instruction)
+{
+    data[instruction.second[0]] /= ParseValue(instruction.second[1]);
+}
+
+void Modulo(Instruction instruction)
+{
+    data[instruction.second[0]] %= ParseValue(instruction.second[1]);
+}
+
+void Equal(Instruction instruction)
+{
+    bool truthVal = ParseValue(instruction.second[0])
+                    == ParseValue(instruction.second[1]);
+    data[instruction.second[0]] = truthVal ? 1 : 0;
+}
+
+int ParseValue(std::string input)
+{
+    if (input[0] >= 'a')
+        return data.at(input);
+
+    return std::stoi(input);
+}
 
 static Instructions ExtractInstructions(const std::string& text)
 {
