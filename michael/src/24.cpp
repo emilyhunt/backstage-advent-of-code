@@ -28,7 +28,7 @@ using Instructions = std::vector<Instruction>;
 
 using FunctionType = void (*)(const Instruction&);
 
-void Input(const Instruction& instruction);
+void Input(const Instruction& instruction, int64_t input);
 void Add(const Instruction& instruction);
 void Multiply(const Instruction& instruction);
 void Divide(const Instruction& instruction);
@@ -38,10 +38,13 @@ void Equal(const Instruction& instruction);
 int ParseValue(std::string input);
 
 const std::unordered_map<std::string, FunctionType> functionMapping{
-    {"inp", Input},  {"add", Add},    {"mul", Multiply},
-    {"div", Divide}, {"mod", Modulo}, {"eql", Equal}};
+    {"add", Add},
+    {"mul", Multiply},
+    {"div", Divide},
+    {"mod", Modulo},
+    {"eql", Equal}};
 
-std::unordered_map<std::string, int> data{
+std::unordered_map<std::string, int64_t> data{
     {"w", 0}, {"x", 0}, {"y", 0}, {"z", 0}};
 
 /*
@@ -49,7 +52,10 @@ std::unordered_map<std::string, int> data{
                             Function Definitions
 ================================================================================
 */
-void Input(const Instruction& instruction) { return; }
+void Input(const Instruction& instruction, int64_t input)
+{
+    data[instruction.second[0]] = input;
+}
 
 void Add(const Instruction& instruction)
 {
@@ -113,7 +119,62 @@ static void PrintInstructions(const Instructions& instructions)
     }
 }
 
-static int Part1(const Instructions& instructions) { return 0; }
+void ResetAlu()
+{
+    data["w"] = 0;
+    data["x"] = 0;
+    data["y"] = 0;
+    data["z"] = 0;
+}
+
+bool ContainsZeroDigit(int64_t input)
+{
+    while (input > 0)
+    {
+        int digit = input % 10;
+        if (!digit)
+            return true;
+        input /= 10;
+    }
+
+    return false;
+}
+
+bool CheckModelNumber(const Instructions& instructions, int64_t input)
+{
+    // Check if contains zeros
+    if (ContainsZeroDigit(input))
+        return true;
+
+    // Run program
+    for (const auto& instruction : instructions)
+    {
+        if (instruction.first == "inp")
+            Input(instruction, input);
+        else
+        {
+            functionMapping.at(instruction.first)(instruction);
+        }
+    }
+
+    return data.at("z");
+}
+
+static int64_t Part1(const Instructions& instructions)
+{
+    int64_t modelNumber = 99999890000000;
+    std::cout << "Enter starting number: ";
+    std::cin >> modelNumber;
+    while (CheckModelNumber(instructions, modelNumber))
+    {
+        modelNumber--;
+        ResetAlu();
+        if (!(modelNumber % 100000))
+            std::cout << modelNumber << "\n";
+    }
+
+    return modelNumber;
+}
 
 /**
  * @brief Day 24 of Advent of Code
@@ -125,7 +186,7 @@ void Day24(const char* fileName)
     const auto text = ReadTextFile(fileName);
     auto instructions = ExtractInstructions(text);
 
-    PrintInstructions(instructions);
+    // PrintInstructions(instructions);
 
-    std::cout << "Part 1: " << Part1(instructions) << "\n";
+    std::cout << "Part 1: \n" << Part1(instructions) << "\n";
 }
