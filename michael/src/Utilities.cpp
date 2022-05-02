@@ -71,7 +71,7 @@ std::vector<std::string> Split(const std::string &text,
         splitString.push_back(text.substr(last, next - last));
         last = next + 1;
     }
-    splitString.push_back(text.substr(text.rfind("\n") + 1, text.length()));
+    splitString.push_back(text.substr(text.rfind(delim) + 1, text.length()));
     return splitString;
 }
 
