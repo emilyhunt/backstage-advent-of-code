@@ -9,6 +9,7 @@
  *
  */
 
+#include <array>
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -140,38 +141,302 @@ bool ContainsZeroDigit(int64_t input)
     return false;
 }
 
+int RunProgram(std::array<int64_t, 14> digit)
+{
+    int64_t w, x, y, z;
+    w = x = y = z = 0;
+
+    w = digit[0];
+    x += 14;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 8;
+    y *= x;
+    z += y;
+
+    w = digit[1];
+    x *= 0;
+    x += z;
+    x %= 26;
+    x += 15;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 11;
+    y *= x;
+    z += y;
+
+    w = digit[2];
+    x *= 0;
+    x += z;
+    x %= 26;
+    x += 13;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 2;
+    y *= x;
+    z += y;
+
+    w = digit[3];
+    x *= 0;
+    x += z;
+    x %= 26;
+    z /= 26;
+    x += -10;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 11;
+    y *= x;
+    z += y;
+
+    w = digit[4];
+    x *= 0;
+    x += z;
+    x %= 26;
+    x += 14;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 1;
+    y *= x;
+    z += y;
+
+    w = digit[5];
+    x *= 0;
+    x += z;
+    x %= 26;
+    z /= 26;
+    x += -3;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 5;
+    y *= x;
+    z += y;
+
+    w = digit[6];
+    x *= 0;
+    x += z;
+    x %= 26;
+    z /= 26;
+    x += -14;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 10;
+    y *= x;
+    z += y;
+
+    w = digit[7];
+    x *= 0;
+    x += z;
+    x %= 26;
+    x += 12;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 6;
+    y *= x;
+    z += y;
+
+    w = digit[8];
+    x *= 0;
+    x += z;
+    x %= 26;
+    x += 14;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 1;
+    y *= x;
+    z += y;
+
+    w = digit[9];
+    x *= 0;
+    x += z;
+    x %= 26;
+    x += 12;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 11;
+    y *= x;
+    z += y;
+
+    w = digit[10];
+    x *= 0;
+    x += z;
+    x %= 26;
+    z /= 26;
+    x += -6;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 9;
+    y *= x;
+    z += y;
+
+    w = digit[11];
+    x *= 0;
+    x += z;
+    x %= 26;
+    z /= 26;
+    x += -6;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 14;
+    y *= x;
+    z += y;
+
+    w = digit[12];
+    x *= 0;
+    x += z;
+    x %= 26;
+    z /= 26;
+    x += -2;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 11;
+    y *= x;
+    z += y;
+
+    w = digit[13];
+    x *= 0;
+    x += z;
+    x %= 26;
+    z /= 26;
+    x += -9;
+    x = x == w ? 1 : 0;
+    x = x == 0 ? 1 : 0;
+    y *= 0;
+    y += 25;
+    y *= x;
+    y += 1;
+    z *= y;
+    y *= 0;
+    y += w;
+    y += 2;
+    y *= x;
+    z += y;
+
+    return z;
+}
+
 bool CheckModelNumber(const Instructions& instructions, int64_t input)
 {
     // Check if contains zeros
     if (ContainsZeroDigit(input))
         return true;
 
-    // Run program
-    for (const auto& instruction : instructions)
+    std::array<int64_t, 14> digits = {};
+    int i = 13;
+    while (input > 0)
     {
-        if (instruction.first == "inp")
-            Input(instruction, input);
-        else
-        {
-            functionMapping.at(instruction.first)(instruction);
-        }
+        digits[i--] = input % 10;
+        input /= 10;
     }
 
-    return data.at("z");
+    return RunProgram(digits);
 }
 
 static int64_t Part1(const Instructions& instructions)
 {
-    int64_t modelNumber = 99999890000000;
-    std::cout << "Enter starting number: ";
-    std::cin >> modelNumber;
+    int64_t modelNumber = 99919780000000; // Close to answer to save time
+
     while (CheckModelNumber(instructions, modelNumber))
-    {
         modelNumber--;
-        ResetAlu();
-        if (!(modelNumber % 100000))
-            std::cout << modelNumber << "\n";
-    }
+
+    return modelNumber;
+}
+
+static int64_t Part2(const Instructions& instructions)
+{
+    int64_t modelNumber = 24913111111111; // Close to answer to save time
+
+    while (CheckModelNumber(instructions, modelNumber))
+        modelNumber++;
 
     return modelNumber;
 }
@@ -188,5 +453,6 @@ void Day24(const char* fileName)
 
     // PrintInstructions(instructions);
 
-    std::cout << "Part 1: \n" << Part1(instructions) << "\n";
+    std::cout << "Part 1: " << Part1(instructions) << "\n";
+    std::cout << "Part 2: " << Part2(instructions) << "\n";
 }
