@@ -97,7 +97,7 @@ int64_t SimulateLanternfish(const std::vector<int>& lanternfish, int steps)
  */
 void Day06(const char* fileName)
 {
-    std::vector<int> lanternfish = ReadNumbersFile<int>(fileName);
+    std::vector<int> lanternfish = ReadNumbersFile(fileName);
 
     std::cout << "Part 1: " << SimulateLanternfish(lanternfish, 80) << "\n";
     std::cout << "Part 2: " << SimulateLanternfish(lanternfish, 256) << "\n";

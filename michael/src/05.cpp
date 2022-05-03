@@ -10,6 +10,7 @@
  */
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <functional>
 #include <iostream>
@@ -19,7 +20,6 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <array>
 
 #include "Days.h"
 #include "Utilities.h"

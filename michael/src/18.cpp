@@ -24,15 +24,23 @@
                                 Classes
 ================================================================================
 */
-
+/// Flag to set debug mode for verbose printing
 static bool debugMode = false;
 
-/// Pair is value, depth
+/// Row of depth value pairs
 class Row
 {
 private:
+    /// Value and depth vector
     std::vector<std::pair<int, int>> m_valueDepthPair;
 
+    /**
+     * @brief Peform explode operation on Row
+     *
+     * @param idx of item to explode
+     * @param depth to explode
+     * @param value to explode
+     */
     void Explode(std::size_t idx, int depth, int value)
     {
         if (debugMode)
@@ -55,21 +63,33 @@ private:
             std::cout << *this << "\n\n";
     }
 
-    void Split(std::size_t idx, int depth, double fValue)
+    /**
+     * @brief Perform split operation on Row
+     *
+     * @param idx of item to split
+     * @param depth to explode
+     * @param value to explode
+     */
+    void Split(std::size_t idx, int depth, double value)
     {
         if (debugMode)
-            std::cout << "Split(" << fValue << "," << depth << ")[" << idx
+            std::cout << "Split(" << value << "," << depth << ")[" << idx
                       << "]\n"
                       << *this << "\n";
         m_valueDepthPair.erase(m_valueDepthPair.begin() + idx);
         m_valueDepthPair.insert(
             m_valueDepthPair.begin() + idx,
-            {{static_cast<int>(std::floor(fValue / 2.0)), depth + 1},
-             {static_cast<int>(std::ceil(fValue / 2.0)), depth + 1}});
+            {{static_cast<int>(std::floor(value / 2.0)), depth + 1},
+             {static_cast<int>(std::ceil(value / 2.0)), depth + 1}});
         if (debugMode)
             std::cout << *this << "\n\n";
     }
 
+    /**
+     * @brief Get the max depth in the Row
+     *
+     * @return int Maximum depth
+     */
     int GetMaxDepth() const
     {
         int level = 0;
@@ -78,6 +98,12 @@ private:
         return level;
     }
 
+    /**
+     * @brief Do a reduce step on the Row
+     *
+     * @return true If the Row was changed
+     * @return false If the Row can no longer be reduced
+     */
     bool ReduceStep()
     {
         for (std::size_t idx = 0; idx < m_valueDepthPair.size(); idx++)
@@ -103,6 +129,11 @@ private:
     }
 
 public:
+    /**
+     * @brief Construct a new Row object
+     *
+     * @param line from input file to generate Row from
+     */
     Row(const std::string& line)
     {
         int depth = 0;
@@ -129,6 +160,9 @@ public:
         }
     }
 
+    /**
+     * @brief Reduce Row until it is fully reduced
+     */
     void Reduce()
     {
         while (ReduceStep())
@@ -136,6 +170,11 @@ public:
         }
     }
 
+    /**
+     * @brief Get the magnitude of the Row
+     *
+     * @return int Magnitude of the Row
+     */
     int GetMagnitude() const
     {
         if (!this->m_valueDepthPair.size())
@@ -143,14 +182,13 @@ public:
         int level = this->GetMaxDepth();
         Row row = *this;
 
-        for (std::size_t i = level; i >= 1; i--)
+        for (int i = level; i >= 1; i--)
         {
             bool didMerge;
             do
             {
                 didMerge = false;
-                for (std::size_t j = 0; j < row.m_valueDepthPair.size() - 1;
-                     j++)
+                for (int j = 0; j < row.m_valueDepthPair.size() - 1; j++)
                 {
                     if (row.m_valueDepthPair[j].second == static_cast<int>(i))
                     {
@@ -180,6 +218,12 @@ public:
                + row.m_valueDepthPair[1].first * 2;
     }
 
+    /**
+     * @brief Addition operator
+     *
+     * @param other Row to add to *this object
+     * @return Row summed *this and other
+     */
     Row operator+(const Row& other) const
     {
         Row newRow = *this;
@@ -195,6 +239,12 @@ public:
         return newRow;
     }
 
+    /**
+     * @brief Addition assignment operator
+     *
+     * @param other Row to add to *this object
+     * @return Row& summed *this and other
+     */
     Row& operator+=(const Row& other)
     {
         this->m_valueDepthPair.insert(this->m_valueDepthPair.end(),
@@ -210,6 +260,13 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Row& row);
 };
 
+/**
+ * @brief Print the row to ostream
+ *
+ * @param os ostream to print to
+ * @param row to be printed
+ * @return std::ostream& to print to
+ */
 std::ostream& operator<<(std::ostream& os, const Row& row)
 {
     for (const auto& elem : row.m_valueDepthPair)
@@ -217,12 +274,18 @@ std::ostream& operator<<(std::ostream& os, const Row& row)
     return os;
 }
 
+/// Snailfish object
 class Snailfish
 {
 private:
-    std::vector<Row> m_rows;
+    std::vector<Row> m_rows; ///< Row of fish
 
 public:
+    /**
+     * @brief Construct a new Snailfish object
+     *
+     * @param text to construct from
+     */
     Snailfish(const std::string& text)
     {
         std::size_t lineStart = 0;
@@ -240,6 +303,11 @@ public:
         m_rows.push_back(Row(line));
     }
 
+    /**
+     * @brief Find the total sum of fish
+     *
+     * @return Row The sum as a row
+     */
     Row FindTotalSum() const
     {
         Snailfish rows(*this);
@@ -248,13 +316,16 @@ public:
         {
             rows.m_rows[0] += rows.m_rows[1];
             rows.m_rows.erase(rows.m_rows.begin() + 1, rows.m_rows.begin() + 2);
-            // rows.m_rows[0].Reduce();
         }
-        // rows.m_rows[0].Reduce();
 
         return rows.m_rows[0];
     }
 
+    /**
+     * @brief Find all sum combinations and create vector of sums
+     *
+     * @return std::vector<int> All the sum combinations
+     */
     std::vector<int> FindAllSumCombinations() const
     {
         std::vector<int> sums;
@@ -277,10 +348,10 @@ public:
     }
 
     /**
-     * @brief Get the magnitude of the first row. Should be the only row after
-     * sum
+     * @brief Get the magnitude of the row
      *
-     * @return int the magnitude
+     * @param index The row to find the magnitude of
+     * @return int The magnitude
      */
     int GetMagnitude(std::size_t index) const
     {
@@ -290,6 +361,13 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Snailfish& fish);
 };
 
+/**
+ * @brief Snailfish output stream operator
+ *
+ * @param os Output stream to write to
+ * @param fish The fish data
+ * @return std::ostream& Reference to modified output stream
+ */
 std::ostream& operator<<(std::ostream& os, const Snailfish& fish)
 {
     for (const auto& row : fish.m_rows)
@@ -304,7 +382,6 @@ std::ostream& operator<<(std::ostream& os, const Snailfish& fish)
                             Function Definitions
 ================================================================================
 */
-
 /**
  * @brief Day 18 of Advent of Code
  *

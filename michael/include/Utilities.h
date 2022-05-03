@@ -27,11 +27,24 @@ std::vector<std::string> Split(const std::string& text,
                                const std::string& delim);
 std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text);
 void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid);
+std::vector<int> ReadNumbers(const std::string& text);
+std::vector<int> ReadNumbersFile(const char* fileName);
 
+/**
+ * @brief Timer object
+ *
+ * Intended for use on stack scope, timer starts when initialised, and timer
+ * stops when destructed. Duration is then printed to std::cout.
+ */
 class Timer
 {
 private:
+    /// Start time
     std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+
+    /**
+     * @brief Stop the clock and find duration
+     */
     void Stop()
     {
         auto end = std::chrono::high_resolution_clock::now();
@@ -46,29 +59,6 @@ public:
     Timer() { m_start = std::chrono::high_resolution_clock::now(); }
     ~Timer() { Stop(); }
 };
-
-/**
- * @brief Read numbers to a vector of numbers, can be spaced by anything
- *
- * @tparam T data will be read as this integer type
- * @param fileName Path to file to read from
- * @return std::vector<T> Vector of integer type
- */
-template <typename T>
-std::vector<T> ReadNumbersFile(const char* fileName)
-{
-    std::vector<T> numbers;
-    std::string text = ReadTextFile(fileName);
-    std::regex numberRegex("\\d+");
-
-    auto begin = std::sregex_iterator(text.begin(), text.end(), numberRegex);
-    auto end = std::sregex_iterator();
-
-    for (std::sregex_iterator iter = begin; iter != end; iter++)
-        numbers.push_back(std::atoi((*iter).str().c_str()));
-
-    return numbers;
-}
 
 /**
  * @brief Prints all elements of a vector

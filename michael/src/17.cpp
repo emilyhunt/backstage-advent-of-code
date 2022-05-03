@@ -36,7 +36,8 @@ static std::pair<int, int> Part1And2(
 {
     const auto& [x, y] = bounds;
 
-    const int minXv = std::sqrt(std::abs(2 * x.first)) * Sign(x.first);
+    const int minXv
+        = static_cast<int>(std::sqrt(std::abs(2 * x.first))) * Sign(x.first);
     const int maxXv = x.second;
     const int minYv = y.first;
     const int maxYv = -y.first + 1;
@@ -83,7 +84,7 @@ static std::pair<int, int> Part1And2(
         }
     }
 
-    return std::make_pair(highestY, success.size());
+    return std::make_pair(highestY, static_cast<int>(success.size()));
 }
 
 /**
