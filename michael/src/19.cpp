@@ -68,27 +68,27 @@
 //     vec);
 // };
 
-//static double DegToRad(double angle) { return M_PI / 180.0 * angle; }
+// static double DegToRad(double angle) { return M_PI / 180.0 * angle; }
 //
-//Eigen::Matrix3d CreateRotation(double yaw, double pitch, double roll)
+// Eigen::Matrix3d CreateRotation(double yaw, double pitch, double roll)
 //{
-//    yaw = DegToRad(yaw);
-//    pitch = DegToRad(pitch);
-//    roll = DegToRad(roll);
+//     yaw = DegToRad(yaw);
+//     pitch = DegToRad(pitch);
+//     roll = DegToRad(roll);
 //
-//    double c1 = std::cos(roll);
-//    double c2 = std::cos(pitch);
-//    double c3 = std::cos(yaw);
-//    double s1 = std::sin(roll);
-//    double s2 = std::sin(pitch);
-//    double s3 = std::sin(yaw);
+//     double c1 = std::cos(roll);
+//     double c2 = std::cos(pitch);
+//     double c3 = std::cos(yaw);
+//     double s1 = std::sin(roll);
+//     double s2 = std::sin(pitch);
+//     double s3 = std::sin(yaw);
 //
-//    Eigen::Matrix3d m_matrix{
-//        {(c2 * c3), (-s2), (c2 * s3)},
-//        {(s1 * s3 + c1 * c3 * s2), (c1 * c2), (c1 * s2 * s3 - c3 * s1)},
-//        {(c3 * s1 * s2 - c1 * s3), (c2 * s1), (c1 * c3 + s1 * s2 * s3)}};
-//    return m_matrix;
-//}
+//     Eigen::Matrix3d m_matrix{
+//         {(c2 * c3), (-s2), (c2 * s3)},
+//         {(s1 * s3 + c1 * c3 * s2), (c1 * c2), (c1 * s2 * s3 - c3 * s1)},
+//         {(c3 * s1 * s2 - c1 * s3), (c2 * s1), (c1 * c3 + s1 * s2 * s3)}};
+//     return m_matrix;
+// }
 
 // class Rotation
 // {
@@ -154,7 +154,7 @@
 //     return os;
 // }
 //
-//std::vector<Eigen::Matrix3d> rotations{
+// std::vector<Eigen::Matrix3d> rotations{
 //    // Forward
 //    CreateRotation(0, 0, 0),
 //    CreateRotation(0, 0, 90),
@@ -187,7 +187,7 @@
 //    CreateRotation(180, 0, -90),
 //};
 //
-//using Scanners = std::vector<std::vector<Eigen::Vector3d>>;
+// using Scanners = std::vector<std::vector<Eigen::Vector3d>>;
 
 /*
 ================================================================================
@@ -195,13 +195,13 @@
 ================================================================================
 */
 //
-//namespace std
+// namespace std
 //{
-///**
+// /**
 // * @brief Hash function for Vector3d
 // */
-//template <>
-//struct hash<Eigen::Vector3d>
+// template <>
+// struct hash<Eigen::Vector3d>
 //{
 //    /**
 //     * @brief Call operator for hash object, for use with std::unordered_map
@@ -218,7 +218,7 @@
 //};
 //}
 //
-//Scanners CreateScannerData(const std::string& text)
+// Scanners CreateScannerData(const std::string& text)
 //{
 //    std::regex scannerRegex(
 //        "--- scanner \\d+ ---\n((?:-*\\d+,){2}-*\\d+\\n*)+");
@@ -255,14 +255,14 @@
 //    return scanners;
 //}
 //
-//template<typename T>
-//void PrintScannerData(const T& scanner)
+// template<typename T>
+// void PrintScannerData(const T& scanner)
 //{
 //    for (const auto& coord : scanner)
 //        std::cout << coord.transpose() << "\n";
 //}
 //
-//void PrintAllScanners(const Scanners& scanners)
+// void PrintAllScanners(const Scanners& scanners)
 //{
 //    int scannerId = 0;
 //    std::cout << "\nScanner: " << scannerId++ << "\n";
@@ -270,8 +270,8 @@
 //        PrintScannerData(scanner);
 //}
 //
-//std::vector<Eigen::Vector3d>
-//RotateVectors(const Eigen::Matrix3d& rotation,
+// std::vector<Eigen::Vector3d>
+// RotateVectors(const Eigen::Matrix3d& rotation,
 //              const std::vector<Eigen::Vector3d>& vectors)
 //{
 //    std::vector<Eigen::Vector3d> rotatedVectors(vectors);
@@ -282,8 +282,8 @@
 //    return rotatedVectors;
 //}
 //
-//std::vector<Eigen::Vector3d>
-//TranslateVectors(const Eigen::Translation3d& translation,
+// std::vector<Eigen::Vector3d>
+// TranslateVectors(const Eigen::Translation3d& translation,
 //                 const std::vector<Eigen::Vector3d>& vectors)
 //{
 //    std::vector<Eigen::Vector3d> translatedVectors(vectors);
@@ -294,8 +294,8 @@
 //    return translatedVectors;
 //}
 //
-//std::unordered_set<Eigen::Vector3d>
-//FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
+// std::unordered_set<Eigen::Vector3d>
+// FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
 //                      const std::vector<Eigen::Vector3d>& vectorsB)
 //{
 //    for (const auto& rotation : rotations)
@@ -335,40 +335,41 @@
 // 564 too high
 // 142 too low
 
-/**
- * @brief Solve part 1
- *
- * For each scanner other than 0, rotate each direction. For each direction,
- * translate to all positions. If number of vectors that match >= 12. Stop
- * and save rotation and translation. If none are found, continue to try
- * next scanner. After done with 0, try 1 etc.
- *
- * @param scanners Input data
- * @return long int Amount of beacons found by all scanners
- */
-//std::unordered_set<Eigen::Vector3d> Part1(const Scanners& scanners)
+// /**
+//  * @brief Solve part 1
+//  *
+//  * For each scanner other than 0, rotate each direction. For each direction,
+//  * translate to all positions. If number of vectors that match >= 12. Stop
+//  * and save rotation and translation. If none are found, continue to try
+//  * next scanner. After done with 0, try 1 etc.
+//  *
+//  * @param scanners Input data
+//  * @return long int Amount of beacons found by all scanners
+//  */
+// std::unordered_set<Eigen::Vector3d> Part1(const Scanners& scanners)
 //{
-//    std::unordered_map<int, std::pair<Eigen::Vector3d, Eigen::Matrix3d>>
-//        scannerMap;
+//     std::unordered_map<int, std::pair<Eigen::Vector3d, Eigen::Matrix3d>>
+//         scannerMap;
 //
-//    std::unordered_set<Eigen::Vector3d> matches;
-//    for (size_t vectorAIdx = 0; vectorAIdx < scanners.size(); vectorAIdx++)
-//    {
-//        for (size_t vectorBIdx = 0; vectorBIdx < scanners.size(); vectorBIdx++)
-//        {
-//            if (vectorAIdx == vectorBIdx)
-//                continue;
-//            auto currentMatches = FindIntersectionGroup(scanners[vectorAIdx],
-//                                                        scanners[vectorBIdx]);
-//            matches.insert(currentMatches.begin(), currentMatches.end());
-//        }
-//    }
+//     std::unordered_set<Eigen::Vector3d> matches;
+//     for (size_t vectorAIdx = 0; vectorAIdx < scanners.size(); vectorAIdx++)
+//     {
+//         for (size_t vectorBIdx = 0; vectorBIdx < scanners.size();
+//         vectorBIdx++)
+//         {
+//             if (vectorAIdx == vectorBIdx)
+//                 continue;
+//             auto currentMatches = FindIntersectionGroup(scanners[vectorAIdx],
+//                                                         scanners[vectorBIdx]);
+//             matches.insert(currentMatches.begin(), currentMatches.end());
+//         }
+//     }
 //
-//    return matches;
-//}
-// 404 -588 -901
-// 686 422 578
-// -282 -1010 -1479
+//     return matches;
+// }
+//  404 -588 -901
+//  686 422 578
+//  -282 -1010 -1479
 
 /**
  * @brief Day 19 of Advent of Code
@@ -377,8 +378,8 @@
  */
 void Day19(const char* fileName)
 {
-    //const std::string text = ReadTextFile(fileName);
-    //auto scannerData = CreateScannerData(text);
+    // const std::string text = ReadTextFile(fileName);
+    // auto scannerData = CreateScannerData(text);
     //// PrintAllScanners(scannerData);
 
     //// Scanners test = {{
@@ -388,14 +389,16 @@ void Day19(const char* fileName)
     ////     {1, -1, 1}, {-1, -1, 1}, {0, -1, -1}, {1, -1, -1}, {-1, -1, -1},
     //// }};
 
-    //auto matches = Part1(scannerData);
+    // auto matches = Part1(scannerData);
 
-    //PrintScannerData(matches);
+    // PrintScannerData(matches);
 
     //// PrintVector(matches, "\n\n");
 
-    std::cout << "Part 1: " << "\n";
-    std::cout << "Part 2: " << "\n";
+    std::cout << "Part 1: "
+              << "\n";
+    std::cout << "Part 2: "
+              << "\n";
 
     // PrintAllScanners(test);
     // test[0] = RotateVectors(rotations[1], test[0]);

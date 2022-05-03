@@ -14,25 +14,36 @@
 #include <iostream>
 #include <regex>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #pragma once
 
-std::string ReadTextFile(const char *fileName);
-void PrintNumbers(const std::vector<int> &numbers, const char *sep);
-std::vector<std::string> SplitLines(const std::string &text);
-std::vector<std::string> Split(const std::string &text,
-                               const std::string &delim);
-std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string &text);
-void PrintNumberGrid(const std::vector<std::vector<int>> &numberGrid);
-std::vector<int> ReadNumbers(const std::string &text);
-std::vector<int> ReadNumbersFile(const char *fileName);
+std::string ReadTextFile(const char* fileName);
+void PrintNumbers(const std::vector<int>& numbers, const char* sep);
+std::vector<std::string> SplitLines(const std::string& text);
+std::vector<std::string> Split(const std::string& text,
+                               const std::string& delim);
+std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text);
+void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid);
+std::vector<int> ReadNumbers(const std::string& text);
+std::vector<int> ReadNumbersFile(const char* fileName);
 
+/**
+ * @brief Timer object
+ *
+ * Intended for use on stack scope, timer starts when initialised, and timer
+ * stops when destructed. Duration is then printed to std::cout.
+ */
 class Timer
 {
 private:
+    /// Start time
     std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+
+    /**
+     * @brief Stop the clock and find duration
+     */
     void Stop()
     {
         auto end = std::chrono::high_resolution_clock::now();
@@ -58,7 +69,7 @@ public:
 template <typename T>
 void PrintVector(const T& vec, const char* sep = " ")
 {
-    for (const auto &item : vec)
+    for (const auto& item : vec)
         std::cout << item << sep;
     std::cout << "\n";
 }
@@ -74,12 +85,12 @@ void PrintVector(const T& vec, const char* sep = " ")
  * "
  */
 template <typename T1, typename T2>
-void PrintMap(const std::unordered_map<T1, T2> &map,
-              const char *keyValSep = ": ", const char *elemSep = ", ")
+void PrintMap(const std::unordered_map<T1, T2>& map,
+              const char* keyValSep = ": ", const char* elemSep = ", ")
 {
     std::cout << "{";
     bool isFirst = true;
-    for (const auto &[key, val] : map)
+    for (const auto& [key, val] : map)
     {
         if (isFirst)
         {

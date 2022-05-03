@@ -60,7 +60,7 @@ enum class PacketType
 */
 /**
  * @brief Print out the PacketType as a string representation
- * 
+ *
  * @param os output stream
  * @param p packet type enum
  * @return std::ostream& reference to modified output stream
@@ -101,7 +101,6 @@ std::ostream& operator<<(std::ostream& os, const PacketType& p)
         os << "equal";
         break;
 
-    
     default:
         os << "unknown: " << static_cast<int>(p);
         break;
@@ -112,7 +111,7 @@ std::ostream& operator<<(std::ostream& os, const PacketType& p)
 
 /**
  * @brief Map a hex character to a binary string part
- * 
+ *
  * @param ch hex character
  * @return std::string binary string of length 4
  */
@@ -128,7 +127,7 @@ std::string HexCharToBin(char ch)
 
 /**
  * @brief Get the binary string from hex string
- * 
+ *
  * @param hex string
  * @return std::string of 1s and 0s
  */
@@ -142,7 +141,7 @@ std::string GetBinData(const std::string& hex)
 
 /**
  * @brief Solve part 1 and 2
- * 
+ *
  * @param bin binary string
  * @param index current index position in binary string
  * @param versionNumSum sum of version numbers (part 1)
@@ -181,7 +180,6 @@ void Solve(const std::string& bin, int& index, int64_t& versionNumSum,
 
             for (int j = len - 1; j >= 0; j--)
                 total += (bin[index++] - '0') << j;
-
 
             packetType = static_cast<PacketType>(total);
 

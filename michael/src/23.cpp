@@ -27,6 +27,7 @@
                             Function Definitions
 ================================================================================
 */
+/// Cost mapping
 static std::unordered_map<char, int> cost{
     {'A', 1}, {'B', 10}, {'C', 100}, {'D', 1000}};
 
@@ -52,7 +53,10 @@ static int Part1()
     return answer;
 }
 
+/// Puzzle grid object
 using PuzzleGrid = std::array<std::string, 11>;
+
+/// Priority queue element
 using PriorityElement = std::pair<PuzzleGrid, int>;
 
 namespace std
@@ -87,7 +91,7 @@ struct hash<std::pair<int, int>>
     /**
      * @brief Call operator for hash object, for use with std::unordered_map
      *
-     * @param grid std::pair<int, int> object to hash
+     * @param fromTo std::pair<int, int>& object to hash
      * @return std::size_t hash of object
      */
     std::size_t operator()(const std::pair<int, int>& fromTo) const
@@ -100,6 +104,13 @@ struct hash<std::pair<int, int>>
 
 }
 
+/**
+ * @brief Print PuzzleGrid to ostream
+ *
+ * @param os to print to
+ * @param grid to be printed
+ * @return std::ostream& to print to
+ */
 std::ostream& operator<<(std::ostream& os, const PuzzleGrid& grid)
 {
     {
@@ -152,6 +163,13 @@ std::ostream& operator<<(std::ostream& os, const PuzzleGrid& grid)
     return os;
 }
 
+/**
+ * @brief Print the route found
+ *
+ * @param cameFrom node route
+ * @param costs of each node from start
+ * @param end final tile
+ */
 static void
 PrintRoute(const std::unordered_map<PuzzleGrid, PuzzleGrid>& cameFrom,
            const std::unordered_map<PuzzleGrid, int>& costs,
@@ -179,25 +197,70 @@ PrintRoute(const std::unordered_map<PuzzleGrid, PuzzleGrid>& cameFrom,
     }
 }
 
-bool operator<(const PriorityElement& a, const PriorityElement& b)
+/**
+ * @brief Less than operator
+ *
+ * @param lhs left hand side
+ * @param rhs right hand side
+ * @return true lhs is less than rhs
+ * @return false lsh is not less than rhs
+ */
+bool operator<(const PriorityElement& lhs, const PriorityElement& rhs)
 {
-    return a.second < b.second;
+    return lhs.second < rhs.second;
 }
 
-bool operator>(const PriorityElement& a, const PriorityElement& b)
+/**
+ * @brief Greater than operator
+ *
+ * @param lhs left hand side
+ * @param rhs right hand side
+ * @return true lhs is greater than rhs
+ * @return false lhs is not greater than rhs
+ */
+bool operator>(const PriorityElement& lhs, const PriorityElement& rhs)
 {
-    return a.second > b.second;
+    return lhs.second > rhs.second;
 }
 
-bool operator==(const PuzzleGrid& a, const PuzzleGrid& b)
+/**
+ * @brief Equal to operator
+ *
+ * @param lhs left hand side
+ * @param rhs right hand side
+ * @return true both inputs are equal
+ * @return false both inputs are not equal
+ */
+bool operator==(const PuzzleGrid& lhs, const PuzzleGrid& rhs)
 {
-    return std::hash<PuzzleGrid>{}(a) == std::hash<PuzzleGrid>{}(b);
+    return std::hash<PuzzleGrid>{}(lhs) == std::hash<PuzzleGrid>{}(rhs);
 }
 
-bool operator!=(const PuzzleGrid& a, const PuzzleGrid& b) { return !(a == b); }
+/**
+ * @brief Not equal to operator
+ *
+ * @param lhs left hand side
+ * @param rhs right hand side
+ * @return true both inputs are not equal
+ * @return false both inputs are equal
+ */
+bool operator!=(const PuzzleGrid& lhs, const PuzzleGrid& rhs)
+{
+    return !(lhs == rhs);
+}
 
+/// X postion of tile columns
 static const std::array<std::size_t, 4> columns{2, 4, 6, 8};
 
+/**
+ * @brief Check if column insertion is allowed
+ *
+ * @param letter to be test if insertion is allowed
+ * @param index x position to move to
+ * @param columnContents the preexisting letters in column being moved to
+ * @return true The letter can be placed in the column
+ * @return false The letter cannot be placed in the column
+ */
 static bool IsColumnInsertionAllowed(char letter, std::size_t index,
                                      const std::string& columnContents)
 {
@@ -234,6 +297,12 @@ static bool IsColumnInsertionAllowed(char letter, std::size_t index,
     throw std::invalid_argument("Unknown letter");
 }
 
+/**
+ * @brief Solve part 2 of puzzle
+ *
+ * @param doPrint print the solution steps
+ * @return int Final solution
+ */
 static int Part2(bool doPrint)
 {
     // #############
@@ -432,10 +501,12 @@ static int Part2(bool doPrint)
                 int roomToSteps = 0;
 
                 if (movingFromRoom)
-                    roomFromSteps = 4 - current[fromIndex].length();
+                    roomFromSteps
+                        = static_cast<int>(4 - current[fromIndex].length());
 
                 if (movingToRoom)
-                    roomToSteps = 3 - current[toIndex].length();
+                    roomToSteps
+                        = static_cast<int>(3 - current[toIndex].length());
 
                 costs[next]
                     = (cost[letter] * (steps + roomFromSteps + roomToSteps))

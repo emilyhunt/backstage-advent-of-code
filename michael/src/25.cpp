@@ -21,7 +21,7 @@
                                 Classes
 ================================================================================
 */
-
+/// Sea cucumber state
 enum class State
 {
     none,
@@ -29,6 +29,13 @@ enum class State
     right,
 };
 
+/**
+ * @brief Print State to ostream
+ *
+ * @param os to print to
+ * @param state to be printed
+ * @return std::ostream& to print to
+ */
 std::ostream& operator<<(std::ostream& os, const State& state)
 {
     switch (state)
@@ -53,11 +60,19 @@ std::ostream& operator<<(std::ostream& os, const State& state)
     return os;
 }
 
-class SeaCucmbers
+/// Sea cucumbers class
+class SeaCucumbers
 {
 private:
-    std::vector<std::vector<State>> m_grid;
+    std::vector<std::vector<State>> m_grid; ///< The grid of sea cucumbers
+    std::size_t m_iterations;               ///< Number of iterations
 
+    /**
+     * @brief Extract data from line of text from input data
+     *
+     * @param inLine Line input
+     * @return std::vector<State> Data parsed into vector of States
+     */
     std::vector<State> ExtractLine(const std::string& inLine)
     {
         std::vector<State> outLine;
@@ -86,10 +101,13 @@ private:
         return outLine;
     }
 
-    std::size_t m_iterations;
-
 public:
-    SeaCucmbers(const std::string& text) : m_iterations(0)
+    /**
+     * @brief Construct a new SeaCucumbers object
+     *
+     * @param text from the input file
+     */
+    SeaCucumbers(const std::string& text) : m_iterations(0)
     {
         std::size_t splitPoint = 0;
         std::size_t end;
@@ -103,6 +121,9 @@ public:
         m_grid.push_back(ExtractLine(text.substr(splitPoint)));
     }
 
+    /**
+     * @brief Print the iteration value and grid
+     */
     void Print() const
     {
         std::cout << "Iteration: " << m_iterations << "\n";
@@ -111,6 +132,12 @@ public:
         std::cout << "\n";
     }
 
+    /**
+     * @brief Get the next iteration
+     *
+     * @return true if we aren't yet at the end
+     * @return false if it's the last iteration
+     */
     bool Next()
     {
         std::vector<std::vector<State>> gridCopy = m_grid;
@@ -180,6 +207,11 @@ public:
         return hasChanged;
     }
 
+    /**
+     * @brief Get the number of iterations
+     *
+     * @return std::size_t Amount of iterations
+     */
     std::size_t GetIterations() const { return m_iterations; }
 };
 
@@ -196,7 +228,7 @@ public:
  */
 void Day25(const char* fileName)
 {
-    SeaCucmbers seaCucumbers(ReadTextFile(fileName));
+    SeaCucumbers seaCucumbers(ReadTextFile(fileName));
 
     while (seaCucumbers.Next())
     {

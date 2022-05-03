@@ -26,7 +26,7 @@
 */
 /**
  * @brief Checks if the number has a zero digit
- * 
+ *
  * @param input Number to check
  * @return true There is a zero digit
  * @return false There is not a zero digit
@@ -46,9 +46,9 @@ bool ContainsZeroDigit(int64_t input)
 
 /**
  * @brief Runs the input program
- * 
+ *
  * Input is hardcoded so it can be optimised by the compiler.
- * 
+ *
  * @param digit Array of digits for the 14 digit number
  * @return int Result of z register from the program
  */
@@ -317,7 +317,7 @@ int64_t RunProgram(std::array<int64_t, 14> digit)
 
 /**
  * @brief Check the model number if it is invalid
- * 
+ *
  * @param input Number to check
  * @return true Number is an invalid model number
  * @return false Number is a valid model number
@@ -341,7 +341,7 @@ bool CheckModelNumberInvalid(int64_t input)
 
 /**
  * @brief Solves part 1 of the puzzle
- * 
+ *
  * @return int64_t Solution as in interger
  */
 static int64_t Part1()
@@ -356,7 +356,7 @@ static int64_t Part1()
 
 /**
  * @brief Solves part 2 of the puzzle
- * 
+ *
  * @return int64_t Solution as in interger
  */
 static int64_t Part2()
