@@ -57,7 +57,7 @@ static int Part2(const std::vector<int>& numbers)
  */
 void Day07(const char* fileName)
 {
-    std::vector<int> numbers = ReadNumbersFile<int>(fileName);
+    std::vector<int> numbers = ReadNumbersFile(fileName);
     std::cout << "Part 1: " << Part1(numbers) << "\n";
     std::cout << "Part 2: " << Part2(numbers) << "\n";
 }
