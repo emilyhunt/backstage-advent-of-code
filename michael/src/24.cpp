@@ -21,113 +21,16 @@
 
 /*
 ================================================================================
-                                Declarations
-================================================================================
-*/
-using Instruction = std::pair<std::string, std::vector<std::string>>;
-using Instructions = std::vector<Instruction>;
-
-using FunctionType = void (*)(const Instruction&);
-
-void Input(const Instruction& instruction, int64_t input);
-void Add(const Instruction& instruction);
-void Multiply(const Instruction& instruction);
-void Divide(const Instruction& instruction);
-void Modulo(const Instruction& instruction);
-void Equal(const Instruction& instruction);
-
-int ParseValue(std::string input);
-
-const std::unordered_map<std::string, FunctionType> functionMapping{
-    {"add", Add},
-    {"mul", Multiply},
-    {"div", Divide},
-    {"mod", Modulo},
-    {"eql", Equal}};
-
-std::unordered_map<std::string, int64_t> data{
-    {"w", 0}, {"x", 0}, {"y", 0}, {"z", 0}};
-
-/*
-================================================================================
                             Function Definitions
 ================================================================================
 */
-void Input(const Instruction& instruction, int64_t input)
-{
-    data[instruction.second[0]] = input;
-}
-
-void Add(const Instruction& instruction)
-{
-    data[instruction.second[0]] += ParseValue(instruction.second[1]);
-}
-
-void Multiply(const Instruction& instruction)
-{
-    data[instruction.second[0]] *= ParseValue(instruction.second[1]);
-}
-
-void Divide(const Instruction& instruction)
-{
-    data[instruction.second[0]] /= ParseValue(instruction.second[1]);
-}
-
-void Modulo(const Instruction& instruction)
-{
-    data[instruction.second[0]] %= ParseValue(instruction.second[1]);
-}
-
-void Equal(const Instruction& instruction)
-{
-    bool truthVal = ParseValue(instruction.second[0])
-                    == ParseValue(instruction.second[1]);
-    data[instruction.second[0]] = truthVal ? 1 : 0;
-}
-
-int ParseValue(std::string input)
-{
-    if (input[0] >= 'a')
-        return data.at(input);
-
-    return std::stoi(input);
-}
-
-static Instructions ExtractInstructions(const std::string& text)
-{
-    Instructions instructions;
-    auto lines = SplitLines(text);
-
-    for (const auto& line : lines)
-    {
-        auto left = line.substr(0, 3);
-        auto right = Split(line.substr(4), " ");
-
-        instructions.push_back(std::make_pair(left, right));
-    }
-
-    return instructions;
-}
-
-static void PrintInstructions(const Instructions& instructions)
-{
-    for (const auto& instruction : instructions)
-    {
-        std::cout << instruction.first << " ";
-        for (const auto& item : instruction.second)
-            std::cout << item << " ";
-        std::cout << "\n";
-    }
-}
-
-void ResetAlu()
-{
-    data["w"] = 0;
-    data["x"] = 0;
-    data["y"] = 0;
-    data["z"] = 0;
-}
-
+/**
+ * @brief Checks if the number has a zero digit
+ * 
+ * @param input Number to check
+ * @return true There is a zero digit
+ * @return false There is not a zero digit
+ */
 bool ContainsZeroDigit(int64_t input)
 {
     while (input > 0)
@@ -141,7 +44,15 @@ bool ContainsZeroDigit(int64_t input)
     return false;
 }
 
-int RunProgram(std::array<int64_t, 14> digit)
+/**
+ * @brief Runs the input program
+ * 
+ * Input is hardcoded so it can be optimised by the compiler.
+ * 
+ * @param digit Array of digits for the 14 digit number
+ * @return int Result of z register from the program
+ */
+int64_t RunProgram(std::array<int64_t, 14> digit)
 {
     int64_t w, x, y, z;
     w = x = y = z = 0;
@@ -404,14 +315,21 @@ int RunProgram(std::array<int64_t, 14> digit)
     return z;
 }
 
-bool CheckModelNumber(const Instructions& instructions, int64_t input)
+/**
+ * @brief Check the model number if it is invalid
+ * 
+ * @param input Number to check
+ * @return true Number is an invalid model number
+ * @return false Number is a valid model number
+ */
+bool CheckModelNumberInvalid(int64_t input)
 {
-    // Check if contains zeros
     if (ContainsZeroDigit(input))
         return true;
 
     std::array<int64_t, 14> digits = {};
-    int i = 13;
+    int i = static_cast<int>(digits.size()) - 1;
+
     while (input > 0)
     {
         digits[i--] = input % 10;
@@ -421,21 +339,31 @@ bool CheckModelNumber(const Instructions& instructions, int64_t input)
     return RunProgram(digits);
 }
 
-static int64_t Part1(const Instructions& instructions)
+/**
+ * @brief Solves part 1 of the puzzle
+ * 
+ * @return int64_t Solution as in interger
+ */
+static int64_t Part1()
 {
-    int64_t modelNumber = 99919780000000; // Close to answer to save time
+    int64_t modelNumber = 99919770000000; // Close to answer to save time
 
-    while (CheckModelNumber(instructions, modelNumber))
+    while (CheckModelNumberInvalid(modelNumber))
         modelNumber--;
 
     return modelNumber;
 }
 
-static int64_t Part2(const Instructions& instructions)
+/**
+ * @brief Solves part 2 of the puzzle
+ * 
+ * @return int64_t Solution as in interger
+ */
+static int64_t Part2()
 {
     int64_t modelNumber = 24913111111111; // Close to answer to save time
 
-    while (CheckModelNumber(instructions, modelNumber))
+    while (CheckModelNumberInvalid(modelNumber))
         modelNumber++;
 
     return modelNumber;
@@ -448,11 +376,8 @@ static int64_t Part2(const Instructions& instructions)
  */
 void Day24(const char* fileName)
 {
-    const auto text = ReadTextFile(fileName);
-    auto instructions = ExtractInstructions(text);
+    (void)fileName;
 
-    // PrintInstructions(instructions);
-
-    std::cout << "Part 1: " << Part1(instructions) << "\n";
-    std::cout << "Part 2: " << Part2(instructions) << "\n";
+    std::cout << "Part 1: " << Part1() << "\n";
+    std::cout << "Part 2: " << Part2() << "\n";
 }
