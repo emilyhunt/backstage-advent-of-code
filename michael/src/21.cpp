@@ -3,18 +3,21 @@
  * @author Michael Otty (michael.otty@gmail.com)
  * @brief Advent of Code 2021 day 21
  * @version 1.0.0
- * @date 2021-12-21
+ * @date 2022-05-11
  *
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  *
  */
 
 #include <algorithm>
+#include <array>
 #include <iostream>
 #include <string>
 
 #include "Days.h"
 #include "Utilities.h"
+
+static const int WINNING_SCORE = 1000;
 
 /*
 ================================================================================
@@ -30,6 +33,7 @@ enum class PlayerTurn
 /// Dice class
 class Dice
 {
+private:
     int m_value;
     int m_rolls;
 
@@ -58,16 +62,19 @@ public:
 /// Player class
 class Player
 {
-    int m_score;
-    int m_position;
+private:
+    int m_score;    ///< Player score
+    int m_position; ///< Position tile number minus 1
 
 public:
-    Player(int position) : m_score(0), m_position(position) {}
+    Player(int position) : m_score(0), m_position(position - 1) {}
 
     void PlayMove(int diceSum)
     {
-        m_score += diceSum;
-        m_position += diceSum % 10;
+        diceSum %= 10;
+        m_position += diceSum;
+        m_position %= 10;
+        m_score += m_position + 1;
     }
 
     /**
@@ -75,7 +82,7 @@ public:
      *
      * @return True if player has won
      */
-    bool HasWon() const { return m_score >= 1000; }
+    bool HasWon() const { return m_score >= WINNING_SCORE; }
 
     int GetScore() const { return m_score; }
 };
@@ -83,28 +90,50 @@ public:
 /// Game class
 class Game
 {
+private:
     Dice m_dice;
-    Player m_player1;
-    Player m_player2;
+    std::array<Player, 2> m_player;
     PlayerTurn m_playerTurn;
+
+    bool PlayPlayersRound()
+    {
+        bool playerWon = false;
+        int diceSum = m_dice.Throw() + m_dice.Throw() + m_dice.Throw();
+        size_t playerIndex = (m_playerTurn == PlayerTurn::player1) ? 0 : 1;
+
+        m_player[playerIndex].PlayMove(diceSum);
+        playerWon = m_player[playerIndex].HasWon();
+
+        m_playerTurn = (m_playerTurn == PlayerTurn::player1)
+                           ? PlayerTurn::player2
+                           : PlayerTurn::player1;
+        return playerWon;
+    }
 
 public:
     Game(int player1Position, int player2Position)
-        : m_dice(), m_player1(player1Position), m_player2(player2Position),
+        : m_dice(), m_player{{player1Position, player2Position}},
           m_playerTurn(PlayerTurn::player1)
     {
     }
 
     std::pair<int, int> GetScores() const
     {
-        return {m_player1.GetScore(), m_player2.GetScore()};
+        return {m_player[0].GetScore(), m_player[1].GetScore()};
+    }
+
+    int GetLosersScore() const
+    {
+        return std::min(m_player[0].GetScore(), m_player[1].GetScore());
     }
 
     int GetNumberOfDiceRolls() const { return m_dice.GetRolls(); }
 
-    bool PlayPlayersRound()
+    void Play()
     {
-        int diceSum = m_dice.Throw() + m_dice.Throw() + m_dice.Throw();
+        while (!PlayPlayersRound())
+        {
+        }
     }
 };
 
@@ -116,8 +145,8 @@ public:
 static int Part1(int player1Position, int player2Position)
 {
     Game game(player1Position, player2Position);
-    auto scores = game.GetScores();
-    return std::min(scores.first, scores.second) * game.GetNumberOfDiceRolls();
+    game.Play();
+    return game.GetLosersScore() * game.GetNumberOfDiceRolls();
 }
 
 static std::pair<int, int> GetStartingPositions(const std::string& text)
@@ -138,5 +167,6 @@ void Day21(const char* fileName)
 {
     const std::string text = ReadTextFile(fileName);
     auto [player1Position, player2Position] = GetStartingPositions(text);
+
     std::cout << "Part 1: " << Part1(player1Position, player2Position) << "\n";
 }
