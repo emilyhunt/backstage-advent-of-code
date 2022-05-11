@@ -17,25 +17,28 @@
 #include "Days.h"
 #include "Utilities.h"
 
-static const int WINNING_SCORE = 1000;
+static const int WINNING_SCORE = 1000; ///< Winning score
 
 /*
 ================================================================================
-                                Classes
+                                    Classes
 ================================================================================
 */
+/**
+ * @brief The current player turn
+ */
 enum class PlayerTurn
 {
-    player1,
-    player2
+    player1, ///< Player 1
+    player2  ///< Player 2
 };
 
 /// Dice class
 class Dice
 {
 private:
-    int m_value;
-    int m_rolls;
+    int m_value; ///< Value on dice
+    int m_rolls; ///< Count of number of rolls
 
 public:
     Dice() : m_value(0), m_rolls(0) {}
@@ -56,6 +59,11 @@ public:
         return m_value;
     }
 
+    /**
+     * @brief Get the amount of times rolls
+     *
+     * @return number of dice rolls
+     */
     int GetRolls() const { return m_rolls; }
 };
 
@@ -67,12 +75,21 @@ private:
     int m_position; ///< Position tile number minus 1
 
 public:
+    /**
+     * @brief Create a Player object
+     *
+     * @param position the player starts on
+     */
     Player(int position) : m_score(0), m_position(position - 1) {}
 
-    void PlayMove(int diceSum)
+    /**
+     * @brief Play a turn
+     *
+     * @param diceTotal dice that was rolled in the player's turn
+     */
+    void PlayMove(int diceTotal)
     {
-        diceSum %= 10;
-        m_position += diceSum;
+        m_position += diceTotal % 10;
         m_position %= 10;
         m_score += m_position + 1;
     }
@@ -84,6 +101,11 @@ public:
      */
     bool HasWon() const { return m_score >= WINNING_SCORE; }
 
+    /**
+     * @brief Get the player's current score
+     *
+     * @return current score
+     */
     int GetScore() const { return m_score; }
 };
 
@@ -91,10 +113,16 @@ public:
 class Game
 {
 private:
-    Dice m_dice;
-    std::array<Player, 2> m_player;
-    PlayerTurn m_playerTurn;
+    Dice m_dice;                    ///< Dice for the game
+    std::array<Player, 2> m_player; ///< Player array
+    PlayerTurn m_playerTurn;        ///< Current player's turn
 
+    /**
+     * @brief Play the player's turn who's go it is
+     *
+     * @return true The player has won
+     * @return false The player has not won
+     */
     bool PlayPlayersRound()
     {
         bool playerWon = false;
@@ -111,24 +139,38 @@ private:
     }
 
 public:
+    /**
+     * @brief Construct a new Game object
+     *
+     * @param player1Position starting position of player 1
+     * @param player2Position starting position of player 2
+     */
     Game(int player1Position, int player2Position)
         : m_dice(), m_player{{player1Position, player2Position}},
           m_playerTurn(PlayerTurn::player1)
     {
     }
 
-    std::pair<int, int> GetScores() const
-    {
-        return {m_player[0].GetScore(), m_player[1].GetScore()};
-    }
-
+    /**
+     * @brief Get the score for the loser
+     *
+     * @return int Score of loser
+     */
     int GetLosersScore() const
     {
         return std::min(m_player[0].GetScore(), m_player[1].GetScore());
     }
 
+    /**
+     * @brief Get the Number Of times the dice has rolled
+     *
+     * @return int Number of dice rolls
+     */
     int GetNumberOfDiceRolls() const { return m_dice.GetRolls(); }
 
+    /**
+     * @brief Play the full game
+     */
     void Play()
     {
         while (!PlayPlayersRound())
@@ -142,6 +184,13 @@ public:
                             Function Definitions
 ================================================================================
 */
+/**
+ * @brief Calculate part 1 of the puzzle
+ *
+ * @param player1Position for start of game
+ * @param player2Position for start of game
+ * @return Solution to part 1
+ */
 static int Part1(int player1Position, int player2Position)
 {
     Game game(player1Position, player2Position);
@@ -149,6 +198,12 @@ static int Part1(int player1Position, int player2Position)
     return game.GetLosersScore() * game.GetNumberOfDiceRolls();
 }
 
+/**
+ * @brief Get the starting positions out of the text file
+ *
+ * @param text from file
+ * @return pair for player 1 then player 2 starting positions
+ */
 static std::pair<int, int> GetStartingPositions(const std::string& text)
 {
     auto lines = Split(text, "\n");
