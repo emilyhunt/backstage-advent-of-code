@@ -142,5 +142,5 @@ T Median(std::vector<T> numbers)
 template <typename T>
 T Mean(std::vector<T> numbers)
 {
-    return std::reduce(numbers.begin(), numbers.end()) / numbers.size();
+    return std::reduce(numbers.begin(), numbers.end()) / static_cast<T>(numbers.size());
 }
