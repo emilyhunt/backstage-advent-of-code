@@ -23,7 +23,12 @@
                             Function Definitions
 ================================================================================
 */
-
+/**
+ * @brief Solve part 1
+ *
+ * @param numbers to calculate answer from
+ * @return int the solution to part 1
+ */
 static int Part1(const std::vector<int>& numbers)
 {
     const int median = Median(numbers);
@@ -37,6 +42,12 @@ static int Part1(const std::vector<int>& numbers)
     return answer;
 }
 
+/**
+ * @brief Solve part 2
+ *
+ * @param numbers to calculate answer from
+ * @return int the solution to part 2
+ */
 static int Part2(const std::vector<int>& numbers)
 {
     const int mean = Mean(numbers);
