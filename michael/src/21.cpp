@@ -102,7 +102,10 @@ public:
 
     int GetNumberOfDiceRolls() const { return m_dice.GetRolls(); }
 
-    bool PlayPlayersRound() { m_dice.Throw(); }
+    bool PlayPlayersRound()
+    {
+        int diceSum = m_dice.Throw() + m_dice.Throw() + m_dice.Throw();
+    }
 };
 
 /*
