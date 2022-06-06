@@ -25,8 +25,7 @@
 ================================================================================
 */
 using Coordinate = std::array<int, 3>;
-using Instruction = std::tuple<bool, Coordinate, Coordinate>;
-using Instructions = std::vector<Instruction>;
+using Instructions = std::vector<std::tuple<bool, Coordinate, Coordinate>>;
 
 /*
 ================================================================================
@@ -70,13 +69,52 @@ std::ostream& operator<<(std::ostream& os, Instructions instructions)
             os << "on ";
         else
             os << "off ";
+
         const auto& [x0, y0, z0] = rangeStart;
         const auto& [x1, y1, z1] = rangeEnd;
+
         os << "x=" << x0 << ".." << x1 << ",";
         os << "y=" << y0 << ".." << y1 << ",";
         os << "z=" << z0 << ".." << z1 << "\n";
     }
     return os;
+}
+
+static size_t Part1(Instructions instructions)
+{
+    std::set<Coordinate> onCubes{};
+
+    for (const auto& [switchState, rangeStart, rangeEnd] : instructions)
+    {
+        for (int x = rangeStart[0]; x <= rangeEnd[0]; x++)
+        {
+            if (x < -50)
+                continue;
+            if (x > 50)
+                break;
+            for (int y = rangeStart[1]; y <= rangeEnd[1]; y++)
+            {
+                if (y < -50)
+                    continue;
+                if (y > 50)
+                    break;
+                for (int z = rangeStart[2]; z <= rangeEnd[2]; z++)
+                {
+                    if (z < -50)
+                        continue;
+                    if (z > 50)
+                        break;
+
+                    if (switchState)
+                        onCubes.insert({x, y, z});
+                    else
+                        onCubes.erase({x, y, z});
+                }
+            }
+        }
+    }
+
+    return onCubes.size();
 }
 
 /**
@@ -86,8 +124,6 @@ std::ostream& operator<<(std::ostream& os, Instructions instructions)
  */
 void Day22(const char* fileName)
 {
-    const std::string text = ReadTextFile(fileName);
-    const auto& instructions = ParseInstructions(text);
-    std::cout << text << "\n\n";
-    std::cout << instructions << "\n";
+    const auto& instructions = ParseInstructions(ReadTextFile(fileName));
+    std::cout << "Part 1: " << Part1(instructions) << "\n";
 }
