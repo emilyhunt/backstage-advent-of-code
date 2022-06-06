@@ -353,7 +353,7 @@ static int64_t Part2(std::pair<int64_t, int64_t> startingPositions)
  */
 static std::pair<int64_t, int64_t> GetStartingPositions(const std::string& text)
 {
-    auto lines = Split(text, "\n");
+    auto lines = SplitLines(text);
     return {std::stoi(lines[0].substr(28)), std::stoi(lines[1].substr(28))};
 }
 
