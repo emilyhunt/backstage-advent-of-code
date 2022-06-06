@@ -12,7 +12,9 @@
 #include <algorithm>
 #include <array>
 #include <iostream>
+#include <map>
 #include <string>
+#include <tuple>
 #include <utility>
 
 #include "Days.h"
@@ -231,8 +233,14 @@ public:
 class RealGame : public BaseGame
 {
 private:
-    std::array<Player, 2> m_players; ///< The players
+    using ScoreKey = std::tuple<int64_t, int64_t, int64_t, int64_t>;
+    int64_t m_player1Position;
+    int64_t m_player2Position;
     DiracDice m_dice;
+    std::map<ScoreKey, std::pair<int64_t, int64_t>> m_scores;
+    std::pair<int64_t, int64_t> m_answer;
+    bool m_foundAnswer;
+    bool m_player1Turn;
 
 public:
     /**
@@ -241,15 +249,68 @@ public:
      * @param startingPositions player starting positions
      */
     RealGame(std::pair<int64_t, int64_t> startingPositions)
-        : m_players{Player(startingPositions.first, this),
-                    Player(startingPositions.second, this)},
-          m_dice()
+        : m_player1Position(startingPositions.first),
+          m_player2Position(startingPositions.second), m_dice(),
+          m_scores(), m_answer{0, 0}, m_foundAnswer(false), m_player1Turn(true)
     {
     }
 
     virtual int64_t GetScoreToWin() const override { return 21; }
 
-    virtual void Play() override {}
+    virtual void Play() override
+    {
+        ScoreKey startingKey
+            = {m_player1Position - 1, m_player2Position - 1, 0, 0};
+        m_answer = GetWins(startingKey);
+        m_foundAnswer = true;
+    }
+
+    std::pair<int64_t, int64_t> GetAnswer() const
+    {
+        if (!m_foundAnswer)
+            throw std::runtime_error("Answer not found!");
+        return m_answer;
+    }
+
+private:
+    std::pair<int64_t, int64_t> GetWins(const ScoreKey& key)
+    {
+        const auto& [position1, position2, score1, score2] = key;
+
+        if (score1 >= GetScoreToWin())
+            return {1, 0};
+        if (score2 >= GetScoreToWin())
+            return {0, 1};
+        if (m_scores.find(key) != m_scores.end())
+            return m_scores[key];
+
+        const std::array<int64_t, 3> diceSides{1, 2, 3};
+
+        std::pair<int64_t, int64_t> answer{0, 0};
+        for (const auto& dice1 : diceSides)
+        {
+            for (const auto& dice2 : diceSides)
+            {
+                for (const auto& dice3 : diceSides)
+                {
+                    // Swap round to play next player
+                    const int64_t newPosition1
+                        = (position1 + dice1 + dice2 + dice3) % 10;
+                    const int64_t newScore1 = score1 + newPosition1 + 1;
+
+                    const auto [x, y]
+                        = GetWins({position2, newPosition1, score2, newScore1});
+
+                    // Swap back again
+                    answer = std::pair<int64_t, int64_t>(answer.first + y,
+                                                         answer.second + x);
+                }
+            }
+        }
+
+        m_scores[key] = answer;
+        return answer;
+    }
 };
 
 /*
@@ -279,10 +340,9 @@ static int64_t Part1(std::pair<int64_t, int64_t> startingPositions)
 static int64_t Part2(std::pair<int64_t, int64_t> startingPositions)
 {
     RealGame game(startingPositions);
-    // RealGame game(player1Position, player2Position);
-    // game.Play();
-    // return game.GetLosersScore() * game.GetNumberOfDiceRolls();
-    return 0;
+    game.Play();
+    auto answer = game.GetAnswer();
+    return std::max(answer.first, answer.second);
 }
 
 /**
@@ -294,10 +354,7 @@ static int64_t Part2(std::pair<int64_t, int64_t> startingPositions)
 static std::pair<int64_t, int64_t> GetStartingPositions(const std::string& text)
 {
     auto lines = Split(text, "\n");
-    int64_t pos1 = std::stoi(lines[0].substr(28));
-    int64_t pos2 = std::stoi(lines[1].substr(28));
-
-    return {pos1, pos2};
+    return {std::stoi(lines[0].substr(28)), std::stoi(lines[1].substr(28))};
 }
 
 /**
