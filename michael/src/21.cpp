@@ -233,14 +233,19 @@ public:
 class RealGame : public BaseGame
 {
 private:
+    /// Score key with player 1 position, then player 2, then player 1 and 2
+    /// scores
     using ScoreKey = std::tuple<int64_t, int64_t, int64_t, int64_t>;
-    int64_t m_player1Position;
-    int64_t m_player2Position;
-    DiracDice m_dice;
+    int64_t m_player1Position; ///< Position of player 1
+    int64_t m_player2Position; ///< Position of player 2
+
+    /// Final amounts of wins of both players from given starting points and
+    /// scores
     std::map<ScoreKey, std::pair<int64_t, int64_t>> m_scores;
+
+    /// Answer to puzzle once solved
     std::pair<int64_t, int64_t> m_answer;
-    bool m_foundAnswer;
-    bool m_player1Turn;
+    bool m_foundAnswer; ///< Indicates puzzle has been solved
 
 public:
     /**
@@ -250,8 +255,8 @@ public:
      */
     RealGame(std::pair<int64_t, int64_t> startingPositions)
         : m_player1Position(startingPositions.first),
-          m_player2Position(startingPositions.second), m_dice(),
-          m_scores(), m_answer{0, 0}, m_foundAnswer(false), m_player1Turn(true)
+          m_player2Position(startingPositions.second),
+          m_scores(), m_answer{0, 0}, m_foundAnswer(false)
     {
     }
 
@@ -265,6 +270,11 @@ public:
         m_foundAnswer = true;
     }
 
+    /**
+     * @brief Get the answer puzzle
+     *
+     * @return Answer of puzzle
+     */
     std::pair<int64_t, int64_t> GetAnswer() const
     {
         if (!m_foundAnswer)
@@ -273,6 +283,12 @@ public:
     }
 
 private:
+    /**
+     * @brief Get the amount of wins for both players
+     *
+     * @param key From starting positions and scores given by key
+     * @return Amound of wins for player 1 then 2
+     */
     std::pair<int64_t, int64_t> GetWins(const ScoreKey& key)
     {
         const auto& [position1, position2, score1, score2] = key;
