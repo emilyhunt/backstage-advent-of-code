@@ -71,7 +71,8 @@ std::vector<std::string> Split(const std::string& text,
         splitString.push_back(text.substr(last, next - last));
         last = next + 1;
     }
-    splitString.push_back(text.substr(text.rfind("\n") + 1, text.length()));
+    splitString.push_back(
+        text.substr(text.rfind(delim) + delim.length(), text.length()));
     return splitString;
 }
 
@@ -116,4 +117,37 @@ void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid)
         }
         std::cout << "\n";
     }
+}
+
+/**
+ * @brief Read numbers spaced by any delimiter
+ *
+ * @param text text to seperate
+ * @return std::vector<int> numbers from string
+ */
+std::vector<int> ReadNumbers(const std::string& text)
+{
+    std::vector<int> numbers;
+    std::regex numberRegex(R"(\d+)");
+
+    auto begin = std::sregex_iterator(text.begin(), text.end(), numberRegex);
+    auto end = std::sregex_iterator();
+
+    for (std::sregex_iterator iter = begin; iter != end; iter++)
+        numbers.push_back(std::atoi((*iter).str().c_str()));
+
+    return numbers;
+}
+
+/**
+ * @brief Read numbers to a vector of numbers, can be spaced by anything
+ *
+ * @param fileName Path to file to read from
+ * @return std::vector<int> Vector of integer type
+ */
+std::vector<int> ReadNumbersFile(const char* fileName)
+{
+    std::string text = ReadTextFile(fileName);
+    std::vector<int> numbers(ReadNumbers(text));
+    return numbers;
 }

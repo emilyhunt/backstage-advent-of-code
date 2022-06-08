@@ -9,13 +9,15 @@
  *
  */
 
+#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
+#include <numeric>
 #include <regex>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #pragma once
 
@@ -26,11 +28,24 @@ std::vector<std::string> Split(const std::string& text,
                                const std::string& delim);
 std::vector<std::vector<int>> ParseTextToNumberGrid(const std::string& text);
 void PrintNumberGrid(const std::vector<std::vector<int>>& numberGrid);
+std::vector<int> ReadNumbers(const std::string& text);
+std::vector<int> ReadNumbersFile(const char* fileName);
 
+/**
+ * @brief Timer object
+ *
+ * Intended for use on stack scope, timer starts when initialised, and timer
+ * stops when destructed. Duration is then printed to std::cout.
+ */
 class Timer
 {
 private:
+    /// Start time
     std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+
+    /**
+     * @brief Stop the clock and find duration
+     */
     void Stop()
     {
         auto end = std::chrono::high_resolution_clock::now();
@@ -47,26 +62,20 @@ public:
 };
 
 /**
- * @brief Read numbers to a vector of numbers, can be spaced by anything
+ * @brief Limit the value by the given minimum and maximum values
  *
- * @tparam T data will be read as this integer type
- * @param fileName Path to file to read from
- * @return std::vector<T> Vector of integer type
+ * @tparam T any numeric type
+ * @param value to be limited
+ * @param min value
+ * @param max value
+ * @return limited value
  */
 template <typename T>
-std::vector<T> ReadNumbersFile(const char* fileName)
+T Limit(T value, T min, T max)
 {
-    std::vector<T> numbers;
-    std::string text = ReadTextFile(fileName);
-    std::regex numberRegex("\\d+");
-
-    auto begin = std::sregex_iterator(text.begin(), text.end(), numberRegex);
-    auto end = std::sregex_iterator();
-
-    for (std::sregex_iterator iter = begin; iter != end; iter++)
-        numbers.push_back(std::atoi((*iter).str().c_str()));
-
-    return numbers;
+    value = std::max(min, value);
+    value = std::min(max, value);
+    return value;
 }
 
 /**
@@ -124,4 +133,33 @@ template <typename T>
 int Sign(T val)
 {
     return (T(0) < val) - (val < T(0));
+}
+
+/**
+ * @brief Find the median of a list of numbers
+ *
+ * @tparam T Type of input used
+ * @param numbers The list of numbers
+ * @return Median of list of numbers
+ */
+template <typename T>
+T Median(std::vector<T> numbers)
+{
+    size_t n = numbers.size() / 2;
+    std::nth_element(numbers.begin(), numbers.begin() + n, numbers.end());
+    return numbers[n];
+}
+
+/**
+ * @brief Find the meean of a list of numbers
+ *
+ * @tparam T Type of input used
+ * @param numbers The list of numbers
+ * @return Mean of list of numbers
+ */
+template <typename T>
+T Mean(std::vector<T> numbers)
+{
+    return std::reduce(numbers.begin(), numbers.end())
+           / static_cast<T>(numbers.size());
 }

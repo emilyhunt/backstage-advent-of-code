@@ -23,14 +23,20 @@
 */
 /**
  * @brief Trench map image and enchancement algoritm
- *
  */
 class TrenchMap
 {
 private:
-    std::string m_algoritm;
-    std::vector<std::string> m_image;
+    std::string m_algoritm;           ///< Algoritm input from file
+    std::vector<std::string> m_image; ///< Image with each line as element
 
+    /**
+     * @brief Get the index from the '#' characters
+     *
+     * @param row Row to start on
+     * @param col Column to start on
+     * @return std::size_t The index found
+     */
     std::size_t GetIndex(std::size_t row, std::size_t col) const
     {
         std::size_t index = 0;
@@ -47,12 +53,21 @@ private:
         return index;
     }
 
+    /**
+     * @brief Push line to back of image "n" times
+     *
+     * @param line Line to push back
+     * @param n Number of pushes
+     */
     void PushNBack(const std::string& line, std::size_t n)
     {
         for (std::size_t i = 0; i < n; i++)
             m_image.push_back(line);
     }
 
+    /**
+     * @brief Do one step of enhancement
+     */
     void EnhanceStep()
     {
         const std::size_t sizeChange = 2;
@@ -76,6 +91,11 @@ private:
     }
 
 public:
+    /**
+     * @brief Construct a new Trench Map object
+     *
+     * @param text Input file text as a string
+     */
     TrenchMap(const std::string& text)
     {
         const std::size_t gutterSize = 3;
@@ -104,6 +124,11 @@ public:
         PushNBack(firstLine, gutterSize);
     }
 
+    /**
+     * @brief Run enhancement algoritm for the number of steps provided
+     *
+     * @param n Number of steps to enhance
+     */
     void Enhance(std::size_t n)
     {
         for (std::size_t i = 0; i < n; i++)

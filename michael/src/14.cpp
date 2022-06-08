@@ -56,10 +56,9 @@ std::unordered_map<std::string, std::string> CreateMap(const std::string& text)
  * @param iterations Amount of iterations
  * @return int64_t Solution may be a large number for >10 iterations
  */
-static int64_t
-Solve(std::string polymer,
-      const std::unordered_map<std::string, std::string>& map,
-      size_t iterations)
+static int64_t Solve(std::string polymer,
+                     const std::unordered_map<std::string, std::string>& map,
+                     size_t iterations)
 {
     std::unordered_map<std::string, int64_t> counts;
     std::set<char> letters;
@@ -96,7 +95,7 @@ Solve(std::string polymer,
     const char lastLetter = polymer[polymer.length() - 1];
 
     std::unordered_map<char, uint64_t> letterCount(letters.size(),
-                                                 letters.get_allocator());
+                                                   letters.get_allocator());
 
     for (auto letter : letters)
     {

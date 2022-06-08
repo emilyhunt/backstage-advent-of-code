@@ -6,5 +6,4 @@ for a challenge that suits this, which there have been in the past AoC.
 Otherwise, I may do the challenge in C++ just for the lols sometimes since I use
 that at work as well.
 
-To build, use cmake. The doxygen documentation requires `dot` to be installed
-for graphs which can be installed with `sudo apt install graphviz`.
+To build, use cmake. The doxygen documentation requires `graphviz` for graphs.

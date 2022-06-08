@@ -101,9 +101,9 @@ static size_t Part2(const std::vector<std::vector<int>>& numberGrid)
     std::vector<size_t> basinSizes;
     std::set<std::pair<int, int>> visited;
 
-    for (size_t row = 0; row < numRows; row++)
+    for (int row = 0; row < numRows; row++)
     {
-        for (size_t col = 0; col < numCols; col++)
+        for (int col = 0; col < numCols; col++)
         {
             if (!visited.count(std::make_pair(row, col))
                 && (numberGrid[row][col] != 9))
@@ -113,7 +113,7 @@ static size_t Part2(const std::vector<std::vector<int>>& numberGrid)
                 frontier.push(std::make_pair(row, col));
                 while (frontier.size())
                 {
-                    auto currentCoord = frontier.front();
+                    std::pair<int, int> currentCoord = frontier.front();
                     frontier.pop();
                     if (visited.count(currentCoord))
                         continue;
