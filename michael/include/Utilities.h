@@ -9,6 +9,7 @@
  *
  */
 
+#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
@@ -59,6 +60,23 @@ public:
     Timer() { m_start = std::chrono::high_resolution_clock::now(); }
     ~Timer() { Stop(); }
 };
+
+/**
+ * @brief Limit the value by the given minimum and maximum values
+ *
+ * @tparam T any numeric type
+ * @param value to be limited
+ * @param min value
+ * @param max value
+ * @return limited value
+ */
+template <typename T>
+T Limit(T value, T min, T max)
+{
+    value = std::max(min, value);
+    value = std::min(max, value);
+    return value;
+}
 
 /**
  * @brief Prints all elements of a vector
@@ -142,5 +160,6 @@ T Median(std::vector<T> numbers)
 template <typename T>
 T Mean(std::vector<T> numbers)
 {
-    return std::reduce(numbers.begin(), numbers.end()) / static_cast<T>(numbers.size());
+    return std::reduce(numbers.begin(), numbers.end())
+           / static_cast<T>(numbers.size());
 }
