@@ -69,7 +69,7 @@ std::vector<std::string> Split(const std::string& text,
     while ((next = text.find(delim, last)) != std::string::npos)
     {
         splitString.push_back(text.substr(last, next - last));
-        last = next + 1;
+        last = next + delim.length();
     }
     splitString.push_back(
         text.substr(text.rfind(delim) + delim.length(), text.length()));
