@@ -14,12 +14,14 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <initializer_list>
+#include <cstdlib>
 #include <iostream>
+#include <iterator>
+#include <map>
 #include <numeric>
 #include <regex>
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 #include "Days.h"
@@ -33,21 +35,6 @@
 
 using Vector = std::array<int64_t, 3>;
 
-Vector operator+(const Vector& a, const Vector& b)
-{
-    return {
-        a[0] + b[0],
-        a[1] + b[1],
-        a[2] + b[2],
-    };
-}
-
-Vector& operator+=(Vector& a, const Vector& b)
-{
-    a = a + b;
-    return a;
-}
-
 static double DegToRad(double angle) { return M_PI / 180.0 * angle; }
 
 class Rotation
@@ -57,11 +44,6 @@ private:
 
 public:
     Rotation() : m_matrix{{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}} {}
-
-    // Rotation(std::initializer_list<std::array<int64_t, 3>> matrix)
-    //     : m_matrix(matrix)
-    //{
-    // }
 
     Rotation(double yaw, double pitch, double roll) : m_matrix()
     {
@@ -109,6 +91,33 @@ public:
                     + m_matrix[2][2] * b[2]};
     }
 };
+
+Vector operator+(const Vector& a, const Vector& b)
+{
+    return {
+        a[0] + b[0],
+        a[1] + b[1],
+        a[2] + b[2],
+    };
+}
+
+Vector operator+(const Vector& a) { return a; }
+
+Vector& operator+=(Vector& a, const Vector& b)
+{
+    a = a + b;
+    return a;
+}
+
+Vector operator-(const Vector& a) { return {-a[0], -a[1], -a[2]}; }
+
+Vector operator-(const Vector& a, const Vector& b) { return a + -b; }
+
+Vector& operator*=(Vector& vec, const Rotation& rot)
+{
+    vec = rot * vec;
+    return vec;
+}
 
 const std::array<Rotation, 24> rotations{
     // Forward
@@ -173,6 +182,48 @@ std::ostream& operator<<(std::ostream& os, const Scanners& scanners)
     return os;
 }
 
+Scanner operator*(const Scanner& scanner, const Rotation& rot)
+{
+    Scanner newScanner = scanner;
+
+    for (Vector& vec : newScanner)
+    {
+        vec *= rot;
+    }
+
+    return scanner;
+}
+
+Scanner& operator*=(Scanner& scanner, const Rotation& rot)
+{
+    scanner = scanner * rot;
+    return scanner;
+}
+
+Scanner operator+(const Scanner& scanner, const Vector& vecB)
+{
+    Scanner newScanner = scanner;
+
+    for (Vector& vecA : newScanner)
+    {
+        vecA += vecB;
+    }
+
+    return newScanner;
+}
+
+Scanner& operator+=(Scanner& scanner, const Vector& vec)
+{
+    scanner = scanner + vec;
+    return scanner;
+}
+
+Scanner& operator-=(Scanner& scanner, const Vector& vec)
+{
+    scanner += -vec;
+    return scanner;
+}
+
 /*
 ================================================================================
                             Function Definitions
@@ -204,72 +255,11 @@ Scanners CreateScannerData(const std::string& text)
     return scanners;
 }
 
-//}
-//
-// std::vector<Eigen::Vector3d>
-// RotateVectors(const Eigen::Matrix3d& rotation,
-//              const std::vector<Eigen::Vector3d>& vectors)
-//{
-//    std::vector<Eigen::Vector3d> rotatedVectors(vectors);
-//    for (auto& vector : rotatedVectors)
-//    {
-//        vector = rotation * vector;
-//    }
-//    return rotatedVectors;
-//}
-//
-// std::vector<Eigen::Vector3d>
-// TranslateVectors(const Eigen::Translation3d& translation,
-//                 const std::vector<Eigen::Vector3d>& vectors)
-//{
-//    std::vector<Eigen::Vector3d> translatedVectors(vectors);
-//    for (auto& vector : translatedVectors)
-//    {
-//        vector = translation * vector;
-//    }
-//    return translatedVectors;
-//}
-//
-// std::unordered_set<Eigen::Vector3d>
-// FindIntersectionGroup(const std::vector<Eigen::Vector3d>& vectorsA,
-//                      const std::vector<Eigen::Vector3d>& vectorsB)
-//{
-//    for (const auto& rotation : rotations)
-//    {
-//        auto rotatedVecs = RotateVectors(rotation, vectorsB);
-//        for (const auto& vecB : rotatedVecs)
-//        {
-//            for (const auto& vecA : vectorsA)
-//            {
-//                Eigen::Translation3d translate(vecA - vecB);
-//                std::vector<Eigen::Vector3d> transfVecs
-//                    = TranslateVectors(translate, rotatedVecs);
-//                std::unordered_set<Eigen::Vector3d> currentMatches;
-//
-//                for (const auto& originalVec : vectorsA)
-//                {
-//                    for (const auto& transfVec : transfVecs)
-//                    {
-//                        if (transfVec.isApprox(originalVec, 0.1))
-//                        {
-//                            currentMatches.insert(transfVec);
-//                            break;
-//                        }
-//                    }
-//                }
-//
-//                if (currentMatches.size() >= 12)
-//                {
-//                    return currentMatches;
-//                }
-//            }
-//        }
-//    }
-//    return std::unordered_set<Eigen::Vector3d>();
-//}
-
-// 564 too high
-// 142 too low
+int64_t GetManhattanDistance(const Vector& a, const Vector& b)
+{
+    Vector c = b - a;
+    return std::abs(c[0]) + std::abs(c[1]) + std::abs(c[2]);
+}
 
 /**
  * @brief Solve part 1
@@ -284,24 +274,108 @@ Scanners CreateScannerData(const std::string& text)
  */
 int64_t Part1(const Scanners& scanners)
 {
-    // std::unordered_map<int, std::pair<Vector3d, Matrix3d>>
-    //     scannerMap;
+    auto t = Timer();
+    std::vector<std::map<std::pair<Vector, Vector>, int64_t>> scannerDistances;
+    scannerDistances.reserve(scanners.size());
 
-    // std::unordered_set<Eigen::Vector3d> matches;
-    // for (size_t vectorAIdx = 0; vectorAIdx < scanners.size(); vectorAIdx++)
-    //{
-    //     for (size_t vectorBIdx = 0; vectorBIdx < scanners.size();
-    //     vectorBIdx++)
-    //     {
-    //         if (vectorAIdx == vectorBIdx)
-    //             continue;
-    //         auto currentMatches = FindIntersectionGroup(scanners[vectorAIdx],
-    //                                                     scanners[vectorBIdx]);
-    //         matches.insert(currentMatches.begin(), currentMatches.end());
-    //     }
-    // }
+    for (size_t i = 0; i < scanners.size(); i++)
+    {
+        std::map<std::pair<Vector, Vector>, int64_t> distances;
+        for (const auto& vecA : scanners[i])
+        {
+            for (const auto& vecB : scanners[i])
+            {
+                if (vecA == vecB)
+                    continue;
+                auto key = std::make_pair(std::min(vecA, vecB),
+                                          std::max(vecA, vecB));
+                if (distances.count(key))
+                    continue;
 
-    return 0;
+                distances[key] = GetManhattanDistance(vecA, vecB);
+            }
+        }
+        scannerDistances.push_back(distances);
+    }
+
+    std::unordered_map<int64_t, int64_t> counter;
+    for (const auto& scanner : scannerDistances)
+    {
+        for (const auto& [key, val] : scanner)
+        {
+            counter[val]++;
+            const auto& [vecA, vecB] = key;
+        }
+    }
+
+    std::map<std::pair<int64_t, int64_t>,
+             std::vector<std::pair<Vector, Rotation>>>
+        transforms;
+
+    for (size_t i = 0; i < scanners.size(); i++)
+    {
+        for (size_t j = i; j < scanners.size(); j++)
+        {
+            if (i == j)
+                continue;
+
+            for (const auto& [keyA, valA] : scannerDistances[i])
+            {
+                for (const auto& [keyB, valB] : scannerDistances[j])
+                {
+                    if (valA != valB)
+                        continue;
+
+                    const auto& [vecA1, vecA2] = keyA;
+                    const auto& [vecB1, vecB2] = keyB;
+
+                    const auto vecA = vecA2 - vecA1;
+
+                    for (const auto& rotation : rotations)
+                    {
+                        auto vecB = vecB2 - vecB1;
+                        vecB *= rotation;
+
+                        if (vecA != vecB)
+                            continue;
+
+                        Scanner scannerA = scanners[i];
+                        Scanner scannerB = scanners[j];
+
+                        scannerB -= vecB1;
+                        scannerB *= rotation;
+                        scannerB += vecA1;
+
+                        std::sort(scannerA.begin(), scannerA.end());
+                        std::sort(scannerB.begin(), scannerB.end());
+
+                        // std::cout << "VecA: [" << vecA1 << "], [" << vecA2
+                        //           << "] = [" << vecA << "]\n";
+                        // std::cout << "VecB: [" << vecB1 << "], [" << vecB2
+                        //           << "] = [" << vecB << "]\n";
+
+                        // std::cout << "Scanner A:\n" << scannerA << "\n";
+                        // std::cout << "Scanner B:\n" << scannerB << "\n";
+
+                        Scanner scannerIntersection;
+                        std::set_intersection(
+                            scannerA.begin(), scannerA.end(), scannerB.begin(),
+                            scannerB.end(),
+                            std::back_inserter(scannerIntersection));
+
+                        if (scannerIntersection.size() >= 12)
+                            transforms[{i, j}].push_back({vecA, rotation});
+                    }
+                }
+            }
+        }
+    }
+
+    int64_t count = 0;
+    for (const auto& [key, val] : transforms)
+        count += val.size();
+
+    return transforms.size();
 }
 
 /**
@@ -314,8 +388,11 @@ void Day19(const char* fileName)
     const std::string text = ReadTextFile(fileName);
     auto scanners = CreateScannerData(text);
 
-    std::cout << scanners << "\n";
+    // std::cout << scanners << "\n";
 
-    std::cout << "Part 1: " << Part1(scanners) << "\n";
+    std::cout << "Part 1:\n" << Part1(scanners) << "\n";
+    // 564 too high
+    // 142 too low
+
     // std::cout << "Part 2: " << Part2() << "\n";
 }
