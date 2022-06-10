@@ -120,9 +120,9 @@ std::ostream& operator<<(std::ostream& os, const PuzzleGrid& grid)
         if (grid[10].length())
             row[6] = grid[10];
 
-        for (int i = 0; i < 5; i++)
+        for (size_t i = 0; i < 5; i++)
         {
-            std::size_t index = (i * 2) + 1;
+            size_t index = (i * 2) + 1;
             if (grid[index].length())
                 row[i + 1] = grid[index];
         }
@@ -455,10 +455,10 @@ static int Part2(bool doPrint)
                 if (current[toIndex].length() == 4)
                     continue;
 
-                bool movingToRoom
-                    = std::count(columns.begin(), columns.end(), toIndex);
-                bool movingFromRoom
-                    = std::count(columns.begin(), columns.end(), fromIndex);
+                bool movingToRoom = static_cast<bool>(
+                    std::count(columns.begin(), columns.end(), toIndex));
+                bool movingFromRoom = static_cast<bool>(
+                    std::count(columns.begin(), columns.end(), fromIndex));
 
                 // If moving to waiting area but it's full
                 if (!(movingToRoom || (current[toIndex].length() == 0)))

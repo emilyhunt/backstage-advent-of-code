@@ -52,7 +52,7 @@ private:
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
                             end - m_start)
                             .count();
-        double msDuration = duration * 0.001;
+        double msDuration = static_cast<double>(duration) * 0.001;
         std::cout << "Time: " << msDuration << "ms\n";
     }
 
@@ -103,8 +103,8 @@ void PrintVector(const T& vec, const char* sep = " ")
  * @param elemSep Optional seperator between each key value pair. Default is ",
  * "
  */
-template <typename T1, typename T2>
-void PrintMap(const std::unordered_map<T1, T2>& map,
+template <typename T>
+void PrintMap(const T& map,
               const char* keyValSep = ": ", const char* elemSep = ", ")
 {
     std::cout << "{";
@@ -145,7 +145,7 @@ int Sign(T val)
 template <typename T>
 T Median(std::vector<T> numbers)
 {
-    size_t n = numbers.size() / 2;
+    size_t n = numbers.size() / 2U;
     std::nth_element(numbers.begin(), numbers.begin() + n, numbers.end());
     return numbers[n];
 }

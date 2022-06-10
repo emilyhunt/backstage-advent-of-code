@@ -336,7 +336,7 @@ bool CheckModelNumberInvalid(int64_t input)
         input /= 10;
     }
 
-    return RunProgram(digits);
+    return static_cast<bool>(RunProgram(digits));
 }
 
 /**

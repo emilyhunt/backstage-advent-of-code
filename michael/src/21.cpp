@@ -146,14 +146,10 @@ public:
     /**
      * @brief Test if player has won
      *
-     * @param gameType for selecting the win condition for game type
      * @return true player has won
      * @return false player has not won
      */
-    bool HasWon(GameType gameType) const
-    {
-        return m_score >= m_game->GetScoreToWin();
-    }
+    bool HasWon() const { return m_score >= m_game->GetScoreToWin(); }
 
     /**
      * @brief Get the player's current score
@@ -183,7 +179,7 @@ private:
         int64_t diceSum = m_dice.Throw() + m_dice.Throw() + m_dice.Throw();
 
         m_player[m_playerId].PlayMove(diceSum);
-        playerWon = m_player[m_playerId].HasWon(GameType::practice);
+        playerWon = m_player[m_playerId].HasWon();
 
         m_playerId = m_playerId ^ 1; // Toggle
         return playerWon;
@@ -196,11 +192,16 @@ public:
      * @param startingPositions player starting positions
      */
     PracticeGame(std::pair<int64_t, int64_t> startingPositions)
-        : m_player{Player(startingPositions.first, this),
-                   Player(startingPositions.second, this)},
-          m_dice(), m_playerId(0)
+        : m_player{Player(startingPositions.first, nullptr),
+                   Player(startingPositions.second, nullptr)},
+          m_dice(),
+          m_playerId(0)
     {
+        m_player = {Player(startingPositions.first, this),
+                    Player(startingPositions.second, this)};
     }
+
+    virtual ~PracticeGame() {}
 
     /**
      * @brief Get the score for the loser
@@ -259,6 +260,8 @@ public:
           m_scores(), m_answer{0, 0}, m_foundAnswer(false)
     {
     }
+
+    virtual ~RealGame() {}
 
     virtual int64_t GetScoreToWin() const override { return 21; }
 

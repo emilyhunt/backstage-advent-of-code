@@ -49,7 +49,7 @@ bool ReplaceAll(std::string& inOutStr, const std::string_view& what,
     {
         inOutStr.replace(pos, what.length(), with.data(), with.length());
     }
-    return count;
+    return static_cast<bool>(count);
 }
 
 /**

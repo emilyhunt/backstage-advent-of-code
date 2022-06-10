@@ -240,7 +240,7 @@ public:
         std::smatch match;
         auto begin = std::sregex_iterator(text.begin(), text.end(), lineRegex);
         auto end = std::sregex_iterator();
-        std::array<int, 4> num;
+        std::array<int, 4> num{};
 
         for (auto i = begin; i != end; i++)
         {

@@ -50,15 +50,15 @@ int GetRiskLevel(const std::vector<std::vector<int>>& numberGrid, size_t row,
  * @param numberGrid from text input file
  * @return int Solution
  */
-static int Part1(const std::vector<std::vector<int>>& numberGrid)
+static int64_t Part1(const std::vector<std::vector<int>>& numberGrid)
 {
-    int sum = 0;
+    int64_t sum = 0;
 
     const size_t numRows = numberGrid.size();
     const size_t numCols = numberGrid[0].size();
 
-    const std::array rowSearch = {0, 1, 0, -1};
-    const std::array colSearch = {1, 0, -1, 0};
+    const std::array<int64_t, 4> rowSearch = {0, 1, 0, -1};
+    const std::array<int64_t, 4> colSearch = {1, 0, -1, 0};
 
     for (size_t row = 0; row < numRows; row++)
     {
@@ -67,13 +67,14 @@ static int Part1(const std::vector<std::vector<int>>& numberGrid)
             bool isLowPoint = true;
             for (size_t k = 0; k < rowSearch.size(); k++)
             {
-                int64_t searchRow = row + rowSearch[k];
-                int64_t searchCol = col + colSearch[k];
-                if ((searchRow >= 0) && (searchRow < static_cast<int>(numRows))
+                int64_t searchRow = static_cast<int64_t>(row) + rowSearch[k];
+                int64_t searchCol = static_cast<int64_t>(col) + colSearch[k];
+                if ((searchRow >= 0)
+                    && (searchRow < static_cast<int64_t>(numRows))
                     && (searchCol >= 0)
-                    && (searchCol < static_cast<int>(numCols)))
-                    if (numberGrid[row][col]
-                        >= numberGrid[searchRow][searchCol])
+                    && (searchCol < static_cast<int64_t>(numCols)))
+                    if (numberGrid[row][col] >= numberGrid[static_cast<size_t>(
+                            searchRow)][static_cast<size_t>(searchCol)])
                         isLowPoint = false;
             }
             if (isLowPoint)
@@ -95,25 +96,25 @@ static size_t Part2(const std::vector<std::vector<int>>& numberGrid)
     const size_t numRows = numberGrid.size();
     const size_t numCols = numberGrid[0].size();
 
-    const std::array rowSearch = {0, 1, 0, -1};
-    const std::array colSearch = {1, 0, -1, 0};
+    const std::array<int64_t, 4> rowSearch = {0, 1, 0, -1};
+    const std::array<int64_t, 4> colSearch = {1, 0, -1, 0};
 
     std::vector<size_t> basinSizes;
-    std::set<std::pair<int, int>> visited;
+    std::set<std::pair<size_t, size_t>> visited;
 
-    for (int row = 0; row < numRows; row++)
+    for (size_t row = 0; row < numRows; row++)
     {
-        for (int col = 0; col < numCols; col++)
+        for (size_t col = 0; col < numCols; col++)
         {
             if (!visited.count(std::make_pair(row, col))
                 && (numberGrid[row][col] != 9))
             {
                 size_t basinSize = 0;
-                std::queue<std::pair<int, int>> frontier;
+                std::queue<std::pair<size_t, size_t>> frontier;
                 frontier.push(std::make_pair(row, col));
                 while (frontier.size())
                 {
-                    std::pair<int, int> currentCoord = frontier.front();
+                    std::pair<int64_t, int64_t> currentCoord = frontier.front();
                     frontier.pop();
                     if (visited.count(currentCoord))
                         continue;
@@ -121,13 +122,15 @@ static size_t Part2(const std::vector<std::vector<int>>& numberGrid)
                     basinSize++;
                     for (size_t k = 0; k < rowSearch.size(); k++)
                     {
-                        int searchRow = currentCoord.first + rowSearch[k];
-                        int searchCol = currentCoord.second + colSearch[k];
+                        int64_t searchRow = currentCoord.first + rowSearch[k];
+                        int64_t searchCol = currentCoord.second + colSearch[k];
                         if ((searchRow >= 0)
-                            && (searchRow < static_cast<int>(numRows))
+                            && (searchRow < static_cast<int64_t>(numRows))
                             && (searchCol >= 0)
-                            && (searchCol < static_cast<int>(numCols)))
-                            if (numberGrid[searchRow][searchCol] != 9)
+                            && (searchCol < static_cast<int64_t>(numCols)))
+                            if (numberGrid[static_cast<size_t>(searchRow)]
+                                          [static_cast<size_t>(searchCol)]
+                                != 9)
                             {
                                 frontier.push(
                                     std::make_pair(searchRow, searchCol));
