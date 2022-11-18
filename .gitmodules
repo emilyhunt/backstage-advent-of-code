@@ -13,3 +13,6 @@
 [submodule "will"]
 	path = will
 	url = https://gitlab.com/laywill/advent-of-code-2021.git
+[submodule "emily"]
+	path = emily
+	url = https://github.com/emilyhunt/advent-of-code
