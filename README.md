@@ -24,7 +24,7 @@ You can structure your submodule code however you'd like, but we recommend doing
 To clone the repo and all of its constituent submodules - which is useful if you want to run others' code - use 
 
 ```
-git clone --recurse-submodules
+git clone --recursive https://github.com/emilyhunt/backstage-advent-of-code.git
 ```
 
 If you didn't do this, the submodules may need to be initialised for the first time with 
@@ -33,7 +33,7 @@ If you didn't do this, the submodules may need to be initialised for the first t
 git submodule update --init
 ```
 
-It's not the end of the world if you don't update the submodules, you just won't see much in your local repo!
+depending on your Git version. It's not the end of the world if you don't update the submodules, you just won't see much in your local repo!
 
 ### 4. Get added to the private leaderboard
 
