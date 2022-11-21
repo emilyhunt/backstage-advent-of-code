@@ -16,3 +16,6 @@
 [submodule "emily"]
 	path = emily
 	url = https://github.com/emilyhunt/advent-of-code
+[submodule "thomas"]
+	path = thomas
+	url = https://github.com/Hypothawits/AoC
