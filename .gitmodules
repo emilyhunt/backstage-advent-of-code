@@ -15,7 +15,10 @@
 	url = https://gitlab.com/laywill/advent-of-code-2021.git
 [submodule "emily"]
 	path = emily
-	url = https://github.com/emilyhunt/advent-of-code
+	url = https://github.com/emilyhunt/aoc.emilydoesastro.com
 [submodule "thomas"]
 	path = thomas
 	url = https://github.com/Hypothawits/AoC
+[submodule "emilyh"]
+	path = emilyh
+	url = https://github.com/emilyhunt/aoc.emilydoesastro.com
