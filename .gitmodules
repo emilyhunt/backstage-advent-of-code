@@ -7,9 +7,6 @@
 [submodule "tomdufall/solutions"]
 	path = tomdufall/solutions
 	url = https://github.com/TomDufall/prog-puzzles
-[submodule "angel"]
-	path = angel
-	url = https://github.com/ACascarino/advent_of_code_2021.git
 [submodule "will"]
 	path = will
 	url = https://gitlab.com/laywill/advent-of-code-2021.git
