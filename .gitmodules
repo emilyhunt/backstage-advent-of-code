@@ -19,3 +19,6 @@
 [submodule "emilyh"]
 	path = emilyh
 	url = https://github.com/emilyhunt/aoc.emilydoesastro.com
+[submodule "angel"]
+	path = angel
+	url = https://github.com/ACascarino/advent_of_code_2021.git
