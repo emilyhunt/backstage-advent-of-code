@@ -29,15 +29,33 @@ The short instructions are...
 
 2. Ask Emily to add your repository as a submodule to this parent one!
 
-#### (Aside for contributors only)
+### (Aside for contributors only)
 
-If you've been added to the repo as a contributor, then you can run the following in this repo to do it yourself:
+If you're a repo contributor, then you can add a new submodule with [`git submodule add`](https://git-scm.com/docs/git-submodule#Documentation/git-submodule.txt-add-bltbranchgt-f--force--nameltnamegt--referenceltrepositorygt--depthltdepthgt--ltrepositorygtltpathgt). 
+
+#### 1. Add the repo
+
+Ensure that the correct branch name is specified -- **this is typically `main` for newer repos** -- else updating won't necessarily work.
 
 ```
-git submodule add https://github.com/<username>/<repo_name> <name>
+git submodule add -b <branch> --reference https://github.com/<username>/<repo_name> --name <name>
 ```
 
-Don't forget to commit the change to the `main` branch.
+(The branch issue can be fixed afterwards with [these instructions](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/18799234#18799234).)
+
+#### 2. Commit the changes
+
+Make a new commit with the new submodule added.
+
+#### 3. Check that the new submodule can be updated
+
+Check that trying to update all modules works. The following should return no errors, and should update all submodules:
+
+```
+git submodule update --remote --merge
+```
+
+If this works, then you're safe to commit the changes to the `main` branch. (If not, undo your changes and chat to Emily.)
 
 ### 3. Setup your submodule's structure
 
