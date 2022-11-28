@@ -11,11 +11,35 @@ jobs:
     name: Submodule Sync
     runs-on: ubuntu-latest
     steps:
-      - name: Submodule Sync
+      - name: Submodule Sync angel
+        uses: mheap/submodule-sync-action@v1
+        with:
+          path: angel
+          ref: main
+          pr_branch: automated-submodule-update-angel
+          target_branch: main
+          pr_body: "Update to Angel's submodule"
+      - name: Submodule Sync chris
+        uses: mheap/submodule-sync-action@v1
+        with:
+          path: chris
+          ref: master
+          pr_branch: automated-submodule-update-chris
+          target_branch: main
+          pr_body: "Update to Chris's submodule"
+      - name: Submodule Sync emily
         uses: mheap/submodule-sync-action@v1
         with:
           path: emily
           ref: main
-          pr_branch: automated-submodule-update
+          pr_branch: automated-submodule-update-emily
           target_branch: main
-          pr_body: "Update to emily submodule"
+          pr_body: "Update to Emily's submodule"
+      - name: Submodule Sync thomas
+        uses: mheap/submodule-sync-action@v1
+        with:
+          path: thomas
+          ref: main
+          pr_branch: automated-submodule-update-thomas
+          target_branch: main
+          pr_body: "Update to Thomas's submodule"
