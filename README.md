@@ -72,13 +72,18 @@ You can structure your submodule code however you'd like, but we recommend doing
 
 ### 4. Get added to the private leaderboard
 
-Each year, we use a private leaderboard. They're currently maintained by [Tom](https://github.com/TomDufall) - ask him to get added. You'll need to be logged in to see it.
+Each year, we use a private leaderboard. They're currently maintained by [Tom](https://github.com/TomDufall) - ask him to get added.
 
-Links to each year's leaderboard:
+Links to each year's leaderboard (you'll need to be logged in to see them):
 
-* 2022 (in-progress)
+* **[2022](https://adventofcode.com/2022/leaderboard/private/view/830486)**
 * [2021](https://adventofcode.com/2021/leaderboard/private/view/830486)
-* 2020 (link unknown)
+* [2020](https://adventofcode.com/2020/leaderboard/private/view/830486)
+* [2019](https://adventofcode.com/2019/leaderboard/private/view/830486)
+* [2018](https://adventofcode.com/2018/leaderboard/private/view/830486)
+* [2017](https://adventofcode.com/2017/leaderboard/private/view/830486)
+* [2016](https://adventofcode.com/2016/leaderboard/private/view/830486)
+* [2015](https://adventofcode.com/2015/leaderboard/private/view/830486)
 
 
 ## Repo etiquette
