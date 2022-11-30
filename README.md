@@ -38,7 +38,7 @@ If you're a repo contributor, then you can add a new submodule with [`git submod
 Ensure that the correct branch name is specified -- **this is typically `main` for newer repos** -- else updating won't necessarily work.
 
 ```
-git submodule add -b <branch> --reference https://github.com/<username>/<repo_name> --name <name>
+git submodule add -b <branch> https://github.com/<username>/<repo_name> <name>
 ```
 
 (The branch issue can be fixed afterwards with [these instructions](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/18799234#18799234).)
