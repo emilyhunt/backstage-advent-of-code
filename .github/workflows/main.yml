@@ -59,11 +59,12 @@ jobs:
           pr_branch: automated-submodule-update-tom
           target_branch: main
           pr_body: "Update to Tom's submodule"
-      - name: Submodule Sync will
-        uses: mheap/submodule-sync-action@v1
-        with:
-          path: will
-          ref: main
-          pr_branch: automated-submodule-update-will
-          target_branch: main
-          pr_body: "Update to Will's submodule"
+# Unfortunately, non-GitHub repos aren't supported =(
+#       - name: Submodule Sync will
+#         uses: mheap/submodule-sync-action@v1
+#         with:
+#           path: will
+#           ref: main
+#           pr_branch: automated-submodule-update-will
+#           target_branch: main
+#           pr_body: "Update to Will's submodule"
