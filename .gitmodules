@@ -28,3 +28,7 @@
 	path = tom
 	url = https://github.com/TomDufall/prog-puzzles
 	branch = main
+[submodule "michael"]
+	path = michael
+	url = https://github.com/michaelotty/AdventOfCode
+	branch = main
