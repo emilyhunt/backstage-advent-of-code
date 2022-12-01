@@ -10,7 +10,7 @@
 	branch = main
 [submodule "emily"]
 	path = emily
-	url = https://github.com/emilyhunt/aoc.emilydoesastro.com
+	url = https://github.com/emilyhunt/advent-of-code
 	branch = main
 [submodule "thomas"]
 	path = thomas
