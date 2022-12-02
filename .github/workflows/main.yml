@@ -43,6 +43,14 @@ jobs:
           pr_branch: automated-submodule-update-emily
           target_branch: main
           pr_body: "Update to Emily's submodule"
+      - name: Submodule Sync michael
+        uses: mheap/submodule-sync-action@v1
+        with:
+          path: michael
+          ref: main
+          pr_branch: automated-submodule-update-michael
+          target_branch: main
+          pr_body: "Update to Michael's submodule"
       - name: Submodule Sync thomas
         uses: mheap/submodule-sync-action@v1
         with:
