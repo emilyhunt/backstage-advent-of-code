@@ -36,3 +36,7 @@
 	path = abi
 	url = https://github.com/abiterry/Advent-Of-Code-2022
 	branch = main
+[submodule "oli"]
+	path = oli
+	url = https://github.com/oli-tailby/advent-of-code
+	branch = master
