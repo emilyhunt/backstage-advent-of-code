@@ -11,6 +11,14 @@ jobs:
     name: Submodule Sync
     runs-on: ubuntu-latest
     steps:
+      - name: Submodule Sync abi
+        uses: mheap/submodule-sync-action@v1
+        with:
+          path: abi
+          ref: main
+          pr_branch: automated-submodule-update-abi
+          target_branch: main
+          pr_body: "Update to Abi's submodule"
       - name: Submodule Sync alex
         uses: mheap/submodule-sync-action@v1
         with:

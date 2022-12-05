@@ -32,3 +32,7 @@
 	path = michael
 	url = https://github.com/michaelotty/AdventOfCode
 	branch = main
+[submodule "abi"]
+	path = abi
+	url = https://github.com/abiterry/Advent-Of-Code-2022
+	branch = main
