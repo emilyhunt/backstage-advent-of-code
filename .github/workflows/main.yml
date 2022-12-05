@@ -67,6 +67,16 @@ jobs:
           pr_branch: automated-submodule-update-tom
           target_branch: main
           pr_body: "Update to Tom's submodule"
+  auto-approve:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    if: github.actor == 'github-actions'
+    steps:
+      - name: Auto-accept Submodule Sync PRs
+        uses: hmarr/auto-approve-action@v3
+        with:
+          review-message: "Auto approved automated Submodule Sync PRs"
 # Unfortunately, non-GitHub repos aren't supported =(
 #       - name: Submodule Sync will
 #         uses: mheap/submodule-sync-action@v1
