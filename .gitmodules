@@ -4,9 +4,13 @@
 [submodule "chris"]
 	path = chris
 	url = https://github.com/enygma999/AdventOfCode
-[submodule "will"]
-	path = will
+[submodule "will-2021"]
+	path = will-2021
 	url = https://gitlab.com/laywill/advent-of-code-2021.git
+	branch = main
+[submodule "will-2022"]
+	path = will-2022
+	url = https://gitlab.com/laywill/advent-of-code-2022.git
 	branch = main
 [submodule "emily"]
 	path = emily
