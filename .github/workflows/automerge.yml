@@ -1,3 +1,4 @@
+# uses: https://github.com/marketplace/actions/merge-pull-requests-automerge-action
 name: Automerge Submodules
 on:
   pull_request:
