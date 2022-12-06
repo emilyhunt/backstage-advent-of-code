@@ -97,3 +97,14 @@ This mostly applies to people not using submodules.
 * Try to avoid adding any big files here! You can set up some `.gitignore` rules to keep them in your local repo if you'd like.
 
 * Make sure that any file output that your code spews out goes into any folder called `output`, as this will be auto-ignored via the .gitignore file.
+
+
+## Workflow structure
+
+The repo has a number of workflows setup to automatically sync submodules.
+
+1. Once every hour during December (or daily otherwise, set manually), `.github/workflows/main.yml` checks all submodules for changes and creates PRs.
+2. `.github/workflows/pr-labeler.yml` labels relevant PRs.
+3. `.github/workflows/automerge.yml` merges them into the `main` branch.
+
+Chat to Emily if there are any configuration issues or to get things tweaked.
