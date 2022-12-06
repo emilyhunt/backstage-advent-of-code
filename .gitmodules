@@ -6,11 +6,11 @@
 	url = https://github.com/enygma999/AdventOfCode
 [submodule "will-2021"]
 	path = will-2021
-	url = https://gitlab.com/laywill/advent-of-code-2021.git
+	url = https://gitlab.com/laywill/advent-of-code-2021/
 	branch = main
 [submodule "will-2022"]
 	path = will-2022
-	url = https://gitlab.com/laywill/advent-of-code-2022.git
+	url = https://gitlab.com/laywill/advent-of-code-2022/
 	branch = main
 [submodule "emily"]
 	path = emily
