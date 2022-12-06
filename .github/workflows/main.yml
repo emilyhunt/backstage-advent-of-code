@@ -14,6 +14,7 @@ jobs:
       - name: Submodule Sync abi
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: abi
           ref: main
           pr_branch: automated-submodule-update-abi
@@ -22,6 +23,7 @@ jobs:
       - name: Submodule Sync alex
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: alex
           ref: main
           pr_branch: automated-submodule-update-alex
@@ -30,6 +32,7 @@ jobs:
       - name: Submodule Sync angel
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: angel
           ref: main
           pr_branch: automated-submodule-update-angel
@@ -38,6 +41,7 @@ jobs:
       - name: Submodule Sync chris
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: chris
           ref: master
           pr_branch: automated-submodule-update-chris
@@ -46,6 +50,7 @@ jobs:
       - name: Submodule Sync emily
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: emily
           ref: main
           pr_branch: automated-submodule-update-emily
@@ -54,6 +59,7 @@ jobs:
       - name: Submodule Sync michael
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: michael
           ref: main
           pr_branch: automated-submodule-update-michael
@@ -62,6 +68,7 @@ jobs:
       - name: Submodule Sync oli
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: oli
           ref: master
           pr_branch: automated-submodule-update-oli
@@ -70,6 +77,7 @@ jobs:
       - name: Submodule Sync thomas
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: thomas
           ref: main
           pr_branch: automated-submodule-update-thomas
@@ -78,6 +86,7 @@ jobs:
       - name: Submodule Sync tom
         uses: mheap/submodule-sync-action@v1
         with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: tom
           ref: main
           pr_branch: automated-submodule-update-tom
