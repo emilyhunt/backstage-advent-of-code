@@ -29,7 +29,9 @@ The short instructions are...
 
 2. Ask Emily to add your repository as a submodule to this parent one!
 
-### (Aside for contributors only)
+#### Instructions on how to add repos as submodules (for contributors only)
+<details>
+<summary>(Click to show)</summary>
 
 If you're a repo contributor, then you can add a new submodule with [`git submodule add`](https://git-scm.com/docs/git-submodule#Documentation/git-submodule.txt-add-bltbranchgt-f--force--nameltnamegt--referenceltrepositorygt--depthltdepthgt--ltrepositorygtltpathgt). 
 
@@ -56,6 +58,8 @@ git submodule update --remote --merge
 ```
 
 If this works, then you're safe to commit the changes to the `main` branch. (If not, undo your changes and chat to Emily.)
+
+</details>
 
 ### 3. Setup your submodule's structure
 
