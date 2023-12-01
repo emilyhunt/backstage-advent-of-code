@@ -80,7 +80,8 @@ Each year, we use a private leaderboard. They're currently maintained by [Tom](h
 
 Links to each year's leaderboard (you'll need to be logged in to see them):
 
-* **[2022](https://adventofcode.com/2022/leaderboard/private/view/830486)**
+* **[2023](https://adventofcode.com/2023/leaderboard/private/view/830486)**
+* [2022](https://adventofcode.com/2022/leaderboard/private/view/830486)**
 * [2021](https://adventofcode.com/2021/leaderboard/private/view/830486)
 * [2020](https://adventofcode.com/2020/leaderboard/private/view/830486)
 * [2019](https://adventofcode.com/2019/leaderboard/private/view/830486)
