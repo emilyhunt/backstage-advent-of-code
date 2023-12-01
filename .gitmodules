@@ -20,10 +20,6 @@
 	path = thomas
 	url = https://github.com/Hypothawits/AoC
 	branch = main
-[submodule "angel"]
-	path = angel
-	url = https://github.com/ACascarino/advent_of_code_2021.git
-	branch = main
 [submodule "alex"]
 	path = alex
 	url = https://github.com/alexbabington/MyAOC
@@ -44,3 +40,7 @@
 	path = oli
 	url = https://github.com/oli-tailby/advent-of-code
 	branch = master
+[submodule "angel"]
+	path = angel
+	url = git@github.com:ACascarino/advent_of_code.git
+	branch = main
