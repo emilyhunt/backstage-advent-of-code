@@ -92,6 +92,15 @@ jobs:
           pr_branch: automated-submodule-update-tom
           target_branch: main
           pr_body: "Update to Tom's submodule"
+      - name: Submodule Sync anna
+        uses: mheap/submodule-sync-action@v1
+        with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
+          path: anna
+          ref: main
+          pr_branch: automated-submodule-update-anna
+          target_branch: main
+          pr_body: "Update to Anna's submodule"
 # Unfortunately, non-GitHub repos aren't supported =(
 #       - name: Submodule Sync will
 #         uses: mheap/submodule-sync-action@v1

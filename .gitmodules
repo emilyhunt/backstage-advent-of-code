@@ -44,3 +44,7 @@
 	path = angel
 	url = git@github.com:ACascarino/advent_of_code.git
 	branch = main
+[submodule "anna"]
+	path = anna
+	url = git@github.com:anna-lcg/AdventOfCode.git
+	branch = main
