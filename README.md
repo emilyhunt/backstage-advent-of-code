@@ -45,6 +45,26 @@ git submodule add -b <branch> https://github.com/<username>/<repo_name> <name>
 
 (The branch issue can be fixed afterwards with [these instructions](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/18799234#18799234).)
 
+#### 2. Update the workflow file
+
+To get their submodule to update regularly, add the following at the bottom of `.github/workflows/mail.yml`:
+
+```
+      - name: Submodule Sync <NAME>
+        uses: mheap/submodule-sync-action@v1
+        with:
+          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
+          path: <REPO_NAME>
+          ref: <BRANCH>
+          pr_branch: automated-submodule-update-<NAME>
+          target_branch: main
+          pr_body: "Update to <NAME>'s submodule"
+```
+
+where `<NAME>` is their name, `<REPO_NAME>` is the name of their submodule in the repo (probably the same as `<NAME>`), and `<BRANCH>` is their branch name (probably `main`).
+
+Make sure to set `<NAME>` in `pr_branch` and `pr_body`, too!
+
 #### 2. Commit the changes
 
 Make a new commit with the new submodule added.
