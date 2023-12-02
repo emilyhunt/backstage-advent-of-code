@@ -65,11 +65,11 @@ where `<NAME>` is their name, `<REPO_NAME>` is the name of their submodule in th
 
 Make sure to set `<NAME>` in `pr_branch` and `pr_body`, too!
 
-#### 2. Commit the changes
+#### 3. Commit the changes
 
 Make a new commit with the new submodule added.
 
-#### 3. Check that the new submodule can be updated
+#### 4. Check that the new submodule can be updated
 
 Check that trying to update all modules works. The following should return no errors, and should update all submodules:
 
