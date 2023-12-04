@@ -4,6 +4,7 @@
 [submodule "chris"]
 	path = chris
 	url = https://github.com/enygma999/AdventOfCode
+	branch = main
 [submodule "will-2021"]
 	path = will-2021
 	url = https://gitlab.com/laywill/advent-of-code-2021/
