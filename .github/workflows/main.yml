@@ -43,7 +43,7 @@ jobs:
         with:
           token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
           path: chris
-          ref: master
+          ref: main
           pr_branch: automated-submodule-update-chris
           target_branch: main
           pr_body: "Update to Chris's submodule"
