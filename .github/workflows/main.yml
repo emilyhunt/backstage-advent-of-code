@@ -38,15 +38,16 @@ jobs:
           pr_branch: automated-submodule-update-angel
           target_branch: main
           pr_body: "Update to Angel's submodule"
-      - name: Submodule Sync chris
-        uses: mheap/submodule-sync-action@v1
-        with:
-          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
-          path: chris
-          ref: main
-          pr_branch: automated-submodule-update-chris
-          target_branch: main
-          pr_body: "Update to Chris's submodule"
+# Look into how to do this with private repo
+#      - name: Submodule Sync chris
+#        uses: mheap/submodule-sync-action@v1
+#        with:
+#          token: "${{ secrets.EMILYHUNT_WORKFLOWS }}"
+#          path: chris
+#          ref: main
+#          pr_branch: automated-submodule-update-chris
+#          target_branch: main
+#          pr_body: "Update to Chris's submodule"
       - name: Submodule Sync emily
         uses: mheap/submodule-sync-action@v1
         with:
